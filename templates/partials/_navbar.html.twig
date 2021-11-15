@@ -1,28 +1,29 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid navbar-container">
+  <div class="container-fluid navbar-container">
 
-      <img class="navbar-logo" src="images/logo-quantique-web.png" alt="image">
-      
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <div class="collapse navbar-collapse navbar-content">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Features</a>
-          </li>
-        </ul>
+    <img class="navbar-logo" src="images/logo-quantique-web.png" alt="image">
 
-        {% if app.user %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url('app_logout') }}">Déconnexion</a>
-          </li>
-          {% endif %}
-      </div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03"
+      aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
+    <div class="collapse navbar-collapse navbar-content">
+      {% if app.user %}
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Features</a>
+        </li>
+      </ul>
+
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url('app_logout') }}">Déconnexion</a>
+      </li>
+      {% endif %}
     </div>
-  </nav>
+
+  </div>
+</nav>
