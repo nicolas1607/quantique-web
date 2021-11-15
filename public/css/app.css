@@ -1,0 +1,97 @@
+@font-face {
+    font-family: Poppins-Regular;
+    src: url('../fonts/poppins/Poppins-Regular.ttf'); 
+}
+
+@font-face {
+    font-family: Poppins-Bold;
+    src: url('../fonts/poppins/Poppins-Bold.ttf'); 
+}
+
+@font-face {
+    font-family: Poppins-Medium;
+    src: url('../fonts/poppins/Poppins-Medium.ttf'); 
+}
+
+@font-face {
+    font-family: Montserrat-Bold;
+    src: url('../fonts/montserrat/Montserrat-Bold.ttf'); 
+}
+
+/* Typographie */
+
+* {
+    font-family: Poppins-Regular;
+    font-size: 1rem;
+}
+
+h1, h2, h3 {
+    font-family: Poppins-Bold;
+}
+
+h1 {
+    font-size: 2.4rem;
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.4rem;
+}
+
+/* Générique */
+
+:root {
+    --bg-color: #F3AA10;
+    --color: white;
+    --bg-hover: #333333;
+}
+
+.container {
+    padding-left: 8rem;
+    padding-right: 8rem;
+}
+
+.btn-type {
+    background-color: var(--bg-color);
+    color: var(--color);
+    font-weight: bold;
+    font-size: 1rem;
+
+    font-family: Montserrat-Bold;
+    font-size: 1rem;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.btn-type:hover {
+    background-color: var(--bg-hover);
+    color: var(--color);
+}
+
+/* body {
+    background-color: var(--bg-color);
+    color: var(--color);
+} */
+
+li {
+    list-style-type: none;
+}
+
+/* Navbar */
+.navbar-container {
+    padding-left: 4rem;
+    padding-right: 4rem;
+}
+
+.navbar-logo {
+    width: 10rem;
+}
+
+.navbar-content {
+    margin-left: 2rem;
+}
