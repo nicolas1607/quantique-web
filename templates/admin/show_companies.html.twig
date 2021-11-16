@@ -14,14 +14,14 @@
                 href="{{path('show_stats_user', {'id': user.id})}}">Statistiques</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab"
+            <a class="nav-link" data-bs-toggle="tab"
                 href="{{path('show_contracts_user', {'id': user.id})}}">Contrats</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="{{path('show_invoices_user', {'id': user.id})}}">Factures</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab"
+            <a class="nav-link active" data-bs-toggle="tab"
                 href="{{path('show_companies_user', {'id': user.id})}}">Entreprises</a>
         </li>
     </ul>
@@ -30,23 +30,21 @@
         <thead>
             <tr>
                 <th scope="col">Id</th>
-                <th scope="col">Nom du contrat</th>
-                <th scope="col">Type de contrat</th>
-                <th scope="col">Prix en €/mois</th>
+                <th scope="col">Nom de l'entreprise</th>
+                <th scope="col">Adresse</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
-            {% for contract in user.contracts %}
+            {% for company in user.companies %}
             <tr class="table-light">
-                <td>{{ contract.id }}</td>
-                <td>{{ contract.name }}</td>
-                <td>{{ contract.type.name }}</td>
-                <td>{{ contract.price }}€ / mois</td>
+                <td>{{ company.id }}</td>
+                <td>{{ company.name }}</td>
+                <td>{{ company.address }}, {{ company.postalCode }} {{ company.city }}</td>
                 <td>
                     <ul class="action-list">
                         <li class="action-item">
-                            <a href="{{path('edit_contract', {'id': contract.id})}}" class="action-link">Modifier</a>
+                            <a href="" class="action-link">Modifier</a>
                         </li>
                     </ul>
                 </td>

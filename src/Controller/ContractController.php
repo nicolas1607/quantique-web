@@ -55,22 +55,13 @@ class ContractController extends AbstractController
 
         if ($updateContractForm->isSubmitted() && $updateContractForm->isValid()) {
             $this->em->flush();
-            return $this->redirectToRoute('show_contract', ['id' => $id->getId()]);
+            return $this->redirectToRoute('show_contracts_user', ['id' => $id->getUserId()->getId()]);
         }
 
         return $this->render('contract/edit.html.twig', [
-            'edit_contract_form' => $updateContractForm->createView()
+            'edit_contract_form' => $updateContractForm->createView(),
+            'contract' => $id,
+            'user' => $id->getUserId()
         ]);
     }
-
-    /**
-     * @Route("/contract/delete/{id}", name="delete_contract")
-     */
-    // public function delete(Request $request, Contract $id): Response
-    // {
-    //     $this->em->remove($id);
-    //     $this->em->flush();
-
-    //     return $this->redirect($request->headers->get('referer'));
-    // }
 }

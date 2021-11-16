@@ -159,4 +159,14 @@ class UserController extends AbstractController
             'type' => $type
         ]);
     }
+
+    /**
+     * @Route("/user/companies/{id}", name="show_companies_user")
+     */
+    public function showCompanies(User $user): Response
+    {
+        return $this->render('admin/show_companies.html.twig', [
+            'user' => $user
+        ]);
+    }
 }
