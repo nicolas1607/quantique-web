@@ -20,7 +20,7 @@
                 </select>
             </div>
         </form>
-        <a class="btn-type btn10" href="">Nouvelle facture</a>
+        <a class="btn-type btn10" href="{{path('add_invoice', {'user': user.id})}}">Nouvelle facture</a>
     </div>
 
     <ul class="nav nav-tabs">
@@ -61,7 +61,10 @@
                     <ul class="action-list">
                         <li class="action-item">
                             <a href="" class="action-link">Voir</a>
-                            <a href="" class="action-link">Télécharger</a>
+                            <img class="show-article-img"
+                                src="../../public/{{asset('uploads/invoices/')}}{{invoice.file}}">
+                            <a href="{{path('download_invoice', {'id': invoice.id})}}"
+                                class="action-link">Télécharger</a>
                         </li>
                     </ul>
                 </td>

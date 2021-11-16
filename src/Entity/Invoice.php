@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Repository\InvoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\InvoiceRepository;
 
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
@@ -23,7 +23,7 @@ class Invoice
     private $num;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
      */
     private $releasedAt;
 
@@ -54,12 +54,12 @@ class Invoice
         return $this;
     }
 
-    public function getReleasedAt(): ?\DateTimeImmutable
+    public function getReleasedAt(): ?\DateTime
     {
         return $this->releasedAt;
     }
 
-    public function setReleasedAt(\DateTimeImmutable $releasedAt): self
+    public function setReleasedAt(\DateTime $releasedAt): self
     {
         $this->releasedAt = $releasedAt;
 
