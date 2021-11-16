@@ -25,27 +25,8 @@ class UserController extends AbstractController
         $this->userRepo = $userRepo;
     }
 
-    /**
-     * @Route("/admin", name="admin")
-     */
-    public function admin(): Response
-    {
-        $users = [];
-        foreach ($this->userRepo->findAll() as $user) {
-            $flag = true;
-            foreach ($user->getRoles() as $role) {
-                if ($role == 'ROLE_ADMIN') {
-                    $flag = false;
-                }
-            }
-            if ($flag) {
-                $users[] = $user;
-            }
-        }
-        return $this->render('admin/user.html.twig', [
-            'users' => $users
-        ]);
-    }
+
+    // UTILISATEUR //
 
     /**
      * @Route("/profile", name="profile")
@@ -104,12 +85,36 @@ class UserController extends AbstractController
     }
 
 
+    // ADMINISTRATEUR //
+
+    /**
+     * @Route("/admin", name="admin")
+     */
+    public function admin(): Response
+    {
+        $users = [];
+        foreach ($this->userRepo->findAll() as $user) {
+            $flag = true;
+            foreach ($user->getRoles() as $role) {
+                if ($role == 'ROLE_ADMIN') {
+                    $flag = false;
+                }
+            }
+            if ($flag) {
+                $users[] = $user;
+            }
+        }
+        return $this->render('admin/users.html.twig', [
+            'users' => $users
+        ]);
+    }
+
     /**
      * @Route("/user/stats/{id}", name="show_stats_user")
      */
     public function showStats(User $user): Response
     {
-        return $this->render('user/show_stats.html.twig', [
+        return $this->render('admin/show_stats.html.twig', [
             'user' => $user
         ]);
     }
@@ -119,7 +124,7 @@ class UserController extends AbstractController
      */
     public function showContracts(User $user): Response
     {
-        return $this->render('user/show_contracts.html.twig', [
+        return $this->render('admin/show_contracts.html.twig', [
             'user' => $user
         ]);
     }
@@ -148,21 +153,10 @@ class UserController extends AbstractController
             return $a < $b ? -1 : 1;
         });
 
-        return $this->render('user/show_invoices.html.twig', [
+        return $this->render('admin/show_invoices.html.twig', [
             'user' => $user,
             'invoices' => $res,
             'type' => $type
         ]);
     }
-
-    /**
-     * @Route("/user/add/contract/{id}", name="add_contract")
-     */
-    // public function addContract(User $user): Response
-    // {
-
-    //     return $this->render('user/s_contracts.html.twig', [
-    //         'user' => $user
-    //     ]);
-    // }
 }
