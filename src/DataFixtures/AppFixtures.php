@@ -33,11 +33,25 @@ class AppFixtures extends Fixture
 
         // Type
         $types = [];
-        $advert = new Type();
-        $advert->setName('Publicité')
-            ->setLib('advert');
-        $types[] = $advert;
-        $manager->persist($advert);
+
+        $googleAds = new Type();
+        $googleAds->setName('GoogleAds')
+            ->setLib('googleAds');
+        $types[] = $googleAds;
+        $manager->persist($googleAds);
+
+        $youtube = new Type();
+        $youtube->setName('Youtube')
+            ->setLib('youtube');
+        $types[] = $youtube;
+        $manager->persist($youtube);
+
+        $facebook = new Type();
+        $facebook->setName('Facebook')
+            ->setLib('facebook');
+        $types[] = $facebook;
+        $manager->persist($facebook);
+
         $contract = new Type();
         $contract->setName('Contrat')
             ->setLib('contract');
@@ -66,7 +80,7 @@ class AppFixtures extends Fixture
             $contract->setName($faker->jobTitle())
                 ->setPrice($faker->numberBetween(80, 210))
                 ->setUserId($users[$i]);
-            $nb = rand(0, 1);
+            $nb = rand(0, 3);
             $contract->setType($types[$nb]);
             $types[$nb]->addContract($contract);
             $contracts[] = $contract;
