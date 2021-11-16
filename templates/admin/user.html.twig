@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace administration{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1>Espace administration</h1>
+    <a class="btn-type right btn10" href="{{ path('app_register') }}">Nouveau client</a>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="">Les clients</a>
+        </li>
+    </ul>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Entreprise</th>
+                <th scope="col">Email</th>
+                <th scope="col">Contact</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr class="table-light">
+                <td>{{ user.id }}</td>
+                <td>
+                    {% for company in user.companies %}
+                    {{ company.name }}
+                    {% endfor %}
+                </td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.contact }}</td>
+                <td>
+                    <ul class="action-list">
+                        <li class="action-item">
+                            <a href="{{path('add_contract', {'user': user.id})}}" class="action-link">Contrat</a>
+                            <a href="" class="action-link">Facture</a>
+                            <a href="{{path('show_stats_user', {'id': user.id})}}" class="action-link">Voir</a>
+                            <a href="{{path('modify_user', {'id': user.id})}}" class="action-link">Modifier</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

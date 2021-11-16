@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le client{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h2>Client {{ user.email }}</h2>
+
+    <form id="selectTypeForm" class="cont-flex form-search right" method="get">
+        <div class="form-group">
+            <label for="typeContract" class="form-label">Type de contrat</label>
+            <select class="form-select" id="typeContract" name="typeContract">
+                <option id="all" value="all">Tous</option>
+                <option id="contract" value="contract">Contrat</option>
+                <option id="google" value="google">GoogleAds</option>
+                <option id="facebook" value="facebook">Facebook</option>
+                <option id="youtube" value="youtube">Youtube</option>
+            </select>
+        </div>
+    </form>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab"
+                href="{{path('show_stats_user', {'id': user.id})}}">Statistiques</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab"
+                href="{{path('show_contracts_user', {'id': user.id})}}">Contrats</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab"
+                href="{{path('show_invoices_user', {'id': user.id})}}">Factures</a>
+        </li>
+    </ul>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Num</th>
+                <th scope="col">Contrat</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices %}
+            <tr class="table-light">
+                <td>{{ invoice.releasedAt|date("d/m/Y") }}</td>
+                <td>{{ invoice.num }}</td>
+                <td>{{ invoice.contract.name }}</td>
+                <td>
+                    <ul class="action-list">
+                        <li class="action-item">
+                            <a href="" class="action-link">Voir</a>
+                            <a href="" class="action-link">Télécharger</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    const selectType = document.querySelector('#typeContract');
+    selectType.addEventListener('change', () => {
+        document.querySelector('#selectTypeForm').submit();
+    })
+
+    const option = document.querySelector('#{{type}}');
+    option.setAttribute('selected', 'selected');
+</script>
+{% endblock %}

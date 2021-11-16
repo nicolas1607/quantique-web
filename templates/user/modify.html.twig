@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le client{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h2>Informations personnelles </h2>
+
+    {{ form_start(modify_user_form) }}
+    <div class="cont-grid form-section">
+        {{ form_row(modify_user_form.email) }}
+        {{ form_row(modify_user_form.contact) }}
+    </div>
+
+    <div class="cont-grid">
+        <div class="form-section">
+            <h2>Compte Google</h2>
+            <div>
+                <label for="emailGoogle">Email</label>
+                <input class="form-control" type="text" name="emailGoogle">
+                <label for="mdpGoogle">Mot de passe</label>
+                <input class="form-control" type="password" name="mdpGoogle">
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>Compte Facebook</h2>
+            <div>
+                <label for="emailFb">Email</label>
+                <input class="form-control" type="text" name="emailFb">
+                <label for="mdpFb">Mot de passe</label>
+                <input class="form-control" type="password" name="mdpFb">
+            </div>
+        </div>
+    </div>
+    {{ form_end(modify_user_form) }}
+</div>
+
+{% endblock %}

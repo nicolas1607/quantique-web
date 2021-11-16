@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le client{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h2>Client {{ user.email }}</h2>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab"
+                href="{{path('show_stats_user', {'id': user.id})}}">Statistiques</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab"
+                href="{{path('show_contracts_user', {'id': user.id})}}">Contrats</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="{{path('show_invoices_user', {'id': user.id})}}">Factures</a>
+        </li>
+    </ul>
+
+    <h3>Statistiques</h3>
+
+</div>
+
+{% endblock %}
