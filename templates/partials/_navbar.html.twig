@@ -1,7 +1,9 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg">
   <div class="container-fluid navbar-container">
 
-    <img class="navbar-logo" src="images/logo-quantique-web.png" alt="image">
+    {% if app.user %}
+    <img class="navbar-logo" src="{{asset('images/logo-quantique-web.png')}}" alt="image">
+    {% endif %}
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03"
       aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,12 +13,15 @@
     <div class="collapse navbar-collapse navbar-content">
       {% if app.user %}
       <ul class="navbar-nav me-auto">
+        {% if is_granted('ROLE_ADMIN') %}
         <li class="nav-item">
-          <a class="nav-link active" href="#">Home</a>
+          <a class="nav-link active" href="{{path('admin')}}">Admin</a>
         </li>
+        {% elseif is_granted('ROLE_USER') %}
         <li class="nav-item">
           <a class="nav-link" href="#">Features</a>
         </li>
+        {% endif %}
       </ul>
 
       <li class="nav-item">

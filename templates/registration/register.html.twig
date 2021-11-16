@@ -1,17 +1,30 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+<div class="container">
+    <div class="register-form">
+        <span class="form-title">Ajouter un nouveau client</span>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        {{ form_start(registrationForm) }}
+        <label for="roles">Rôle</label>
+        <select id="roles" class="form-select" name="roles">
+            <option value="user">Utilisateur</option>
+            <option value="admin">Administrateur</option>
+        </select>
+        <div class="wrap-input validate-input" data-validate="Entrer une adresse mail valide">
+            {{ form_row(registrationForm.email) }}
+            <span class="focus-input"></span>
+            <span class="symbol-input">
+                <i class="fa fa-lock" aria-hidden="true"></i>
+            </span>
+        </div>
+        {{ form_row(registrationForm.plainPassword) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+        {{ form_end(registrationForm) }}
+
+    </div>
+</div>
 {% endblock %}
