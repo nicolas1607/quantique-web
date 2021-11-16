@@ -7,10 +7,10 @@
 <div class="container">
     <h2>Informations personnelles </h2>
 
-    {{ form_start(modify_user_form) }}
+    {{ form_start(edit_user_form) }}
     <div class="cont-grid form-section">
-        {{ form_row(modify_user_form.email) }}
-        {{ form_row(modify_user_form.contact) }}
+        {{ form_row(edit_user_form.email) }}
+        {{ form_row(edit_user_form.contact) }}
     </div>
 
     <div class="cont-grid">
@@ -33,7 +33,7 @@
             </div>
         </div>
     </div>
-    {{ form_end(modify_user_form) }}
+    {{ form_end(edit_user_form) }}
 </div>
 
 {% endblock %}

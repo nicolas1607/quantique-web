@@ -37,16 +37,16 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/modify/{id}", name="modify_user")
+     * @Route("/user/edit/{id}", name="edit_user")
      */
-    public function modifyUser(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
+    public function editUser(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
     {
-        $modifyUserForm = $this->createForm(UserType::class, $user, ['method' => 'GET']);
+        $editUserForm = $this->createForm(UserType::class, $user, ['method' => 'GET']);
 
-        $modifyUserForm->handleRequest($request);
+        $editUserForm->handleRequest($request);
 
-        if ($modifyUserForm->isSubmitted() && $modifyUserForm->isValid()) {
-            $user = $modifyUserForm->getData();
+        if ($editUserForm->isSubmitted() && $editUserForm->isValid()) {
+            $user = $editUserForm->getData();
 
             // On créer les comptes Google & Facebook
             $emailGoogle = $request->query->get('emailGoogle');
@@ -78,8 +78,8 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user');
         }
 
-        return $this->render('user/modify.html.twig', [
-            'modify_user_form' => $modifyUserForm->createView(),
+        return $this->render('user/edit.html.twig', [
+            'edit_user_form' => $editUserForm->createView(),
             'user' => $user
         ]);
     }
