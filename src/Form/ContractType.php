@@ -2,16 +2,16 @@
 
 namespace App\Form;
 
-use App\Entity\Compagny;
-use App\Entity\Contract;
 use App\Entity\Type;
-use DateTimeImmutable;
-use Doctrine\DBAL\Types\FloatType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Company;
+use App\Entity\Contract;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ContractType extends AbstractType
 {
@@ -24,19 +24,13 @@ class ContractType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('releasedAt', DateTimeImmutable::class, [
-                'label' => 'Date de création',
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ])
-            ->add('price', FloatType::class, [
+            ->add('price', NumberType::class, [
                 'label' => 'Prix de la préstation',
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
-            ->add('type_id', EntityType::class, [
+            ->add('type', EntityType::class, [
                 'class' => Type::class,
                 'choice_label' => 'name',
                 'label' => 'Type de contrat',
@@ -44,12 +38,10 @@ class ContractType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('user_id', EntityType::class, [
-                'class' => Compagny::class,
-                'choice_label' => 'name',
-                'label' => 'Type de contrat',
+            ->add('submit', SubmitType::class, [
+                'label' => 'Envoyer',
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'btn-type'
                 ]
             ]);
     }

@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Contract;
 use App\Form\ContractType;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,6 +14,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ContractController extends AbstractController
 {
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/contract/add/{user}", name="add_contract")
      */
@@ -22,24 +31,17 @@ class ContractController extends AbstractController
         $addContractForm->handleRequest($request);
 
         if ($addContractForm->isSubmitted() && $addContractForm->isValid()) {
-            $contract->setUserId($user->getId());
+            $contract->setUserId($user);
+            $user->addContract($contract);
             $this->em->persist($contract);
             $this->em->flush();
 
-            return $this->redirectToRoute('show_contract', ['id' => $contract->getId()]);
+            return $this->redirectToRoute('show_contracts_user', ['id' => $user->getId()]);
         }
 
-        return $this->render('contract/add.html.twig');
-    }
-
-
-    /**
-     * @Route("/contract/show/{id}", name="show_contract")
-     */
-    public function show(Contract $contract): Response
-    {
-        return $this->render('album/show.html.twig', [
-            'contract' => $contract
+        return $this->render('contract/add.html.twig', [
+            'user' => $user,
+            'add_contract_form' => $addContractForm->createView()
         ]);
     }
 

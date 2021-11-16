@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le client{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h2>Nouveau contrat <span> pour {{user.email}}</span></h2>
+
+    {{ form_start(add_contract_form) }}
+    <div class="cont-grid form-section">
+        {{ form_row(add_contract_form.name) }}
+        {{ form_row(add_contract_form.price) }}
+    </div>
+    <div class="cont-grid form-section">
+        {{ form_row(add_contract_form.type) }}
+        {{ form_row(add_contract_form.submit) }}
+    </div>
+
+    {{ form_end(add_contract_form) }}
+</div>
+
+{% endblock %}

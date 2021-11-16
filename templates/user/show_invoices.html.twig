@@ -7,18 +7,21 @@
 <div class="container">
     <h2>Client {{ user.email }}</h2>
 
-    <form id="selectTypeForm" class="cont-flex form-search right" method="get">
-        <div class="form-group">
-            <label for="typeContract" class="form-label">Type de contrat</label>
-            <select class="form-select" id="typeContract" name="typeContract">
-                <option id="all" value="all">Tous</option>
-                <option id="contract" value="contract">Contrat</option>
-                <option id="google" value="google">GoogleAds</option>
-                <option id="facebook" value="facebook">Facebook</option>
-                <option id="youtube" value="youtube">Youtube</option>
-            </select>
-        </div>
-    </form>
+    <div class="right cont-flex">
+        <form id="selectTypeForm" class="cont-flex form-search" method="get">
+            <div class="form-group">
+                <label for="typeContract" class="form-label">Type de contrat</label>
+                <select class="form-select" id="typeContract" name="typeContract">
+                    <option id="all" value="all">Tous</option>
+                    <option id="contract" value="contract">Contrat</option>
+                    <option id="google" value="google">GoogleAds</option>
+                    <option id="facebook" value="facebook">Facebook</option>
+                    <option id="youtube" value="youtube">Youtube</option>
+                </select>
+            </div>
+        </form>
+        <a class="btn-type btn10" href="{{ path('add_invoice', {'user': user.id}) }}">Nouvelle facture</a>
+    </div>
 
     <ul class="nav nav-tabs">
         <li class="nav-item">
