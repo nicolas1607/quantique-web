@@ -5,7 +5,7 @@
 {% block body %}
 
 <div class="container">
-    <h2>Informations personnelles </h2>
+    <h1 class="form-title">Informations personnelles </h1>
 
     {{ form_start(edit_user_form) }}
     <div class="cont-grid form-section">
@@ -32,6 +32,9 @@
                 <input class="form-control" type="password" name="mdpFb">
             </div>
         </div>
+    </div>
+    <div class="cont-flex">
+        {{ form_row(edit_user_form.submit) }}
     </div>
     {{ form_end(edit_user_form) }}
 </div>

@@ -8,14 +8,7 @@
     <h1 class="form-title">Ajouter une facture</h1>
     {{ form_start(add_invoice_form) }}
     <div class="cont-grid form-section">
-        <div>
-            <label for="company">Entreprise</label>
-            <select class="form-select" name="company">
-                {% for company in companies %}
-                    <option value="{{company.id}}">{{company.name}}</option>
-                {% endfor %}
-            </select>
-        </div>
+        <p>{{user.email}}</p>
         {{ form_row(add_invoice_form.contract) }}
     </div>
     <div class="cont-grid form-section">

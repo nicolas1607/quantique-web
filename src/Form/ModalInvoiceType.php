@@ -2,10 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use App\Entity\Invoice;
 use App\Entity\Contract;
-use App\Repository\ContractRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -15,11 +13,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
-class InvoiceType extends AbstractType
+class ModalInvoiceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('num', TextType::class, [
+                'label' => 'Numéro',
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
             ->add('releasedAt', DateTimeType::class, [
                 'label' => 'Date de facturation',
                 'widget' => 'single_text',
@@ -35,10 +39,6 @@ class InvoiceType extends AbstractType
             ])
             ->add('contract', EntityType::class, [
                 'class' => Contract::class,
-                // 'query_builder' => function (ContractRepository $contractRepo) {
-                //     return $contractRepo->createQueryBuilder('c')
-                //         ->where('c.user_id = ' . $this->user->getId());
-                // },
                 'choice_label' => 'name',
                 'label' => 'Contrat',
                 'attr' => [

@@ -31,7 +31,7 @@ class UserType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer',
                 'attr' => [
-                    'class' => 'btn btn-type'
+                    'class' => 'btn-type btn-form'
                 ]
             ]);
     }

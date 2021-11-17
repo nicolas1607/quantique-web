@@ -41,7 +41,7 @@ class ContractType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer',
                 'attr' => [
-                    'class' => 'btn-type'
+                    'class' => 'btn-type btn-form'
                 ]
             ]);
     }

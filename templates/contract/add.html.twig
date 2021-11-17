@@ -5,8 +5,7 @@
 {% block body %}
 
 <div class="container">
-    <h2>Nouveau contrat <span> pour {{user.email}}</span></h2>
-
+    <h1 class="form-title">Nouveau contrat <span> pour {{user.email}}</span></h1>
     {{ form_start(add_contract_form) }}
     <div class="cont-grid form-section">
         {{ form_row(add_contract_form.name) }}
@@ -14,9 +13,10 @@
     </div>
     <div class="cont-grid form-section">
         {{ form_row(add_contract_form.type) }}
+    </div>
+    <div class="cont-flex">
         {{ form_row(add_contract_form.submit) }}
     </div>
-
     {{ form_end(add_contract_form) }}
 </div>
 

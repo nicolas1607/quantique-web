@@ -5,12 +5,12 @@
 {% block body %}
 
 <div class="container">
-    <h2>Client {{ user.email }}</h2>
+    <h1>Client {{ user.email }}</h1>
 
-    <div class="right cont-flex">
+    <div class="right cont-flex-space">
         <form id="selectTypeForm" class="cont-flex form-search" method="get">
-            <div class="form-group">
-                <label for="typeContract" class="form-label">Type de contrat</label>
+            <div class="form-group filter">
+                <label for="typeContract" class="form-label">Type</label>
                 <select class="form-select" id="typeContract" name="typeContract">
                     <option id="all" value="all">Tous</option>
                     <option id="contract" value="contract">Contrat</option>
@@ -20,7 +20,7 @@
                 </select>
             </div>
         </form>
-        <a class="btn-type btn10" href="{{path('add_invoice', {'user': user.id})}}">Nouvelle facture</a>
+        <a class="btn-type btn10" href="{{path('add_invoice_user', {'user': user.id})}}">Nouvelle facture</a>
     </div>
 
     <ul class="nav nav-tabs">
@@ -46,8 +46,8 @@
         <thead>
             <tr>
                 <th scope="col">Date</th>
-                <th scope="col">Num</th>
                 <th scope="col">Contrat</th>
+                <th scope="col">Nom</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -55,14 +55,12 @@
             {% for invoice in invoices %}
             <tr class="table-light">
                 <td>{{ invoice.releasedAt|date("d/m/Y") }}</td>
-                <td>{{ invoice.num }}</td>
                 <td>{{ invoice.contract.name }}</td>
+                <td>{{ invoice.file }}</td>
                 <td>
                     <ul class="action-list">
                         <li class="action-item">
                             <a href="" class="action-link">Voir</a>
-                            <img class="show-article-img"
-                                src="../../public/{{asset('uploads/invoices/')}}{{invoice.file}}">
                             <a href="{{path('download_invoice', {'id': invoice.id})}}"
                                 class="action-link">Télécharger</a>
                         </li>

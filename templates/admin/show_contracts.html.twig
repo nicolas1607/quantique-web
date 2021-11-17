@@ -5,8 +5,10 @@
 {% block body %}
 
 <div class="container">
-    <h2>Client {{ user.email }}</h2>
-    <a class="btn-type right btn10" href="{{ path('add_contract', {'user': user.id}) }}">Nouveau contrat</a>
+    <h1>Client {{ user.email }}</h1>
+    <div class="right">
+        <a class="btn-type btn10" href="{{ path('add_contract', {'user': user.id}) }}">Nouveau contrat</a>
+    </div>
 
     <ul class="nav nav-tabs">
         <li class="nav-item">

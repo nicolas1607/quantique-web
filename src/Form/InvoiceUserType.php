@@ -15,10 +15,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
-class InvoiceType extends AbstractType
+class InvoiceUserType extends AbstractType
 {
+    private User $user;
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $this->user = $options['user'];
+
         $builder
             ->add('releasedAt', DateTimeType::class, [
                 'label' => 'Date de facturation',
@@ -35,10 +39,10 @@ class InvoiceType extends AbstractType
             ])
             ->add('contract', EntityType::class, [
                 'class' => Contract::class,
-                // 'query_builder' => function (ContractRepository $contractRepo) {
-                //     return $contractRepo->createQueryBuilder('c')
-                //         ->where('c.user_id = ' . $this->user->getId());
-                // },
+                'query_builder' => function (ContractRepository $contractRepo) {
+                    return $contractRepo->createQueryBuilder('c')
+                        ->where('c.user_id = ' . $this->user->getId());
+                },
                 'choice_label' => 'name',
                 'label' => 'Contrat',
                 'attr' => [
@@ -57,6 +61,7 @@ class InvoiceType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Invoice::class,
+            'user' => User::class
         ]);
     }
 }

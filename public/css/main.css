@@ -27,7 +27,7 @@
 
 h1, h2, h3 {
   font-family: Poppins-Bold;
-  margin-top: 4rem;
+  margin-top: 2rem;
   margin-bottom: 2rem;
 }
 
@@ -78,6 +78,7 @@ a {
 	-webkit-transition: all 0.4s;
   -o-transition: all 0.4s;
   -moz-transition: all 0.4s;
+  cursor: pointer;
 }
 
 a:focus {
@@ -99,9 +100,9 @@ a:hover {
 }
 
 .btn-type {
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
   padding: 1rem 2rem;
-  width: 100%;
+  /* width: 100%; */
   background-color: var(--orange);
   color: var(--white);
   border-radius: 2rem;
@@ -111,6 +112,12 @@ a:hover {
 
 .btn10 {
   width: 12rem;
+  margin-left: 2rem;
+}
+
+.btn-form {
+  width: 12rem;
+  margin-top: 2rem;
 }
 
 .btn-type:hover {
@@ -118,12 +125,22 @@ a:hover {
   color: var(--white);
 }
 
+form {
+  padding-left: 6rem;
+  padding-right: 6rem;
+  margin-top: 4rem;
+}
+
+.form-title {
+  margin-left: 6rem;
+}
+
 label {
   color: var(--color1);
 }
 
 input, select {
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .container {
@@ -134,6 +151,13 @@ input, select {
 .cont-flex {
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.cont-flex-space {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .cont-grid {
@@ -146,6 +170,10 @@ input, select {
   float: right;
 }
 
+.text-center {
+  text-align: center;
+}
+
 .text-color1 {
   color: var(--color1);
 }
@@ -156,7 +184,6 @@ input, select {
 .navbar {
   padding-top: 1rem;
   padding-bottom: 1rem;
-  background-color: var(--color2);
 }
 
 .navbar-container {
@@ -165,10 +192,7 @@ input, select {
 }
 
 .navbar-logo {
-  width: 12rem;
-  background-color: var(--white);
-  padding: .5rem 2rem;
-  border-radius: 4rem 1rem 4rem 1rem;
+  width: 10rem;
 }
 
 .navbar-content {
@@ -176,7 +200,7 @@ input, select {
 }
 
 .nav-link {
-  color: var(--white);
+  color: var(--color1);
   font-size: 1rem;
 }
 
@@ -218,7 +242,7 @@ input, select {
 /* Admin */
 
 .nav-tabs {
-  margin-top: 8rem;
+  margin-top: 6rem;
 }
 
 .nav-tabs a {
@@ -235,4 +259,33 @@ input, select {
 
 .form-search {
   width: 20rem;
+  margin-top: 0;
+  margin-right: -4rem;
+}
+
+#typeContract {
+  margin-bottom: 0;
+}
+
+.filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 20rem;
+}
+
+.filter label {
+  width: 8rem;
+  margin-bottom: 0;
+}
+
+.filter input {
+  width: 10rem;
+}
+
+
+/* Modal */
+
+#modal-invoice {
+  display: none;
 }

@@ -1,30 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}Nouveau client{% endblock %}
 
 {% block body %}
 <div class="container">
-    <div class="register-form">
-        <span class="form-title">Ajouter un nouveau client</span>
-
-        {{ form_start(registrationForm) }}
-        <label for="roles">Rôle</label>
-        <select id="roles" class="form-select" name="roles">
-            <option value="user">Utilisateur</option>
-            <option value="admin">Administrateur</option>
-        </select>
-        <div class="wrap-input validate-input" data-validate="Entrer une adresse mail valide">
-            {{ form_row(registrationForm.email) }}
-            <span class="focus-input"></span>
-            <span class="symbol-input">
-                <i class="fa fa-lock" aria-hidden="true"></i>
-            </span>
+    <h1 class="form-title">Nouveau client</h1>
+    {{ form_start(registrationForm) }}
+    <div class="cont-grid form-section">
+        <div>
+            <label for="roles">Rôle</label>
+            <select id="roles" class="form-select" name="roles">
+                <option value="user">Utilisateur</option>
+                {% if is_granted('ROLE_ADMIN') %}
+                <option value="admin">Administrateur</option>
+                {% endif %}
+            </select>
         </div>
-        {{ form_row(registrationForm.plainPassword) }}
-
-        <button type="submit" class="btn btn-primary">Envoyer</button>
-        {{ form_end(registrationForm) }}
-
+        {{ form_row(registrationForm.email) }}
     </div>
+    <div class="cont-grid form-section">
+        {{ form_row(registrationForm.firstname) }}
+        {{ form_row(registrationForm.lastname) }}
+    </div>
+    <div class="cont-grid form-section">
+        {{ form_row(registrationForm.password) }}
+    </div>
+    <div class="cont-grid form-section">
+        {{ form_row(registrationForm.contact) }}
+    </div>
+    <div class="cont-flex">
+        {{ form_row(registrationForm.submit) }}
+    </div>
+    {{ form_end(registrationForm) }}
 </div>
 {% endblock %}
