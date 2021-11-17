@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouveau contrat{% endblock %}
+{% block title %}Modifier le client{% endblock %}
 
 {% block body %}
 
 <div class="container">
-    <h1 class="form-title">Nouveau contrat</span></h1>
+    <h1 class="form-title">Nouveau contrat</br><span> pour {{user.email}}</span></h1>
     {{ form_start(add_contract_form) }}
     <div class="cont-grid form-section">
         {{ form_row(add_contract_form.name) }}

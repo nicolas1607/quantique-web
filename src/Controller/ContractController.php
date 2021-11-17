@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Contract;
 use App\Form\ContractType;
+use App\Form\ContractUserType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,12 +23,36 @@ class ContractController extends AbstractController
     }
 
     /**
-     * @Route("/contract/add/{user}", name="add_contract")
+     * @Route("/contract/add", name="add_contract")
      */
-    public function add(Request $request, User $user): Response
+    public function add(Request $request): Response
     {
         $contract = new Contract();
         $addContractForm = $this->createForm(ContractType::class, $contract);
+        $addContractForm->handleRequest($request);
+
+        if ($addContractForm->isSubmitted() && $addContractForm->isValid()) {
+            // $contract->setUserId($user);
+            // $user->addContract($contract);
+            $this->em->persist($contract);
+            $this->em->flush();
+
+            // return $this->redirectToRoute('show_contracts_user', ['id' => $user->getId()]);
+        }
+
+        return $this->render('contract/add.html.twig', [
+            // 'user' => $user,
+            'add_contract_form' => $addContractForm->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/contract/add/{user}", name="add_contract_user")
+     */
+    public function addForUser(Request $request, User $user): Response
+    {
+        $contract = new Contract();
+        $addContractForm = $this->createForm(ContractUserType::class, $contract);
         $addContractForm->handleRequest($request);
 
         if ($addContractForm->isSubmitted() && $addContractForm->isValid()) {
@@ -39,7 +64,7 @@ class ContractController extends AbstractController
             return $this->redirectToRoute('show_contracts_user', ['id' => $user->getId()]);
         }
 
-        return $this->render('contract/add.html.twig', [
+        return $this->render('contract/add_user.html.twig', [
             'user' => $user,
             'add_contract_form' => $addContractForm->createView()
         ]);
