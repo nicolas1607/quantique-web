@@ -18,11 +18,6 @@ class Invoice
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $num;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $releasedAt;
@@ -40,18 +35,6 @@ class Invoice
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getNum(): ?string
-    {
-        return $this->num;
-    }
-
-    public function setNum(string $num): self
-    {
-        $this->num = $num;
-
-        return $this;
     }
 
     public function getReleasedAt(): ?\DateTime

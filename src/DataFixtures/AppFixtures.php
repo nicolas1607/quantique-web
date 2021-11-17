@@ -2,10 +2,10 @@
 
 namespace App\DataFixtures;
 
+use DateTime;
 use Faker\Factory;
 use App\Entity\Type;
 use App\Entity\User;
-use DateTimeImmutable;
 use App\Entity\Company;
 use App\Entity\Invoice;
 use App\Entity\Contract;
@@ -27,7 +27,10 @@ class AppFixtures extends Fixture
             $company->setName($faker->company())
                 ->setAddress($faker->address())
                 ->setPostalCode($faker->postcode())
-                ->setCity($faker->city());
+                ->setCity($faker->city())
+                ->setSiret($faker->regexify('[A-Z]{5}[0-4]{3}'))
+                ->setPhone($faker->phoneNumber())
+                ->setUrl($faker->url());
             $companies[] = $company;
         }
 
@@ -62,7 +65,9 @@ class AppFixtures extends Fixture
         $users = [];
         for ($i = 0; $i < 10; $i++) {
             $user = new User();
-            $user->setRoles(['ROLE_USER'])
+            $user->setFirstname($faker->firstName())
+                ->setLastname($faker->lastName())
+                ->setRoles(['ROLE_USER'])
                 ->setEmail($faker->email())
                 ->setPassword($faker->password())
                 ->setContact($faker->phoneNumber())
@@ -91,8 +96,7 @@ class AppFixtures extends Fixture
         $invoices = [];
         for ($i = 0; $i < 10; $i++) {
             $invoice = new Invoice();
-            $invoice->setNum($faker->lexify('id-?????'))
-                ->setReleasedAt(new DateTimeImmutable())
+            $invoice->setReleasedAt(new DateTime())
                 ->setContract($contracts[$i])
                 ->setFile('/facture/test');
             $contracts[$i]->addInvoice($invoice);
@@ -138,7 +142,10 @@ class AppFixtures extends Fixture
     public function createAdmin(): User
     {
         $admin = new User();
-        $admin->setRoles(['ROLE_ADMIN'])
+        $admin->setFirstname('Nicolas')
+            ->setLastname('Mormiche')
+            ->setContact('06 27 71 24 03')
+            ->setRoles(['ROLE_ADMIN'])
             ->setEmail('nicolas160796@gmail.com')
             ->setPassword('$2y$13$gOxWfP/wFyivsBfnKq1DGuRtWgGEYSFbBClRk3fcGxkXA54EYdQc6'); // test
         return $admin;
@@ -147,7 +154,10 @@ class AppFixtures extends Fixture
     public function createUser(): User
     {
         $user = new User();
-        $user->setRoles(['ROLE_USER'])
+        $user->setFirstname('Florent')
+            ->setLastname('Pietrangeli')
+            ->setContact('06 19 72 24 10')
+            ->setRoles(['ROLE_USER'])
             ->setEmail('test@gmail.com')
             ->setPassword('$2y$13$gOxWfP/wFyivsBfnKq1DGuRtWgGEYSFbBClRk3fcGxkXA54EYdQc6'); // test
         return $user;
