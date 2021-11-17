@@ -28,9 +28,10 @@ class FacebookAccount
     private $password;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, mappedBy="facebook_account", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="facebook_account")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $user_id;
+    private $company;
 
     public function getId(): ?int
     {
@@ -61,24 +62,14 @@ class FacebookAccount
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getCompany(): ?Company
     {
-        return $this->user_id;
+        return $this->company;
     }
 
-    public function setUserId(?User $user_id): self
+    public function setCompany(?Company $company): self
     {
-        // unset the owning side of the relation if necessary
-        if ($user_id === null && $this->user_id !== null) {
-            $this->user_id->setFacebookAccount(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($user_id !== null && $user_id->getFacebookAccount() !== $this) {
-            $user_id->setFacebookAccount($this);
-        }
-
-        $this->user_id = $user_id;
+        $this->company = $company;
 
         return $this;
     }

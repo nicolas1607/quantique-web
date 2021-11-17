@@ -30,40 +30,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
-
-    /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="json")
      */
-    private $contact;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Company::class, mappedBy="user_id")
-     */
-    private $companies;
-
-    /**
-     * @ORM\OneToOne(targetEntity=GoogleAccount::class, inversedBy="user_id", cascade={"persist", "remove"})
-     */
-    private $google_account;
-
-    /**
-     * @ORM\OneToOne(targetEntity=FacebookAccount::class, inversedBy="user_id", cascade={"persist", "remove"})
-     */
-    private $facebook_account;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Contract::class, mappedBy="user_id")
-     */
-    private $contracts;
+    private $roles = [];
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -75,10 +50,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $lastname;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $contact;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Company::class, inversedBy="users")
+     */
+    private $compagnies;
+
     public function __construct()
     {
         $this->companies = new ArrayCollection();
         $this->contracts = new ArrayCollection();
+        $this->compagnies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -182,90 +168,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Company[]
-     */
-    public function getCompanies(): Collection
-    {
-        return $this->companies;
-    }
-
-    public function addCompany(Company $company): self
-    {
-        if (!$this->companies->contains($company)) {
-            $this->companies[] = $company;
-            $company->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCompany(Company $company): self
-    {
-        if ($this->companies->removeElement($company)) {
-            // set the owning side to null (unless already changed)
-            if ($company->getUserId() === $this) {
-                $company->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getGoogleAccount(): ?GoogleAccount
-    {
-        return $this->google_account;
-    }
-
-    public function setGoogleAccount(?GoogleAccount $google_account): self
-    {
-        $this->google_account = $google_account;
-
-        return $this;
-    }
-
-    public function getFacebookAccount(): ?FacebookAccount
-    {
-        return $this->facebook_account;
-    }
-
-    public function setFacebookAccount(?FacebookAccount $facebook_account): self
-    {
-        $this->facebook_account = $facebook_account;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Contract[]
-     */
-    public function getContracts(): Collection
-    {
-        return $this->contracts;
-    }
-
-    public function addContract(Contract $contract): self
-    {
-        if (!$this->contracts->contains($contract)) {
-            $this->contracts[] = $contract;
-            $contract->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeContract(Contract $contract): self
-    {
-        if ($this->contracts->removeElement($contract)) {
-            // set the owning side to null (unless already changed)
-            if ($contract->getUserId() === $this) {
-                $contract->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -298,6 +200,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFunction(?string $function): self
     {
         $this->function = $function;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Company[]
+     */
+    public function getCompagnies(): Collection
+    {
+        return $this->compagnies;
+    }
+
+    public function addCompagny(Company $compagny): self
+    {
+        if (!$this->compagnies->contains($compagny)) {
+            $this->compagnies[] = $compagny;
+        }
+
+        return $this;
+    }
+
+    public function removeCompagny(Company $compagny): self
+    {
+        $this->compagnies->removeElement($compagny);
 
         return $this;
     }

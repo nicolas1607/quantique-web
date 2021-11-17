@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CompanyRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,12 +40,6 @@ class Company
     private $city;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="companies")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user_id;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $numTVA;
@@ -62,6 +58,34 @@ class Company
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $phone;
+
+    /**
+     * @ORM\OneToMany(targetEntity=FacebookAccount::class, mappedBy="company")
+     */
+    private $facebook_account;
+
+    /**
+     * @ORM\OneToMany(targetEntity=GoogleAccount::class, mappedBy="company")
+     */
+    private $google_account;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Contract::class, mappedBy="company")
+     */
+    private $contracts;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="compagnies")
+     */
+    private $users;
+
+    public function __construct()
+    {
+        $this->facebook_account = new ArrayCollection();
+        $this->google_account = new ArrayCollection();
+        $this->contracts = new ArrayCollection();
+        $this->users = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -116,18 +140,6 @@ class Company
         return $this;
     }
 
-    public function getUserId(): ?User
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(?User $user_id): self
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
-
     public function getNumTVA(): ?string
     {
         return $this->numTVA;
@@ -172,6 +184,123 @@ class Company
     public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FacebookAccount[]
+     */
+    public function getFacebookAccount(): Collection
+    {
+        return $this->facebook_account;
+    }
+
+    public function addFacebookAccount(FacebookAccount $facebookAccount): self
+    {
+        if (!$this->facebook_account->contains($facebookAccount)) {
+            $this->facebook_account[] = $facebookAccount;
+            $facebookAccount->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFacebookAccount(FacebookAccount $facebookAccount): self
+    {
+        if ($this->facebook_account->removeElement($facebookAccount)) {
+            // set the owning side to null (unless already changed)
+            if ($facebookAccount->getCompany() === $this) {
+                $facebookAccount->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|GoogleAccount[]
+     */
+    public function getGoogleAccount(): Collection
+    {
+        return $this->google_account;
+    }
+
+    public function addGoogleAccount(GoogleAccount $googleAccount): self
+    {
+        if (!$this->google_account->contains($googleAccount)) {
+            $this->google_account[] = $googleAccount;
+            $googleAccount->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGoogleAccount(GoogleAccount $googleAccount): self
+    {
+        if ($this->google_account->removeElement($googleAccount)) {
+            // set the owning side to null (unless already changed)
+            if ($googleAccount->getCompany() === $this) {
+                $googleAccount->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Contract[]
+     */
+    public function getContracts(): Collection
+    {
+        return $this->contracts;
+    }
+
+    public function addContract(Contract $contract): self
+    {
+        if (!$this->contracts->contains($contract)) {
+            $this->contracts[] = $contract;
+            $contract->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContract(Contract $contract): self
+    {
+        if ($this->contracts->removeElement($contract)) {
+            // set the owning side to null (unless already changed)
+            if ($contract->getCompany() === $this) {
+                $contract->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addCompagny($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeCompagny($this);
+        }
 
         return $this;
     }

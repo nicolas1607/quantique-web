@@ -30,11 +30,6 @@ class Contract
     private $price;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="contracts")
-     */
-    private $user_id;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="contracts")
      */
     private $type;
@@ -43,6 +38,12 @@ class Contract
      * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="contract")
      */
     private $invoices;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="contracts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $company;
 
     public function __construct()
     {
@@ -74,18 +75,6 @@ class Contract
     public function setPrice(float $price): self
     {
         $this->price = $price;
-
-        return $this;
-    }
-
-    public function getUserId(): ?User
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(?User $user_id): self
-    {
-        $this->user_id = $user_id;
 
         return $this;
     }
@@ -128,6 +117,18 @@ class Contract
                 $invoice->setContract(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
 
         return $this;
     }
