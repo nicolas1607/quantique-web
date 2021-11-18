@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quantique | Entreprises Client{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1>Client : {{ user.firstname }} {{ user.lastname }}</h1>
+
+    <div class="infos">
+        <p><strong>Adresse email : </strong>{{ user.email }}</p>
+        <p><strong>Téléphone : </strong>{{ user.phone }}</p>
+    </div>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab"
+                href="{{path('show_companies_user', {'id': user.id})}}">Entreprises</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab"
+                href="{{path('show_websites_user', {'id': user.id})}}">Sites internets</a>
+        </li>
+    </ul>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nom du site</th>
+                <th scope="col">URL du site</th>
+                <th scope="col">Entreprise</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for company in user.companies %}
+            {% for website in company.websites %}
+            <tr class="table-light">
+                <td>{{website.id}}</td>
+                <td>{{website.name}}</td>
+                <td><a class="nav-link" href="{{website.url}}">{{website.url}}</a></td>
+                <td>{{website.company.name}}</td>
+                <td>
+                    <ul class="action-list">
+                        <li class="action-item">
+                            <a href="{{path('show_website', {'website': website.id})}}" class="action-link">Voir</a>
+                        </li>
+                        <li class="action-item">
+                            <a href="{{path('edit_website', {'website': website.id})}}" class="action-link">Modifier</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

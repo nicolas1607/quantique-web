@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quantique | Ajouter une entreprise{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <h1>{{company.name}}</h1>
+
+    <div>
+        <div>
+            <div class="cont-grid">
+                <p><strong>Email</strong> : {{company.email}}</p>
+                <p><strong>Téléphone</strong> : {{company.phone}}</p>
+            </div>
+            <div class="cont-grid">
+                <p><strong>Adresse : </strong>{{company.address}}</p>
+                <p><strong>Complément d'adresse : </strong>{{company.city}} {{company.postalCode}}</p>
+            </div>
+            <div class="cont-grid">
+                <p><strong>Numéro TVA : </strong>{{company.numTVA}}</p>
+                <p><strong>SIRET ou SIREN : </strong>{{company.siret}}</p>
+            </div>
+            <div class="cont-grid">
+                <p><strong>Nombre de site internet : </strong>{{company.websites|length}}</p>
+                <p><strong>Nombre de contrats : </strong>{{nbContract}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="cont-grid">
+        {# {% if company.facebookAccount.email != null %} #}
+        <div class="form-facebook-account">
+            <button id="newFacebookAccount" class="btn-type" type="button">Compte Facebook</button>
+        </div>
+        <div id="FacebookAccount" class="form-facebook">
+            <h2>Compte Facebook</h2>
+            <form class="form-account" method="GET">
+                <label for="emailFb">Email</label>
+                <input class="form-control" type="text" name="emailFb">
+                <label for="mdpFb">Mot de passe</label>
+                <input class="form-control" type="password" name="mdpFb">
+                <button class="btn-type btn-login" type="submit">Envoyer</button>
+            </form>
+        </div>
+        <div class="form-google-account">
+            <button id="newGoogleAccount" class="btn-type" type="button">Compte Google</button>
+        </div>
+        <div id="GoogleAccount" class="form-google">
+            <h2>Compte Google</h2>
+            <form class="form-account" method="GET">
+                <label for="emailGoogle">Email</label>
+                <input class="form-control" type="text" name="emailGoogle">
+                <label for="mdpGoogle">Mot de passe</label>
+                <input class="form-control" type="password" name="mdpGoogle">
+                <button class="btn-type btn-login" type="submit">Envoyer</button>
+            </form>
+        </div>
+        
+    </div>
+
+    <div>
+        <h2>Sites internet</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Nom du site</th>
+                    <th scope="col">URL du site</th>
+                    <th scope="col">Entreprise</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for website in company.websites %}
+                <tr class="table-light">
+                    <td>{{website.id}}</td>
+                    <td>{{website.name}}</td>
+                    <td><a class="nav-link" href="{{website.url}}">{{website.url}}</a></td>
+                    <td>{{website.company.name}}</td>
+                    <td>
+                        <ul class="action-list">
+                            <li class="action-item">
+                                <a href="{{path('show_website', {'website': website.id})}}" class="action-link">Voir</a>
+                            </li>
+                            <li class="action-item">
+                                <a href="{{path('edit_website', {'website': website.id})}}" class="action-link">Modifier</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const googleAccount = document.querySelector('#GoogleAccount');
+    const facebookAccount = document.querySelector('#FacebookAccount');
+
+    const buttonGoogle = document.querySelector('#newGoogleAccount');
+    buttonGoogle.addEventListener('click', () => {
+        googleAccount.style.display = 'block';
+        document.querySelector('.form-google-account').style.display = 'none';
+    });
+
+    const buttonFacebook = document.querySelector('#newFacebookAccount');
+    buttonFacebook.addEventListener('click', () => {
+        facebookAccount.style.display = 'block';
+        document.querySelector('.form-facebook-account').style.display = 'none';
+    });
+</script>
+
+{% endblock %}

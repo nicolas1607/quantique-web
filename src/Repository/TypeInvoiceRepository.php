@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Type;
+use App\Entity\TypeInvoice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Type|null find($id, $lockMode = null, $lockVersion = null)
- * @method Type|null findOneBy(array $criteria, array $orderBy = null)
- * @method Type[]    findAll()
- * @method Type[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method TypeInvoice|null find($id, $lockMode = null, $lockVersion = null)
+ * @method TypeInvoice|null findOneBy(array $criteria, array $orderBy = null)
+ * @method TypeInvoice[]    findAll()
+ * @method TypeInvoice[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TypeRepository extends ServiceEntityRepository
+class TypeInvoiceRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Type::class);
+        parent::__construct($registry, TypeInvoice::class);
     }
 
     // /**
-    //  * @return Type[] Returns an array of Type objects
+    //  * @return TypeInvoice[] Returns an array of TypeInvoice objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class TypeRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Type
+    public function findOneBySomeField($value): ?TypeInvoice
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.exampleField = :val')

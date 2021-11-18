@@ -2,53 +2,41 @@
 
 namespace App\Form;
 
-use App\Entity\Type;
 use App\Entity\Company;
-use App\Entity\Contract;
-use App\Entity\TypeContract;
-use App\Entity\User;
 use App\Entity\Website;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ContractType extends AbstractType
+class WebsiteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('website', EntityType::class, [
-                'class' => Website::class,
-                'choice_label' => 'name',
-                'label' => 'Site internet',
-                'attr' => [
-                    'class' => 'form-select'
-                ]
-            ])
-            ->add('price', NumberType::class, [
-                'label' => 'Prix initial',
+            ->add('name', TextType::class, [
+                'label' => 'Nom du site',
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
-            ->add('promotion', NumberType::class, [
-                'label' => 'Promotion',
+            ->add('url', TextType::class, [
+                'label' => 'URL du site',
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
-            ->add('type', EntityType::class, [
-                'class' => TypeContract::class,
+            ->add('company', EntityType::class, [
+                'class' => Company::class,
                 'choice_label' => 'name',
-                'label' => 'Type de contrat',
+                'label' => 'Entreprise',
                 'attr' => [
                     'class' => 'form-select'
                 ]
             ])
+            // ->add('invoices')
             ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer',
                 'attr' => [
@@ -60,7 +48,7 @@ class ContractType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Contract::class,
+            'data_class' => Website::class,
         ]);
     }
 }

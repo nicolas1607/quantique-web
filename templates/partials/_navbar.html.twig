@@ -13,17 +13,8 @@
       <ul class="navbar-nav me-auto">
         {% if is_granted('ROLE_ADMIN') %}
         <li class="nav-item">
-          <a class="nav-link" href="{{path('admin')}}">Admin</a>
+          <a class="nav-link" href="{{path('admin_users')}}">Admin</a>
         </li>
-        {# <li class="nav-item">
-          <a id="nav-link-modal-user" class="nav-link">Nouveau client</a>
-        </li>
-        <li class="nav-item">
-          <a id="nav-link-modal-contract" class="nav-link">Nouveau contrat</a>
-        </li>
-        <li class="nav-item">
-          <a id="nav-link-modal-invoice" class="nav-link">Nouvelle facture</a>
-        </li> #}
         {% elseif is_granted('ROLE_USER') %}
         <li class="nav-item">
           <a class="nav-link" href="#">Mon profil</a>

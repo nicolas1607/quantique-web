@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quantique | Modifier une entreprise{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1 class="form-title">{{company.name}}</span></h1>
+    {{ form_start(edit_company_form) }}
+    <div class="cont-grid form-section">
+        {{ form_row(edit_company_form.name) }}
+        {{ form_row(edit_company_form.email) }}
+    </div>
+    <div class="cont-grid form-section">
+        {{ form_row(edit_company_form.phone) }}
+        {{ form_row(edit_company_form.address) }}
+    </div>
+    <div class="cont-grid form-section">
+        {{ form_row(edit_company_form.postalCode) }}
+        {{ form_row(edit_company_form.city) }}
+    </div>
+    <div class="cont-grid form-section">
+        {{ form_row(edit_company_form.numTVA) }}
+        {{ form_row(edit_company_form.siret) }}
+    </div>
+    <div class="cont-flex">
+        {{ form_row(edit_company_form.submit) }}
+    </div>
+    {{ form_end(edit_company_form) }}
+</div>
+
+{% endblock %}

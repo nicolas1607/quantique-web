@@ -9,13 +9,18 @@
     <div class="cont-flex-end">
         <span class="nav-link-header">Ajouter :</span>
         <a class="nav-link" href="{{ path('app_register') }}">Client</a>
+        {# <a class="nav-link" href="{{ path('add_company') }}">Entreprise</a> #}
+        {# <a class="nav-link" href="{{ path('add_website') }}">Site</a> #}
         <a class="nav-link" href="{{ path('add_contract') }}">Contrat</a>
         <a class="nav-link" href="{{ path('add_invoice') }}">Facture</a>
     </div>
 
     <ul class="nav nav-tabs nav-tabs-admin">
         <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab" href="">Les clients</a>
+            <a class="nav-link active" data-bs-toggle="tab" href="{{path('admin_users')}}">Les clients</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="{{path('admin_companies')}}">Les entreprises</a>
         </li>
     </ul>
 
@@ -23,9 +28,9 @@
         <thead>
             <tr>
                 <th scope="col">Id</th>
-                <th scope="col">Entreprise</th>
-                <th scope="col">Email</th>
                 <th scope="col">Contact</th>
+                <th scope="col">Email</th>
+                <th scope="col">Numéro de téléphone</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -33,19 +38,13 @@
             {% for user in users %}
             <tr class="table-light">
                 <td>{{ user.id }}</td>
-                <td>
-                    {% for company in user.companies %}
-                    {{ company.name }}
-                    {% endfor %}
-                </td>
+                <td>{{ user.firstname }} {{ user.lastname }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.contact }}</td>
+                <td>{{ user.phone }}</td>
                 <td>
                     <ul class="action-list">
                         <li class="action-item">
-                            <a href="{{path('add_contract_user', {'user': user.id})}}" class="action-link">Contrat</a>
-                            <a href="{{path('add_invoice_user', {'user': user.id})}}" class="action-link">Facture</a>
-                            <a href="{{path('show_stats_user', {'id': user.id})}}" class="action-link">Voir</a>
+                            <a href="{{path('add_company', {'user': user.id})}}" class="action-link">Entreprise</a>
                             <a href="{{path('edit_user', {'id': user.id})}}" class="action-link">Modifier</a>
                         </li>
                     </ul>

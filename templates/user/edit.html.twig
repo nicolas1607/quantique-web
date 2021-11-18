@@ -9,29 +9,12 @@
 
     {{ form_start(edit_user_form) }}
     <div class="cont-grid form-section">
-        {{ form_row(edit_user_form.email) }}
-        {{ form_row(edit_user_form.contact) }}
+        {{ form_row(edit_user_form.firstname) }}
+        {{ form_row(edit_user_form.lastname) }}
     </div>
-
-    <div class="cont-grid">
-        <div class="form-section">
-            <h2>Compte Google</h2>
-            <div>
-                <label for="emailGoogle">Email</label>
-                <input class="form-control" type="text" name="emailGoogle">
-                <label for="mdpGoogle">Mot de passe</label>
-                <input class="form-control" type="password" name="mdpGoogle">
-            </div>
-        </div>
-        <div class="form-section">
-            <h2>Compte Facebook</h2>
-            <div>
-                <label for="emailFb">Email</label>
-                <input class="form-control" type="text" name="emailFb">
-                <label for="mdpFb">Mot de passe</label>
-                <input class="form-control" type="password" name="mdpFb">
-            </div>
-        </div>
+    <div class="cont-grid form-section">
+        {{ form_row(edit_user_form.email) }}
+        {{ form_row(edit_user_form.phone) }}
     </div>
     <div class="cont-flex">
         {{ form_row(edit_user_form.submit) }}

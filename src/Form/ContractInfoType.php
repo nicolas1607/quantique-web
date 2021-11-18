@@ -16,19 +16,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ContractType extends AbstractType
+class ContractInfoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('website', EntityType::class, [
-                'class' => Website::class,
-                'choice_label' => 'name',
-                'label' => 'Site internet',
-                'attr' => [
-                    'class' => 'form-select'
-                ]
-            ])
             ->add('price', NumberType::class, [
                 'label' => 'Prix initial',
                 'attr' => [
@@ -39,14 +31,6 @@ class ContractType extends AbstractType
                 'label' => 'Promotion',
                 'attr' => [
                     'class' => 'form-control'
-                ]
-            ])
-            ->add('type', EntityType::class, [
-                'class' => TypeContract::class,
-                'choice_label' => 'name',
-                'label' => 'Type de contrat',
-                'attr' => [
-                    'class' => 'form-select'
                 ]
             ])
             ->add('submit', SubmitType::class, [

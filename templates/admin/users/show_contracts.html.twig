@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Quantique | Entreprises Client{% endblock %}
+{% block title %}Quantique | Contrats Client{% endblock %}
 
 {% block body %}
 
 <div class="container">
     <h1>Client : {{ user.firstname }} {{ user.lastname }}</h1>
     <div class="right">
-        <a class="btn-type btn10" href="{{ path('add_contract', {'user': user.id}) }}">Nouveau contrat</a>
+        <a class="btn-type btn10" href="{{ path('add_contract_user', {'user': user.id}) }}">Nouveau contrat</a>
     </div>
 
     <ul class="nav nav-tabs">
@@ -16,14 +16,14 @@
                 href="{{path('show_stats_user', {'id': user.id})}}">Statistiques</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab"
+            <a class="nav-link active" data-bs-toggle="tab"
                 href="{{path('show_contracts_user', {'id': user.id})}}">Contrats</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="{{path('show_invoices_user', {'id': user.id})}}">Factures</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab"
+            <a class="nav-link" data-bs-toggle="tab"
                 href="{{path('show_companies_user', {'id': user.id})}}">Entreprises</a>
         </li>
     </ul>
@@ -32,27 +32,33 @@
         <thead>
             <tr>
                 <th scope="col">Id</th>
-                <th scope="col">Nom de l'entreprise</th>
-                <th scope="col">Adresse</th>
+                <th scope="col">Entreprise</th>
+                <th scope="col">Type de contrat</th>
+                <th scope="col">Prix</th>
+                <th scope="col">Réduction</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
             {% for company in user.companies %}
+            {% for contract in company.contracts %}
             <tr class="table-light">
-                <td>{{ company.id }}</td>
+                <td>{{ contract.id }}</td>
                 <td>{{ company.name }}</td>
-                <td>{{ company.address }}, {{ company.postalCode }} {{ company.city }}</td>
+                <td>{{ contract.type.name }}</td>
+                <td>{{ contract.type.price }}€ / mois</td>
+                <td>{{ contract.promotion }}€ / mois</td>
                 <td>
                     <ul class="action-list">
                         <li class="action-item">
-                            <a href="" class="action-link">
+                            <a href="{{path('edit_contract', {'id': contract.id})}}" class="action-link">
                                 <i class="fas fa-lg fa-edit"></i>
                             </a>
                         </li>
                     </ul>
                 </td>
             </tr>
+            {% endfor %}
             {% endfor %}
         </tbody>
     </table>

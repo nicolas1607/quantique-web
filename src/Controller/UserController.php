@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Entity\GoogleAccount;
@@ -75,7 +76,7 @@ class UserController extends AbstractController
             $this->em->persist($user);
             $this->em->flush();
 
-            return $this->redirectToRoute('user');
+            return $this->redirectToRoute('admin_users');
         }
 
         return $this->render('user/edit.html.twig', [
@@ -85,12 +86,12 @@ class UserController extends AbstractController
     }
 
 
-    // ADMINISTRATEUR //
+    // ADMINISTRATEUR USER //
 
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/admin/users", name="admin_users")
      */
-    public function admin(): Response
+    public function adminUsers(): Response
     {
         $users = [];
         foreach ($this->userRepo->findAll() as $user) {
@@ -104,17 +105,27 @@ class UserController extends AbstractController
                 $users[] = $user;
             }
         }
-        return $this->render('admin/users.html.twig', [
+        return $this->render('admin/users/users.html.twig', [
             'users' => $users
         ]);
     }
 
     /**
-     * @Route("/user/stats/{id}", name="show_stats_user")
+     * @Route("/user/companies/{id}", name="show_companies_user")
      */
-    public function showStats(User $user): Response
+    public function showCompanies(User $user): Response
     {
-        return $this->render('admin/show_stats.html.twig', [
+        return $this->render('admin/users/show_companies.html.twig', [
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * @Route("/user/websites/{id}", name="show_websites_user")
+     */
+    public function showWebsite(User $user): Response
+    {
+        return $this->render('admin/users/show_websites.html.twig', [
             'user' => $user
         ]);
     }
@@ -124,7 +135,7 @@ class UserController extends AbstractController
      */
     public function showContracts(User $user): Response
     {
-        return $this->render('admin/show_contracts.html.twig', [
+        return $this->render('admin/users/show_contracts.html.twig', [
             'user' => $user
         ]);
     }
@@ -155,20 +166,23 @@ class UserController extends AbstractController
             return $a < $b ? -1 : 1;
         });
 
-        return $this->render('admin/show_invoices.html.twig', [
+        return $this->render('admin/users/show_invoices.html.twig', [
             'user' => $user,
             'invoices' => $res,
             'type' => $type
         ]);
     }
 
+    // ADMINISTRATION COMPANY //
+
     /**
-     * @Route("/user/companies/{id}", name="show_companies_user")
+     * @Route("/admin/companies", name="admin_companies")
      */
-    public function showCompanies(User $user): Response
+    public function adminCompanies(): Response
     {
-        return $this->render('admin/show_companies.html.twig', [
-            'user' => $user
+        $companies = $this->em->getRepository(Company::class)->findAll();
+        return $this->render('admin/companies/companies.html.twig', [
+            'companies' => $companies
         ]);
     }
 }

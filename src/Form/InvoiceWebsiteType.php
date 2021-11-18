@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Company;
 use App\Entity\Invoice;
 use App\Entity\Contract;
+use App\Entity\Website;
 use App\Repository\CompanyRepository;
 use App\Repository\ContractRepository;
 use Symfony\Component\Form\AbstractType;
@@ -17,13 +18,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
-class InvoiceUserType extends AbstractType
+class InvoiceWebsiteType extends AbstractType
 {
-    private User $user;
+    private Website $website;
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->user = $options['user'];
+        $this->website = $options['website'];
 
         $builder
             ->add('releasedAt', DateTimeType::class, [
@@ -43,7 +44,7 @@ class InvoiceUserType extends AbstractType
                 'class' => Company::class,
                 'query_builder' => function (CompanyRepository $contractRepo) {
                     return $contractRepo->createQueryBuilder('c')
-                        ->where('c.users in (' . $this->user->getId() . ')');
+                        ->where('c.websites in (' . $this->website->getId() . ')');
                 },
                 'choice_label' => 'name',
                 'label' => 'Entreprise',
@@ -76,7 +77,7 @@ class InvoiceUserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Invoice::class,
-            'user' => User::class
+            'website' => Website::class
         ]);
     }
 }

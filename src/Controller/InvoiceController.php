@@ -7,6 +7,7 @@ use App\Entity\Invoice;
 use App\Form\InvoiceType;
 use App\Form\InvoiceUserType;
 use App\Repository\CompanyRepository;
+use App\Repository\WebsiteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,12 +19,12 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 class InvoiceController extends AbstractController
 {
     private EntityManagerInterface $em;
-    private CompanyRepository $companyRepo;
+    private WebsiteRepository $websiteRepo;
 
-    public function __construct(EntityManagerInterface $em, CompanyRepository $companyRepo)
+    public function __construct(EntityManagerInterface $em, WebsiteRepository $websiteRepo)
     {
         $this->em = $em;
-        $this->companyRepo = $companyRepo;
+        $this->websiteRepo = $websiteRepo;
     }
 
     /**
@@ -35,7 +36,7 @@ class InvoiceController extends AbstractController
         $addInvoiceForm = $this->createForm(InvoiceType::class, $invoice, ['method' => 'GET']);
         $addInvoiceForm->handleRequest($request);
 
-        $companies = $this->companyRepo->findAll();
+        $websites = $this->websiteRepo->findAll();
 
         if ($addInvoiceForm->isSubmitted() && $addInvoiceForm->isValid()) {
 
@@ -70,17 +71,17 @@ class InvoiceController extends AbstractController
 
         return $this->render('invoice/add.html.twig', [
             'add_invoice_form' => $addInvoiceForm->createView(),
-            'companies' => $companies
+            'websites' => $websites
         ]);
     }
 
     /**
-     * @Route("/invoice/add/{user}", name="add_invoice_user")
+     * @Route("/invoice/add/{website}", name="add_invoice_website")
      */
-    public function addForUser(Request $request, User $user, SluggerInterface $slugger): Response
+    public function addForWebsite(Request $request, Website $website, SluggerInterface $slugger): Response
     {
         $invoice = new Invoice();
-        $addInvoiceForm = $this->createForm(InvoiceUserType::class, $invoice, array('user' => $user));
+        $addInvoiceForm = $this->createForm(InvoiceWebsiteType::class, $invoice, array('website' => $website));
         $addInvoiceForm->handleRequest($request);
 
         if ($addInvoiceForm->isSubmitted() && $addInvoiceForm->isValid()) {
@@ -111,11 +112,11 @@ class InvoiceController extends AbstractController
                 $this->em->flush();
             }
 
-            return $this->redirectToRoute('show_invoices_user', ['id' => $user->getId()]);
+            return $this->redirectToRoute('show_invoices_website', ['id' => $website->getId()]);
         }
 
-        return $this->render('invoice/add_user.html.twig', [
-            'user' => $user,
+        return $this->render('invoice/add_website.html.twig', [
+            'website' => $website,
             'add_invoice_form' => $addInvoiceForm->createView()
         ]);
     }
@@ -130,13 +131,12 @@ class InvoiceController extends AbstractController
 
         if ($updateInvoiceForm->isSubmitted() && $updateInvoiceForm->isValid()) {
             $this->em->flush();
-            return $this->redirectToRoute('show_invoices_user', ['id' => $id->getContract()->getUserId()->getId()]);
+            // return $this->redirectToRoute('show_invoices_user', ['id' => $id->getContract()->getUserId()->getId()]);
         }
 
         return $this->render('invoice/edit.html.twig', [
             'edit_invoice_form' => $updateInvoiceForm->createView(),
-            'invoice' => $id,
-            'user' => $id->getContract()->getUserId()
+            'invoice' => $id
         ]);
     }
 

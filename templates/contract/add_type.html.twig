@@ -5,22 +5,21 @@
 {% block body %}
 
 <div class="container">
-    <h1 class="form-title">Nouveau contrat</h1>
+    <h1 class="form-title">Nouveau contrat</span></h1>
     {{ form_start(add_contract_form) }}
     <div class="cont-grid form-section">
         <div>
-            <label for="company">Entreprise</label>
-            <select class="form-select" name="company">
-                {% for company in user.companies %}
-                <option value="{{company.name}}">{{company.name}}</option>
-                {% endfor %}  
-            </select>
+            <label for="website">Site internet</label>
+            <input class="form-control" type="text" name="website" value="{{website.name}}" readonly>
         </div>
-        {{ form_row(add_contract_form.name) }}
+        <div>
+            <label for="type">Type du contrat</label>
+            <input class="form-control" type="text" name="type" value="{{type.name}}" readonly>
+        </div>
     </div>
     <div class="cont-grid form-section">
-        {{ form_row(add_contract_form.type) }}
         {{ form_row(add_contract_form.price) }}
+        {{ form_row(add_contract_form.promotion) }}
     </div>
     <div class="cont-flex">
         {{ form_row(add_contract_form.submit) }}

@@ -22,29 +22,15 @@ class CompanyRepository extends ServiceEntityRepository
     // /**
     //  * @return Company[] Returns an array of Company objects
     //  */
-    /*
-    public function findByExampleField($value)
+    public function findNbContract(Company $company)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->getEntityManager()->createQuery(
+            "SELECT count(c) FROM App:company cmp
+            INNER JOIN App:website w
+            WITH w.company = cmp.id
+            INNER JOIN App:contract c
+            WITH c.website = w.id
+            WHERE cmp.id = " . $company->getId()
+        )->getResult()[0][1];
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Company
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

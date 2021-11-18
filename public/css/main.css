@@ -164,13 +164,18 @@ input, select {
   align-items: center;
 }
 
+.cont-flex-start {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .cont-flex-end {
   position: relative;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   height: 5rem;
-  margin-top: .5rem;
 }
 
 .cont-grid {
@@ -219,7 +224,7 @@ input, select {
 
 .nav-link:hover {
   color: var(--orange);
-  font-size: 1.2rem;
+  /* font-size: 1.2rem; */
 }
 
 .nav-link.active {
@@ -279,7 +284,7 @@ input, select {
 }
 
 .nav-tabs-admin {
-  margin-top: -3rem;
+  margin-top: 0rem;
 }
 
 .table {
@@ -316,9 +321,17 @@ input, select {
   width: 10rem;
 }
 
+/* Facebook & Google */
 
-/* Modal */
-
-#modal-invoice {
+#FacebookAccount,
+#GoogleAccount {
   display: none;
+}
+
+.form-google-account,
+.form-facebook-account {
+  height: 20rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

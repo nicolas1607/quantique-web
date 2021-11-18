@@ -8,12 +8,12 @@
     <h1 class="form-title">Nouveau contrat</span></h1>
     {{ form_start(add_contract_form) }}
     <div class="cont-grid form-section">
-        {{ form_row(add_contract_form.company) }}
-        {{ form_row(add_contract_form.name) }}
+        {{ form_row(add_contract_form.website) }}
+        {{ form_row(add_contract_form.type) }}
     </div>
     <div class="cont-grid form-section">
-        {{ form_row(add_contract_form.type) }}
         {{ form_row(add_contract_form.price) }}
+        {{ form_row(add_contract_form.promotion) }}
     </div>
     <div class="cont-flex">
         {{ form_row(add_contract_form.submit) }}
