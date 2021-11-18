@@ -53,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $contact;
+    private $phone;
 
     /**
      * @ORM\ManyToMany(targetEntity=Company::class, inversedBy="users")
@@ -156,18 +156,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getContact(): ?string
-    {
-        return $this->contact;
-    }
-
-    public function setContact(?string $contact): self
-    {
-        $this->contact = $contact;
-
-        return $this;
-    }
-
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -192,14 +180,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getFunction(): ?string
+    public function getPhone(): ?string
     {
-        return $this->function;
+        return $this->phone;
     }
 
-    public function setFunction(?string $function): self
+    public function setPhone(?string $phone): self
     {
-        $this->function = $function;
+        $this->phone = $phone;
 
         return $this;
     }

@@ -20,30 +20,26 @@ class Contract
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
-
-    /**
      * @ORM\Column(type="float")
      */
     private $price;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="contracts")
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $promotion;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=TypeContract::class, inversedBy="contracts")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $type;
 
     /**
-     * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="contract")
-     */
-    private $invoices;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="contracts")
+     * @ORM\ManyToOne(targetEntity=Website::class, inversedBy="contracts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $company;
+    private $website;
 
     public function __construct()
     {
@@ -53,18 +49,6 @@ class Contract
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getPrice(): ?float
@@ -79,56 +63,38 @@ class Contract
         return $this;
     }
 
-    public function getType(): ?Type
+    public function getPromotion(): ?float
+    {
+        return $this->promotion;
+    }
+
+    public function setPromotion(?float $promotion): self
+    {
+        $this->promotion = $promotion;
+
+        return $this;
+    }
+
+    public function getType(): ?TypeContract
     {
         return $this->type;
     }
 
-    public function setType(?Type $type): self
+    public function setType(?TypeContract $type): self
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * @return Collection|Invoice[]
-     */
-    public function getInvoices(): Collection
+    public function getWebsite(): ?Website
     {
-        return $this->invoices;
+        return $this->website;
     }
 
-    public function addInvoice(Invoice $invoice): self
+    public function setWebsite(?Website $website): self
     {
-        if (!$this->invoices->contains($invoice)) {
-            $this->invoices[] = $invoice;
-            $invoice->setContract($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInvoice(Invoice $invoice): self
-    {
-        if ($this->invoices->removeElement($invoice)) {
-            // set the owning side to null (unless already changed)
-            if ($invoice->getContract() === $this) {
-                $invoice->setContract(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getCompany(): ?Company
-    {
-        return $this->company;
-    }
-
-    public function setCompany(?Company $company): self
-    {
-        $this->company = $company;
+        $this->website = $website;
 
         return $this;
     }

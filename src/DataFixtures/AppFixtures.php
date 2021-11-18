@@ -9,8 +9,11 @@ use App\Entity\User;
 use App\Entity\Company;
 use App\Entity\Invoice;
 use App\Entity\Contract;
+use App\Entity\TypeInvoice;
+use App\Entity\TypeContract;
 use App\Entity\GoogleAccount;
 use App\Entity\FacebookAccount;
+use App\Entity\Website;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -29,9 +32,10 @@ class AppFixtures extends Fixture
                 ->setRoles(['ROLE_USER'])
                 ->setEmail($faker->email())
                 ->setPassword($faker->password())
-                ->setContact($faker->phoneNumber());
-            $users[] = $user;
+                ->setPhone($faker->phoneNumber());
+
             $manager->persist($user);
+            $users[] = $user;
         }
 
         // Company
@@ -39,75 +43,123 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 10; $i++) {
             $company = new Company();
             $company->setName($faker->company())
+                ->setEmail($faker->email())
+                ->setPhone($faker->phoneNumber())
                 ->setAddress($faker->address())
                 ->setPostalCode($faker->postcode())
                 ->setCity($faker->city())
+                ->setNumTVA($faker->regexify('[A-Z]{5}[0-4]{3}'))
                 ->setSiret($faker->regexify('[A-Z]{5}[0-4]{3}'))
-                ->setPhone($faker->phoneNumber())
-                ->setUrl($faker->url())
                 ->addUser($users[$i]);
             $users[$i]->addCompany($company);
+
             $manager->persist($company);
             $manager->persist($users[$i]);
             $companies[] = $company;
         }
 
-        // Type
-        $types = [];
+        // Website
+        $websites = [];
+        for ($i = 0; $i < 10; $i++) {
+            $website = new Website();
+            $website->setName($faker->company())
+                ->setUrl($faker->url())
+                ->setCompany($companies[$i]);
+            $companies[$i]->addWebsite($website);
 
-        $googleAds = new Type();
-        $googleAds->setName('GoogleAds')
-            ->setLib('googleAds');
-        $types[] = $googleAds;
-        $manager->persist($googleAds);
+            $manager->persist($website);
+            $manager->persist($companies[$i]);
+            $websites[] = $website;
+        }
 
-        $youtube = new Type();
-        $youtube->setName('Youtube')
-            ->setLib('youtube');
-        $types[] = $youtube;
-        $manager->persist($youtube);
+        // TypeContract
+        $typesContract = [];
 
-        $facebook = new Type();
-        $facebook->setName('Facebook')
-            ->setLib('facebook');
-        $types[] = $facebook;
+        $vitrine = new TypeContract();
+        $vitrine->setName('Site vitrine');
+        $manager->persist($vitrine);
+        $typesContract[] = $vitrine;
+
+        $ecommerce = new TypeContract();
+        $ecommerce->setName('Site e-commerce');
+        $manager->persist($ecommerce);
+        $typesContract[] = $ecommerce;
+
+        $google = new TypeContract();
+        $google->setName('Publicité Google & Youtube');
+        $manager->persist($google);
+        $typesContract[] = $google;
+
+        $facebook = new TypeContract();
+        $facebook->setName('Publicité Facebook & Instagram');
         $manager->persist($facebook);
-
-        $contract = new Type();
-        $contract->setName('Contrat')
-            ->setLib('contract');
-        $types[] = $contract;
-        $manager->persist($contract);
-
-
+        $typesContract[] = $facebook;
 
         // Contract
         $contracts = [];
         for ($i = 0; $i < 10; $i++) {
+            $type = $typesContract[rand(0, 3)];
             $contract = new Contract();
-            $contract->setName($faker->jobTitle())
-                ->setPrice($faker->numberBetween(80, 210))
-                ->setCompany($companies[$i]);
-            $nb = rand(0, 3);
-            $contract->setType($types[$nb]);
-            $companies[$i]->addContract($contract);
-            $types[$nb]->addContract($contract);
-            $contracts[] = $contract;
+            $contract->setPrice($faker->randomNumber(3, true))
+                ->setPromotion($faker->randomFloat(1, 20, 30))
+                ->setType($type)
+                ->setWebsite($websites[$i]);
+
+            $type->addContract($contract);
+            $websites[$i]->addContract($contract);
+
             $manager->persist($contract);
-            $manager->persist($companies[$i]);
-            $manager->persist($types[$nb]);
+            $manager->persist($type);
+            $manager->persist($websites[$i]);
+            $contracts[] = $contract;
         }
+        for ($i = 0; $i < 10; $i++) {
+            $type = $typesContract[rand(0, 3)];
+            $contract = new Contract();
+            $contract->setPrice($faker->randomNumber(3, true))
+                ->setPromotion($faker->randomFloat(1, 20, 30))
+                ->setType($type)
+                ->setWebsite($websites[$i]);
+
+            $type->addContract($contract);
+            $websites[$i]->addContract($contract);
+
+            $manager->persist($type);
+            $manager->persist($websites[$i]);
+            $manager->persist($contract);
+            $contracts[] = $contract;
+        }
+
+        // TypeInvoice
+        $typesInvoice = [];
+
+        $abonnement = new TypeInvoice();
+        $abonnement->setName('Facture abonnement');
+        $manager->persist($abonnement);
+        $typesInvoice[] = $abonnement;
+
+        $perso = new TypeInvoice();
+        $perso->setName('Facture personnalisée');
+        $manager->persist($perso);
+        $typesInvoice[] = $perso;
 
         // Invoice
         $invoices = [];
         for ($i = 0; $i < 10; $i++) {
+            $type = $typesInvoice[rand(0, 1)];
             $invoice = new Invoice();
             $invoice->setReleasedAt(new DateTime())
-                ->setContract($contracts[$i])
-                ->setFile('/facture/test');
-            $contracts[$i]->addInvoice($invoice);
-            $invoices[] = $invoice;
+                ->setFile('/facture/test')
+                ->setType($type)
+                ->addWebsite($websites[$i]);
+
+            $type->addInvoice($invoice);
+            $websites[$i]->addInvoice($invoice);
+
             $manager->persist($invoice);
+            $manager->persist($type);
+            $manager->persist($websites[$i]);
+            $invoices[] = $invoice;
         }
 
         // FacebookAccount
@@ -140,8 +192,8 @@ class AppFixtures extends Fixture
         $manager->persist($admin);
 
         // User
-        $user = $this->createUser();
-        $manager->persist($user);
+        // $user = $this->createUser();
+        // $manager->persist($user);
 
         $manager->flush();
     }
@@ -151,7 +203,7 @@ class AppFixtures extends Fixture
         $admin = new User();
         $admin->setFirstname('Nicolas')
             ->setLastname('Mormiche')
-            ->setContact('06 27 71 24 03')
+            ->setPhone('06 27 71 24 03')
             ->setRoles(['ROLE_ADMIN'])
             ->setEmail('nicolas160796@gmail.com')
             ->setPassword('$2y$13$gOxWfP/wFyivsBfnKq1DGuRtWgGEYSFbBClRk3fcGxkXA54EYdQc6'); // test
@@ -163,7 +215,7 @@ class AppFixtures extends Fixture
         $user = new User();
         $user->setFirstname('Florent')
             ->setLastname('Pietrangeli')
-            ->setContact('06 19 72 24 10')
+            ->setPhone('06 19 72 24 10')
             ->setRoles(['ROLE_USER'])
             ->setEmail('test@gmail.com')
             ->setPassword('$2y$13$gOxWfP/wFyivsBfnKq1DGuRtWgGEYSFbBClRk3fcGxkXA54EYdQc6'); // test

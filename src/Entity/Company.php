@@ -25,6 +25,16 @@ class Company
     private $name;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $phone;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $address;
@@ -50,16 +60,6 @@ class Company
     private $siret;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $url;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $phone;
-
-    /**
      * @ORM\OneToMany(targetEntity=FacebookAccount::class, mappedBy="company")
      */
     private $facebook_account;
@@ -70,12 +70,12 @@ class Company
     private $google_account;
 
     /**
-     * @ORM\OneToMany(targetEntity=Contract::class, mappedBy="company")
+     * @ORM\OneToMany(targetEntity=Website::class, mappedBy="company")
      */
-    private $contracts;
+    private $websites;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="compagnies")
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="companies")
      */
     private $users;
 
@@ -85,6 +85,10 @@ class Company
         $this->google_account = new ArrayCollection();
         $this->contracts = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->typeContracts = new ArrayCollection();
+        $this->typeInvoices = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
+        $this->websites = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,6 +104,31 @@ class Company
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
 
         return $this;
     }
@@ -160,30 +189,6 @@ class Company
     public function setSiret(?string $siret): self
     {
         $this->siret = $siret;
-
-        return $this;
-    }
-
-    public function getUrl(): ?string
-    {
-        return $this->url;
-    }
-
-    public function setUrl(string $url): self
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    public function getPhone(): ?string
-    {
-        return $this->phone;
-    }
-
-    public function setPhone(?string $phone): self
-    {
-        $this->phone = $phone;
 
         return $this;
     }
@@ -249,29 +254,29 @@ class Company
     }
 
     /**
-     * @return Collection|Contract[]
+     * @return Collection|Website[]
      */
-    public function getContracts(): Collection
+    public function getWebsites(): Collection
     {
-        return $this->contracts;
+        return $this->websites;
     }
 
-    public function addContract(Contract $contract): self
+    public function addWebsite(Website $website): self
     {
-        if (!$this->contracts->contains($contract)) {
-            $this->contracts[] = $contract;
-            $contract->setCompany($this);
+        if (!$this->websites->contains($website)) {
+            $this->websites[] = $website;
+            $website->setCompany($this);
         }
 
         return $this;
     }
 
-    public function removeContract(Contract $contract): self
+    public function removeWebsite(Website $website): self
     {
-        if ($this->contracts->removeElement($contract)) {
+        if ($this->websites->removeElement($website)) {
             // set the owning side to null (unless already changed)
-            if ($contract->getCompany() === $this) {
-                $contract->setCompany(null);
+            if ($website->getCompany() === $this) {
+                $website->setCompany(null);
             }
         }
 
