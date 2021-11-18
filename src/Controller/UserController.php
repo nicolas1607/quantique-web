@@ -138,14 +138,16 @@ class UserController extends AbstractController
         if ($type == null) $type = 'all';
 
         $res = [];
-        foreach ($user->getContracts() as $contract) {
-            foreach ($contract->getInvoices() as $invoice) {
-                if ($type != 'all') {
-                    if ($invoice->getContract()->getType()->getLib() == $type) {
+        foreach ($user->getCompanies() as $company) {
+            foreach ($company->getContracts() as $contract) {
+                foreach ($contract->getInvoices() as $invoice) {
+                    if ($type != 'all') {
+                        if ($invoice->getContract()->getType()->getLib() == $type) {
+                            $res[] = $invoice;
+                        }
+                    } else {
                         $res[] = $invoice;
                     }
-                } else {
-                    $res[] = $invoice;
                 }
             }
         }

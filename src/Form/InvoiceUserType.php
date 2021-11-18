@@ -3,8 +3,10 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Entity\Company;
 use App\Entity\Invoice;
 use App\Entity\Contract;
+use App\Repository\CompanyRepository;
 use App\Repository\ContractRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,11 +40,24 @@ class InvoiceUserType extends AbstractType
                 ]
             ])
             ->add('contract', EntityType::class, [
-                'class' => Contract::class,
-                'query_builder' => function (ContractRepository $contractRepo) {
+                'class' => Company::class,
+                'query_builder' => function (CompanyRepository $contractRepo) {
                     return $contractRepo->createQueryBuilder('c')
-                        ->where('c.user_id = ' . $this->user->getId());
+                        ->where('c.users in (' . $this->user->getId() . ')');
                 },
+                'choice_label' => 'name',
+                'label' => 'Entreprise',
+                'attr' => [
+                    'class' => 'form-select'
+                ]
+            ])
+            ->add('contract', EntityType::class, [
+                'class' => Contract::class,
+                // 'query_builder' => function (ContractRepository $contractRepo) {
+                //     return $contractRepo->createQueryBuilder('c')
+                //         ->join('App:company', 'cmp')
+                //         ->where('cmp.users in (' . $this->user->getId() . ')');
+                // },
                 'choice_label' => 'name',
                 'label' => 'Contrat',
                 'attr' => [

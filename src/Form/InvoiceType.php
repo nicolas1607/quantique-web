@@ -35,10 +35,6 @@ class InvoiceType extends AbstractType
             ])
             ->add('contract', EntityType::class, [
                 'class' => Contract::class,
-                // 'query_builder' => function (ContractRepository $contractRepo) {
-                //     return $contractRepo->createQueryBuilder('c')
-                //         ->where('c.user_id = ' . $this->user->getId());
-                // },
                 'choice_label' => 'name',
                 'label' => 'Contrat',
                 'attr' => [

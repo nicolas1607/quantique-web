@@ -52,11 +52,6 @@ h3 {
   --color2: #333;
 }
 
-body {
-  /* background-color: var(--color2);
-  color: var(--white); */
-}
-
 button {
 	outline: none !important;
 	border: none;
@@ -104,14 +99,17 @@ a:hover {
 }
 
 .btn-type {
-  /* margin-top: 1rem; */
   padding: 1rem 2rem;
-  /* width: 100%; */
   background-color: var(--orange);
   color: var(--white);
   border-radius: 2rem;
   font-weight: bold;
   text-align: center;
+  box-shadow: 1px 1px 4px 1px var(--color2);
+}
+
+.btn-type:hover {
+  transform: scaleY(-1rem);
 }
 
 .btn10 {
@@ -122,6 +120,7 @@ a:hover {
 .btn-form {
   width: 12rem;
   margin-top: 2rem;
+  box-shadow: 1px 1px 4px 1px var(--color2);
 }
 
 .btn-type:hover {
@@ -156,12 +155,22 @@ input, select {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 5rem;
 }
 
 .cont-flex-space {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.cont-flex-end {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 5rem;
+  margin-top: .5rem;
 }
 
 .cont-grid {
@@ -210,10 +219,16 @@ input, select {
 
 .nav-link:hover {
   color: var(--orange);
+  font-size: 1.2rem;
 }
 
 .nav-link.active {
   color: var(--color1);
+}
+
+.nav-link-header {
+  font-family: Poppins-Regular;
+  margin-right: 2rem;
 }
 
 /* Login */
@@ -228,13 +243,23 @@ input, select {
   align-items: center;
   background-color: var(--white);
   padding: 8rem 6rem;
-  margin-top: 4rem;
+  margin-top: 2rem;
   border-radius: 2rem;
-  box-shadow: 2px 2px 2px var(--white);
+  box-shadow: 6px 6px 20px 2px var(--color2);
+}
+
+.login-form form {
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 0;
 }
 
 .login-img {
   width: 85%;
+}
+
+.btn-login {
+  width: 100%;
 }
 
 /* Register */
@@ -246,11 +271,15 @@ input, select {
 /* Admin */
 
 .nav-tabs {
-  margin-top: 6rem;
+  margin-top: 4rem;
 }
 
 .nav-tabs a {
   color: var(--color1);
+}
+
+.nav-tabs-admin {
+  margin-top: -3rem;
 }
 
 .table {

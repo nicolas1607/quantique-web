@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Contract;
 use App\Form\ContractType;
 use App\Form\ContractUserType;
+use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,10 +17,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ContractController extends AbstractController
 {
     private EntityManagerInterface $em;
+    private CompanyRepository $companyRepo;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, CompanyRepository $companyRepo)
     {
         $this->em = $em;
+        $this->companyRepo = $companyRepo;
     }
 
     /**
@@ -32,12 +35,15 @@ class ContractController extends AbstractController
         $addContractForm->handleRequest($request);
 
         if ($addContractForm->isSubmitted() && $addContractForm->isValid()) {
-            // $contract->setUserId($user);
-            // $user->addContract($contract);
+            $contract = $addContractForm->getData();
+            $company = $contract->getCompany();
+            $company->addContract($contract);
+
             $this->em->persist($contract);
+            $this->em->persist($company);
             $this->em->flush();
 
-            // return $this->redirectToRoute('show_contracts_user', ['id' => $user->getId()]);
+            return $this->redirectToRoute('admin');
         }
 
         return $this->render('contract/add.html.twig', [
@@ -56,12 +62,16 @@ class ContractController extends AbstractController
         $addContractForm->handleRequest($request);
 
         if ($addContractForm->isSubmitted() && $addContractForm->isValid()) {
-            $contract->setUserId($user);
-            $user->addContract($contract);
+            $contract = $addContractForm->getData();
+            $company = $addContractForm->getData('company');
+            $company->addContract($contract);
+
             $this->em->persist($contract);
+            $this->em->persist($company);
             $this->em->flush();
 
-            return $this->redirectToRoute('show_contracts_user', ['id' => $user->getId()]);
+            // return $this->redirectToRoute('show_contracts_user', ['id' => $user->getId()]);
+            return $this->redirect($_SERVER['HTTP_REFERER']);
         }
 
         return $this->render('contract/add_user.html.twig', [
@@ -80,13 +90,13 @@ class ContractController extends AbstractController
 
         if ($updateContractForm->isSubmitted() && $updateContractForm->isValid()) {
             $this->em->flush();
-            return $this->redirectToRoute('show_contracts_user', ['id' => $id->getUserId()->getId()]);
+            // return $this->redirectToRoute('show_contracts_user', ['id' => $id->getCompany()->getUsers()->getId()]);
+            return $this->redirect($_SERVER['HTTP_REFERER']);
         }
 
         return $this->render('contract/edit.html.twig', [
             'edit_contract_form' => $updateContractForm->createView(),
             'contract' => $id,
-            'user' => $id->getUserId()
         ]);
     }
 }

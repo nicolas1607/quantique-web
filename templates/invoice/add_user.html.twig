@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter une facture{% endblock %}
+{% block title %}Quantique | Ajouter une facture{% endblock %}
 
 {% block body %}
 
@@ -8,7 +8,7 @@
     <h1 class="form-title">Ajouter une facture</h1>
     {{ form_start(add_invoice_form) }}
     <div class="cont-grid form-section">
-        <p>{{user.email}}</p>
+        {{ form_row(add_invoice_form.company) }}
         {{ form_row(add_invoice_form.contract) }}
     </div>
     <div class="cont-grid form-section">

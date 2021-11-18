@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouveau contrat{% endblock %}
+{% block title %}Quantique | Ajouter un contrat{% endblock %}
 
 {% block body %}
 
@@ -8,11 +8,12 @@
     <h1 class="form-title">Nouveau contrat</span></h1>
     {{ form_start(add_contract_form) }}
     <div class="cont-grid form-section">
+        {{ form_row(add_contract_form.company) }}
         {{ form_row(add_contract_form.name) }}
-        {{ form_row(add_contract_form.price) }}
     </div>
     <div class="cont-grid form-section">
         {{ form_row(add_contract_form.type) }}
+        {{ form_row(add_contract_form.price) }}
     </div>
     <div class="cont-flex">
         {{ form_row(add_contract_form.submit) }}

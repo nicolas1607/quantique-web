@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier le client{% endblock %}
+{% block title %}Quantique | Contrats Client{% endblock %}
 
 {% block body %}
 
 <div class="container">
-    <h1>Client {{ user.email }}</h1>
+    <h1>Client : {{ user.firstname }} {{ user.lastname }}</h1>
     <div class="right">
         <a class="btn-type btn10" href="{{ path('add_contract_user', {'user': user.id}) }}">Nouveau contrat</a>
     </div>
@@ -32,6 +32,7 @@
         <thead>
             <tr>
                 <th scope="col">Id</th>
+                <th scope="col">Entreprise</th>
                 <th scope="col">Nom du contrat</th>
                 <th scope="col">Type de contrat</th>
                 <th scope="col">Prix en €/mois</th>
@@ -39,9 +40,11 @@
             </tr>
         </thead>
         <tbody>
-            {% for contract in user.contracts %}
+            {% for company in user.companies %}
+            {% for contract in company.contracts %}
             <tr class="table-light">
                 <td>{{ contract.id }}</td>
+                <td>{{ company.name }}</td>
                 <td>{{ contract.name }}</td>
                 <td>{{ contract.type.name }}</td>
                 <td>{{ contract.price }}€ / mois</td>
@@ -55,6 +58,7 @@
                     </ul>
                 </td>
             </tr>
+            {% endfor %}
             {% endfor %}
         </tbody>
     </table>

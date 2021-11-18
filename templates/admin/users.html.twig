@@ -1,18 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Espace administration{% endblock %}
+{% block title %}Quantique | Clients{% endblock %}
 
 {% block body %}
 
 <div class="container">
     <h1>Espace administration</h1>
-    <div class="right">
-        <a class="btn-type btn10" href="{{ path('app_register') }}">Nouveau client</a>
-        <a class="btn-type btn10" href="{{ path('add_contract') }}">Nouveau contrat</a>
-        <a class="btn-type btn10" href="{{ path('add_invoice') }}">Nouvelle facture</a>
+    <div class="cont-flex-end">
+        <span class="nav-link-header">Ajouter :</span>
+        <a class="nav-link" href="{{ path('app_register') }}">Client</a>
+        <a class="nav-link" href="{{ path('add_contract') }}">Contrat</a>
+        <a class="nav-link" href="{{ path('add_invoice') }}">Facture</a>
     </div>
 
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs nav-tabs-admin">
         <li class="nav-item">
             <a class="nav-link active" data-bs-toggle="tab" href="">Les clients</a>
         </li>
@@ -42,8 +43,8 @@
                 <td>
                     <ul class="action-list">
                         <li class="action-item">
-                            <a href="{{path('add_contract', {'user': user.id})}}" class="action-link">Contrat</a>
-                            <a href="" class="action-link">Facture</a>
+                            <a href="{{path('add_contract_user', {'user': user.id})}}" class="action-link">Contrat</a>
+                            <a href="{{path('add_invoice_user', {'user': user.id})}}" class="action-link">Facture</a>
                             <a href="{{path('show_stats_user', {'id': user.id})}}" class="action-link">Voir</a>
                             <a href="{{path('edit_user', {'id': user.id})}}" class="action-link">Modifier</a>
                         </li>

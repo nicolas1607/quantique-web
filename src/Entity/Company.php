@@ -290,7 +290,7 @@ class Company
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
-            $user->addCompagny($this);
+            $user->addCompany($this);
         }
 
         return $this;
@@ -299,7 +299,7 @@ class Company
     public function removeUser(User $user): self
     {
         if ($this->users->removeElement($user)) {
-            $user->removeCompagny($this);
+            $user->removeCompany($this);
         }
 
         return $this;

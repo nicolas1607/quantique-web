@@ -58,13 +58,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\ManyToMany(targetEntity=Company::class, inversedBy="users")
      */
-    private $compagnies;
+    private $companies;
 
     public function __construct()
     {
         $this->companies = new ArrayCollection();
         $this->contracts = new ArrayCollection();
-        $this->compagnies = new ArrayCollection();
+        $this->companies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -207,23 +207,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection|Company[]
      */
-    public function getCompagnies(): Collection
+    public function getCompanies(): Collection
     {
-        return $this->compagnies;
+        return $this->companies;
     }
 
-    public function addCompagny(Company $compagny): self
+    public function addCompany(Company $company): self
     {
-        if (!$this->compagnies->contains($compagny)) {
-            $this->compagnies[] = $compagny;
+        if (!$this->companies->contains($company)) {
+            $this->companies[] = $company;
         }
 
         return $this;
     }
 
-    public function removeCompagny(Company $compagny): self
+    public function removeCompany(Company $company): self
     {
-        $this->compagnies->removeElement($compagny);
+        $this->companies->removeElement($company);
 
         return $this;
     }

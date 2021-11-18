@@ -1,18 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier le client{% endblock %}
+{% block title %}Quantique | Modifier un contrat{% endblock %}
 
 {% block body %}
 
 <div class="container">
-    <h1 class="form-title">Modifier le contrat {{contract.type.name}} <span> pour {{user.email}}</span></h1>
+    <h1 class="form-title">Contrat : {{contract.type.name}} pour {{contract.company.name }}</h1>
     {{ form_start(edit_contract_form) }}
     <div class="cont-grid form-section">
+        {{ form_row(edit_contract_form.company) }}
         {{ form_row(edit_contract_form.name) }}
-        {{ form_row(edit_contract_form.price) }}
     </div>
     <div class="cont-grid form-section">
         {{ form_row(edit_contract_form.type) }}
+        {{ form_row(edit_contract_form.price) }}
     </div>
     <div class="cont-flex">
         {{ form_row(edit_contract_form.submit) }}

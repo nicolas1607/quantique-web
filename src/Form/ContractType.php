@@ -21,10 +21,10 @@ class ContractType extends AbstractType
         $builder
             ->add('company', EntityType::class, [
                 'class' => Company::class,
-                // 'choice_label' => fu,
-                'label' => 'Client',
+                'choice_label' => 'name',
+                'label' => 'Entreprise',
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-select'
                 ]
             ])
             ->add('name', TextType::class, [

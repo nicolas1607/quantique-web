@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier le client{% endblock %}
+{% block title %}Quantique | Entreprises Client{% endblock %}
 
 {% block body %}
 
 <div class="container">
-    <h1>Client {{ user.email }}</h1>
+    <h1>Client : {{ user.firstname }} {{ user.lastname }}</h1>
     <div class="right">
         <a class="btn-type btn10" href="{{ path('add_contract', {'user': user.id}) }}">Nouveau contrat</a>
     </div>

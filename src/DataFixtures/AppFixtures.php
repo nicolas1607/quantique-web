@@ -20,6 +20,20 @@ class AppFixtures extends Fixture
     {
         $faker = Factory::create();
 
+        // User
+        $users = [];
+        for ($i = 0; $i < 10; $i++) {
+            $user = new User();
+            $user->setFirstname($faker->firstName())
+                ->setLastname($faker->lastName())
+                ->setRoles(['ROLE_USER'])
+                ->setEmail($faker->email())
+                ->setPassword($faker->password())
+                ->setContact($faker->phoneNumber());
+            $users[] = $user;
+            $manager->persist($user);
+        }
+
         // Company
         $companies = [];
         for ($i = 0; $i < 10; $i++) {
@@ -30,7 +44,11 @@ class AppFixtures extends Fixture
                 ->setCity($faker->city())
                 ->setSiret($faker->regexify('[A-Z]{5}[0-4]{3}'))
                 ->setPhone($faker->phoneNumber())
-                ->setUrl($faker->url());
+                ->setUrl($faker->url())
+                ->addUser($users[$i]);
+            $users[$i]->addCompany($company);
+            $manager->persist($company);
+            $manager->persist($users[$i]);
             $companies[] = $company;
         }
 
@@ -61,22 +79,7 @@ class AppFixtures extends Fixture
         $types[] = $contract;
         $manager->persist($contract);
 
-        // User
-        $users = [];
-        for ($i = 0; $i < 10; $i++) {
-            $user = new User();
-            $user->setFirstname($faker->firstName())
-                ->setLastname($faker->lastName())
-                ->setRoles(['ROLE_USER'])
-                ->setEmail($faker->email())
-                ->setPassword($faker->password())
-                ->setContact($faker->phoneNumber())
-                ->addCompany($companies[$i]);
-            $companies[$i]->setUserId($user);
-            $users[] = $user;
-            $manager->persist($user);
-            $manager->persist($companies[$i]);
-        }
+
 
         // Contract
         $contracts = [];
@@ -84,12 +87,15 @@ class AppFixtures extends Fixture
             $contract = new Contract();
             $contract->setName($faker->jobTitle())
                 ->setPrice($faker->numberBetween(80, 210))
-                ->setUserId($users[$i]);
+                ->setCompany($companies[$i]);
             $nb = rand(0, 3);
             $contract->setType($types[$nb]);
+            $companies[$i]->addContract($contract);
             $types[$nb]->addContract($contract);
             $contracts[] = $contract;
             $manager->persist($contract);
+            $manager->persist($companies[$i]);
+            $manager->persist($types[$nb]);
         }
 
         // Invoice
@@ -110,10 +116,11 @@ class AppFixtures extends Fixture
             $fbAccount = new FacebookAccount();
             $fbAccount->setEmail($faker->email())
                 ->setPassword($faker->password())
-                ->setUserId($users[$i]);
-            $users[$i]->setFacebookAccount($fbAccount);
-            $fbAccounts[] = $fbAccount;
+                ->setCompany($companies[$i]);
+            $companies[$i]->addFacebookAccount($fbAccount);
             $manager->persist($fbAccount);
+            $manager->persist($companies[$i]);
+            $fbAccounts[] = $fbAccount;
         }
 
         // GoogleAccount
@@ -122,10 +129,10 @@ class AppFixtures extends Fixture
             $googleAccount = new GoogleAccount();
             $googleAccount->setEmail($faker->email())
                 ->setPassword($faker->password())
-                ->setUserId($users[$i]);
-            $users[$i]->setGoogleAccount($googleAccount);
-            $googleAccounts[] = $googleAccount;
+                ->setCompany($companies[$i]);
             $manager->persist($googleAccount);
+            $manager->persist($companies[$i]);
+            $googleAccounts[] = $googleAccount;
         }
 
         // Admin

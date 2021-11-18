@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Quantique | Connexion{% endblock %}
 
 {% block body %}
 <div class="container">
-    <div class="cont-flex">
+    <div class="cont-flex cont-bg">
         <div class="login-form">
             <img class="login-img" src="{{asset('images/logo-quantique-web.png')}}" alt="logo-quantique">
 
@@ -29,7 +29,7 @@
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                <button class="btn-type" type="submit">CONNEXION</button>
+                <button class="btn-type btn-login" type="submit">CONNEXION</button>
             </form>
         </div>
     </div>
