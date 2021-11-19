@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Type;
 use App\Entity\Company;
 use App\Entity\Contract;
+use App\Entity\TypeContract;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -18,26 +19,26 @@ class ContractUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, [
-                'label' => 'Nom du contrat',
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ])
             ->add('price', NumberType::class, [
                 'label' => 'Prix de la préstation',
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
-            ->add('type', EntityType::class, [
-                'class' => Type::class,
-                'choice_label' => 'name',
-                'label' => 'Type de contrat',
+            ->add('promotion', NumberType::class, [
+                'label' => 'Promotion',
                 'attr' => [
-                    'class' => 'form-select'
+                    'class' => 'form-control'
                 ]
             ])
+            // ->add('type', EntityType::class, [
+            //     'class' => TypeContract::class,
+            //     'choice_label' => 'name',
+            //     'label' => 'Type de contrat',
+            //     'attr' => [
+            //         'class' => 'form-select'
+            //     ]
+            // ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer',
                 'attr' => [

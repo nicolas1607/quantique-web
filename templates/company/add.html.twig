@@ -5,8 +5,12 @@
 {% block body %}
 
 <div class="container">
-    <h1 class="form-title">Ajouter une entreprise à {{user.firstname}} {{user.lastname}}</h1>
+    <h1 class="form-title">Ajouter une entreprise</h1>
     {{ form_start(add_company_form) }}
+    <div class="form-section">
+        <label for="user">Client</label>
+        <input class="form-control" type="text" name="user" value="{{user.firstname}} {{user.lastname}}" readonly>
+    </div>
     <div class="cont-grid form-section">
         {{ form_row(add_company_form.name) }}
         {{ form_row(add_company_form.email) }}

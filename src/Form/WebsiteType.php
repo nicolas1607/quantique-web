@@ -17,13 +17,15 @@ class WebsiteType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom du site',
+                'label' => 'Nom du site *',
+                'required' => true,
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
             ->add('url', TextType::class, [
-                'label' => 'URL du site',
+                'label' => 'URL du site *',
+                'required' => true,
                 'attr' => [
                     'class' => 'form-control'
                 ]

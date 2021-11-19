@@ -5,19 +5,27 @@
 {% block body %}
 
 <div class="container">
-    <h1 class="form-title">Ajouter un site à {{company.name}}</h1>
+    <h1 class="form-title">Ajouter un site</h1>
     {{ form_start(add_website_form) }}
+    <div class="form-section">
+        <label for="company">Entreprise</label>
+        <input class="form-control" type="text" name="company" value="{{company.name}}" readonly>
+    </div>
     <div class="cont-grid form-section">
         {{ form_row(add_website_form.name) }}
         {{ form_row(add_website_form.url) }}
     </div>
-    <div class="form-section">
+    <div class="form-section section">
+        <div class="cont-flex-start">
+            <i class="fas fa-file-contract fa-2x"></i>
+            <h2>Contrats <span>(optionnel)</span></h2>
+        </div>
         <div class="cont-grid">
         {% for type in typesContract %}
             <div>
                 <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox" name="{{type.lib}}-check">
-                <label for="{{type.lib}}-check"><strong>{{type.name}}</strong></label>
-                <div class="cont-grid">
+                <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
+                <div class="">
                     <div>
                         <label for="{{type.lib}}-price">Prix initial</label>
                         <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
@@ -44,8 +52,13 @@
         const price = document.querySelector('#' + type + '-price');
         const promotion = document.querySelector('#' + type + '-promotion');
         check.addEventListener('click', () => {
-            price.setAttribute('required', 'required');
-            promotion.setAttribute('required', 'required');
+            if (check.checked == true) {
+                price.setAttribute('required', 'required');
+                promotion.setAttribute('required', 'required');
+            } else {
+                price.removeAttribute('required')
+                promotion.removeAttribute('required')
+            }
         })
     });
 </script>

@@ -65,14 +65,15 @@ class ContractController extends AbstractController
 
         if ($addContractForm->isSubmitted() && $addContractForm->isValid()) {
             $contract = $addContractForm->getData();
-            $website = $contract->getWebsite();
+            $contract->setWebsite($website)
+                ->setType($type);
             $website->addContract($contract);
 
             $this->em->persist($contract);
             $this->em->persist($website);
             $this->em->flush();
 
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('show_website', ['website' => $website->getId()]);
         }
 
         return $this->render('contract/add_type.html.twig', [
@@ -111,22 +112,32 @@ class ContractController extends AbstractController
     // }
 
     /**
-     * @Route("/contract/edit/{id}", name="edit_contract")
+     * @Route("/contract/edit/{contract}", name="edit_contract")
      */
-    public function edit(Request $request, Contract $id): Response
+    public function edit(Request $request, Contract $contract): Response
     {
-        $updateContractForm = $this->createForm(ContractType::class, $id);
+        $updateContractForm = $this->createForm(ContractUserType::class, $contract);
         $updateContractForm->handleRequest($request);
 
         if ($updateContractForm->isSubmitted() && $updateContractForm->isValid()) {
             $this->em->flush();
-            // return $this->redirectToRoute('show_contracts_user', ['id' => $id->getCompany()->getUsers()->getId()]);
-            return $this->redirect($_SERVER['HTTP_REFERER']);
+            return $this->redirectToRoute('show_website', ['website' => $contract->getWebsite()->getId()]);
         }
 
         return $this->render('contract/edit.html.twig', [
             'edit_contract_form' => $updateContractForm->createView(),
-            'contract' => $id,
+            'contract' => $contract,
         ]);
+    }
+
+    /**
+     * @Route("/contract/delete/{contract}", name="delete_contract")
+     */
+    public function delete(Contract $contract): Response
+    {
+        $this->em->remove($contract);
+        $this->em->flush();
+
+        return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 }
