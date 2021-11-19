@@ -31,6 +31,7 @@ class ContractController extends AbstractController
      */
     public function add(Request $request): Response
     {
+        $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
         $contract = new Contract();
         $addContractForm = $this->createForm(ContractType::class, $contract);
         $addContractForm->handleRequest($request);
@@ -48,7 +49,8 @@ class ContractController extends AbstractController
         }
 
         return $this->render('contract/add.html.twig', [
-            'add_contract_form' => $addContractForm->createView()
+            'add_contract_form' => $addContractForm->createView(),
+            'typesContract' => $typesContract
         ]);
     }
 

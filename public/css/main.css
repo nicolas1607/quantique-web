@@ -18,6 +18,11 @@
   src: url('../fonts/montserrat/Montserrat-Bold.ttf'); 
 }
 
+/* Font Awesome */
+.fa-chevron-right {
+  margin-left: 3rem;
+}
+
 /* Typographie */
 
 * {
@@ -90,7 +95,7 @@ tr, td {
 
 .table {
   margin-top: 2rem;
-  margin-bottom: 8rem;
+  margin-bottom: 4rem;
 }
 
 a:hover {
@@ -138,12 +143,27 @@ form {
   margin-left: 6rem;
 }
 
+.form-check {
+  display: grid;
+  grid-template-columns: 1rem 20rem;
+  margin-top: 1rem;
+}
+
+.form-check label {
+  margin-left: 1rem;
+  margin-top: -.3rem;
+}
+
 label {
   color: var(--color1);
 }
 
 input, select {
   margin-bottom: 2rem;
+}
+
+input[type='checkbox'] {
+  margin-bottom: 0;
 }
 
 .container {
@@ -248,7 +268,7 @@ input, select {
   align-items: center;
   background-color: var(--white);
   padding: 8rem 6rem;
-  margin-top: 2rem;
+  margin-top: 32rem;
   border-radius: 2rem;
   box-shadow: 6px 6px 20px 2px var(--color2);
 }
@@ -293,6 +313,12 @@ input, select {
 
 .action-link {
   color: var(--color1);
+}
+
+.action-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .form-search {

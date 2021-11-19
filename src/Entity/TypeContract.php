@@ -29,6 +29,11 @@ class TypeContract
      */
     private $contracts;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $lib;
+
     public function __construct()
     {
         $this->contracts = new ArrayCollection();
@@ -77,6 +82,18 @@ class TypeContract
                 $contract->setType(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLib(): ?string
+    {
+        return $this->lib;
+    }
+
+    public function setLib(string $lib): self
+    {
+        $this->lib = $lib;
 
         return $this;
     }

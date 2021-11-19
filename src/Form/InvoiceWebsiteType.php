@@ -2,30 +2,21 @@
 
 namespace App\Form;
 
-use App\Entity\User;
-use App\Entity\Company;
 use App\Entity\Invoice;
-use App\Entity\Contract;
+use App\Entity\TypeInvoice;
 use App\Entity\Website;
-use App\Repository\CompanyRepository;
-use App\Repository\ContractRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class InvoiceWebsiteType extends AbstractType
 {
-    private Website $website;
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->website = $options['website'];
-
         $builder
             ->add('releasedAt', DateTimeType::class, [
                 'label' => 'Date de facturation',
@@ -40,27 +31,10 @@ class InvoiceWebsiteType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('contract', EntityType::class, [
-                'class' => Company::class,
-                'query_builder' => function (CompanyRepository $contractRepo) {
-                    return $contractRepo->createQueryBuilder('c')
-                        ->where('c.websites in (' . $this->website->getId() . ')');
-                },
+            ->add('type', EntityType::class, [
+                'class' => TypeInvoice::class,
                 'choice_label' => 'name',
-                'label' => 'Entreprise',
-                'attr' => [
-                    'class' => 'form-select'
-                ]
-            ])
-            ->add('contract', EntityType::class, [
-                'class' => Contract::class,
-                // 'query_builder' => function (ContractRepository $contractRepo) {
-                //     return $contractRepo->createQueryBuilder('c')
-                //         ->join('App:company', 'cmp')
-                //         ->where('cmp.users in (' . $this->user->getId() . ')');
-                // },
-                'choice_label' => 'name',
-                'label' => 'Contrat',
+                'label' => 'Type de facture',
                 'attr' => [
                     'class' => 'form-select'
                 ]
@@ -77,7 +51,6 @@ class InvoiceWebsiteType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Invoice::class,
-            'website' => Website::class
         ]);
     }
 }

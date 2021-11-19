@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Invoice;
+use App\Entity\Website;
 use App\Form\InvoiceType;
 use App\Form\InvoiceUserType;
+use App\Form\InvoiceWebsiteType;
 use App\Repository\CompanyRepository;
 use App\Repository\WebsiteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -81,13 +83,13 @@ class InvoiceController extends AbstractController
     public function addForWebsite(Request $request, Website $website, SluggerInterface $slugger): Response
     {
         $invoice = new Invoice();
-        $addInvoiceForm = $this->createForm(InvoiceWebsiteType::class, $invoice, array('website' => $website));
+        $addInvoiceForm = $this->createForm(InvoiceWebsiteType::class, $invoice);
         $addInvoiceForm->handleRequest($request);
 
         if ($addInvoiceForm->isSubmitted() && $addInvoiceForm->isValid()) {
 
             $path = $addInvoiceForm->get('file')->getData();
-            $contract = $addInvoiceForm->get('contract')->getData();
+            $website = $request->get('website');
 
             if ($path) {
                 $originalFilename = pathinfo($path->getClientOriginalName(), PATHINFO_FILENAME);
@@ -104,15 +106,14 @@ class InvoiceController extends AbstractController
                 }
 
                 $invoice->setFile($newFilename);
-                var_dump($invoice->getFile());
-                $contract->addInvoice($invoice);
+                $website->addInvoice($invoice);
                 $this->em->persist($invoice);
-                $this->em->persist($contract);
+                $this->em->persist($website);
 
                 $this->em->flush();
             }
 
-            return $this->redirectToRoute('show_invoices_website', ['id' => $website->getId()]);
+            return $this->redirectToRoute('show_website', ['website' => $website->getId()]);
         }
 
         return $this->render('invoice/add_website.html.twig', [

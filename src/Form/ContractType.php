@@ -29,26 +29,28 @@ class ContractType extends AbstractType
                     'class' => 'form-select'
                 ]
             ])
-            ->add('price', NumberType::class, [
-                'label' => 'Prix initial',
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ])
-            ->add('promotion', NumberType::class, [
-                'label' => 'Promotion',
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ])
-            ->add('type', EntityType::class, [
-                'class' => TypeContract::class,
-                'choice_label' => 'name',
-                'label' => 'Type de contrat',
-                'attr' => [
-                    'class' => 'form-select'
-                ]
-            ])
+            // ->add('price', NumberType::class, [
+            //     'label' => 'Prix initial',
+            //     'attr' => [
+            //         'class' => 'form-control'
+            //     ]
+            // ])
+            // ->add('promotion', NumberType::class, [
+            //     'label' => 'Promotion',
+            //     'attr' => [
+            //         'class' => 'form-control'
+            //     ]
+            // ])
+            // ->add('type', EntityType::class, [
+            //     'class' => TypeContract::class,
+            //     'choice_label' => 'name',
+            //     'multiple' => true,
+            //     'expanded' => true,
+            //     'label' => 'Type de contrat',
+            //     'attr' => [
+            //         'class' => 'form-check'
+            //     ]
+            // ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer',
                 'attr' => [

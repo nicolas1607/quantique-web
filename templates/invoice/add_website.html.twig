@@ -4,11 +4,15 @@
 
 {% block body %}
 
-{# <div class="container">
+<div class="container">
     <h1 class="form-title">Ajouter une facture</h1>
     {{ form_start(add_invoice_form) }}
     <div class="cont-grid form-section">
-        {{ form_row(add_invoice_form.company) }}
+        <div>
+            <label for="website">Site internet</label>
+            <input id="website" class="form-control" name="website" value="{{website.name}}" readonly>
+        </div>
+        {{ form_row(add_invoice_form.type) }}
     </div>
     <div class="cont-grid form-section">
         {{ form_row(add_invoice_form.file) }}
@@ -18,6 +22,6 @@
         {{ form_row(add_invoice_form.submit) }}
     </div>
     {{ form_end(add_invoice_form) }}
-</div> #}
+</div>
 
 {% endblock %}

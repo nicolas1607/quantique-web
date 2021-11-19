@@ -15,21 +15,23 @@
             {% for t in types %}
                 <h3 class="cont-flex-start">
                     <a class="nav-link" href="{{path('add_contract_with_type', {'website': website.id, 'type': t.id})}}">
-                        <i class="fas fa-plus-square"></i>
+                        <i class="fas fa-plus-square fa-lg"></i>
                     </a>
                     {{t.name}}
                 </h3>
                 {% for contract in website.contracts %}
                     {% if contract.type.id == t.id %}
-                        <p>- {{contract.website.name}} : <strike>{{contract.price}}€ / mois</strike> => {{contract.price - contract.promotion}}€ / mois</p>
+                        <p>
+                            <i class="fas fa-chevron-right"></i> 
+                            {{contract.website.name}} : <strike>{{contract.price}}€ / mois</strike> => {{contract.price - contract.promotion}}€ / mois</p>
                     {% endif %}
                 {% endfor %}  
             {% endfor %}
         </div>
         <div>
             <h2 class="cont-flex-space">Factures
-                <a class="nav-link" href="{{path('add_invoice', {'website': website.id})}}">
-                    <i class="fas fa-plus-square"></i>
+                <a class="nav-link" href="{{path('add_invoice_website', {'website': website.id})}}">
+                    <i class="fas fa-plus-square fa-lg"></i>
                 </a>
             </h2>
             <table class="table table-hover">

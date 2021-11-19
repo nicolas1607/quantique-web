@@ -4,8 +4,9 @@ namespace App\Form;
 
 use App\Entity\User;
 use App\Entity\Invoice;
-use App\Entity\Contract;
 use App\Entity\Website;
+use App\Entity\Contract;
+use App\Entity\TypeInvoice;
 use App\Repository\ContractRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,6 +33,14 @@ class InvoiceType extends AbstractType
                 'label' => 'Fichier PDF',
                 'attr' => [
                     'class' => 'form-control'
+                ]
+            ])
+            ->add('type', EntityType::class, [
+                'class' => TypeInvoice::class,
+                'choice_label' => 'name',
+                'label' => 'Type de facture',
+                'attr' => [
+                    'class' => 'form-select'
                 ]
             ])
             ->add('submit', SubmitType::class, [

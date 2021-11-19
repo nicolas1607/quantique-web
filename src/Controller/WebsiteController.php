@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Entity\Contract;
 use App\Entity\Website;
 use App\Form\WebsiteType;
 use App\Entity\TypeContract;
+use App\Form\ContractType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,23 +28,48 @@ class WebsiteController extends AbstractController
      */
     public function add(Request $request, Company $company): Response
     {
+        $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
+
         $website = new Website();
-        $addWebsiteForm = $this->createForm(WebsiteType::class, $website);
+        $addWebsiteForm = $this->createForm(WebsiteType::class, $website, ['method' => 'GET']);
         $addWebsiteForm->handleRequest($request);
 
         if ($addWebsiteForm->isSubmitted() && $addWebsiteForm->isValid()) {
             $website = $addWebsiteForm->getData();
             $company->addWebsite($website);
 
+
+            // Liste des contrats ajoutés
+            $types = ['vitrine', 'commerce', 'google', 'facebook'];
+            foreach ($types as $type) {
+                $check = $request->query->get($type . '-check');
+                if ($check == 'on') {
+                    $typeContract = $this->em->getRepository(TypeContract::class)->findOneBy(
+                        ['lib' => $type]
+                    );
+                    $price = $request->query->get($type . '-price');
+                    $promotion = $request->query->get($type . '-promotion');
+                    $contract = new Contract;
+                    $contract->setPrice($price)
+                        ->setPromotion($promotion)
+                        ->setType($typeContract)
+                        ->setWebsite($website);
+                    $website->addContract($contract);
+                    $this->em->persist($contract);
+                }
+            }
+
             $this->em->persist($website);
             $this->em->persist($company);
             $this->em->flush();
 
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('show_company', ['company' => $company->getId()]);
         }
 
         return $this->render('website/add.html.twig', [
-            'add_website_form' => $addWebsiteForm->createView()
+            'add_website_form' => $addWebsiteForm->createView(),
+            'company' => $company,
+            'typesContract' => $typesContract
         ]);
     }
 

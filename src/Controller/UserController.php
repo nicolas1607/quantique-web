@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Entity\GoogleAccount;
 use App\Entity\FacebookAccount;
+use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,34 @@ class UserController extends AbstractController
     {
         $this->em = $em;
         $this->userRepo = $userRepo;
+    }
+
+    /**
+     * @Route("/add/user/{company}", name="add_user_company")
+     */
+    public function addForCompany(Request $request, Company $company, UserPasswordHasherInterface $encoder): Response
+    {
+        $user = new User();
+        $addUserForm = $this->createForm(RegistrationFormType::class, $user);
+        $addUserForm->handleRequest($request);
+
+        if ($addUserForm->isSubmitted() && $addUserForm->isValid()) {
+            $user = $addUserForm->getData();
+
+            $password = $user->getPassword();
+            $passwordEncoded = $encoder->hashPassword($user, $password);
+            $user->setPassword($passwordEncoded);
+
+            $this->em->persist($user);
+            $this->em->flush();
+
+            return $this->redirectToRoute('admin_users');
+        }
+
+        return $this->render('user/add_company.html.twig', [
+            'add_user_form' => $addUserForm->createView(),
+            'company' => $company
+        ]);
     }
 
 

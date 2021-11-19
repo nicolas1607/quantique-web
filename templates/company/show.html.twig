@@ -6,7 +6,13 @@
 
 <div class="container">
 
-    <h1>{{company.name}}</h1>
+    <div class="cont-flex-space">
+        <h1>{{company.name}}</h1>
+        <div class="cont-flex-space">
+            <a class="nav-link" href="{{path('add_user_company', {'company': company.id})}}">Nouveau client</a>
+            <a class="nav-link" href="{{path('add_website', {'company': company.id})}}">Nouveau site</a>
+        </div>
+    </div>
 
     <div>
         <div>
@@ -29,8 +35,7 @@
         </div>
     </div>
 
-    <div class="cont-grid">
-        {# {% if company.facebookAccount.email != null %} #}
+    {# <div class="cont-grid">
         <div class="form-facebook-account">
             <button id="newFacebookAccount" class="btn-type" type="button">Compte Facebook</button>
         </div>
@@ -58,6 +63,40 @@
             </form>
         </div>
         
+    </div> #}
+
+    <div>
+        <h2>Clients</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Contact</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Numéro de téléphone</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in company.users %}
+                <tr class="table-light">
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.firstname }} {{ user.lastname }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>
+                        <ul class="action-list">
+                            <li class="action-item">
+                                <a href="{{path('edit_user', {'id': user.id})}}" class="action-link">
+                                    <i class="fas fa-user-edit"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <div>
@@ -68,7 +107,6 @@
                     <th scope="col">Id</th>
                     <th scope="col">Nom du site</th>
                     <th scope="col">URL du site</th>
-                    <th scope="col">Entreprise</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -78,14 +116,17 @@
                     <td>{{website.id}}</td>
                     <td>{{website.name}}</td>
                     <td><a class="nav-link" href="{{website.url}}">{{website.url}}</a></td>
-                    <td>{{website.company.name}}</td>
                     <td>
                         <ul class="action-list">
                             <li class="action-item">
-                                <a href="{{path('show_website', {'website': website.id})}}" class="action-link">Voir</a>
+                                <a href="{{path('show_website', {'website': website.id})}}" class="action-link">
+                                    <i class="fas fa-eye"></i>
+                                </a>
                             </li>
                             <li class="action-item">
-                                <a href="{{path('edit_website', {'website': website.id})}}" class="action-link">Modifier</a>
+                                <a href="{{path('edit_website', {'website': website.id})}}" class="action-link">
+                                    <i class="fas fa-edit"></i>
+                                </a>
                             </li>
                         </ul>
                     </td>

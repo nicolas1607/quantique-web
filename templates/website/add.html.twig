@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quantique | Ajouter un site{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1 class="form-title">Ajouter un site à {{company.name}}</h1>
+    {{ form_start(add_website_form) }}
+    <div class="cont-grid form-section">
+        {{ form_row(add_website_form.name) }}
+        {{ form_row(add_website_form.url) }}
+    </div>
+    <div class="form-section">
+        <div class="cont-grid">
+        {% for type in typesContract %}
+            <div>
+                <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox" name="{{type.lib}}-check">
+                <label for="{{type.lib}}-check"><strong>{{type.name}}</strong></label>
+                <div class="cont-grid">
+                    <div>
+                        <label for="{{type.lib}}-price">Prix initial</label>
+                        <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                    </div>
+                    <div>
+                        <label for="{{type.lib}}-promotion">Promotion</label>
+                        <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    <div class="cont-flex">
+        {{ form_row(add_website_form.submit) }}
+    </div>
+    {{ form_end(add_website_form) }}
+</div>
+
+<script>
+    const types = ['vitrine', 'commerce', 'google', 'facebook']
+    types.forEach(function(type) {
+        const check = document.querySelector('#' + type + '-check');
+        const price = document.querySelector('#' + type + '-price');
+        const promotion = document.querySelector('#' + type + '-promotion');
+        check.addEventListener('click', () => {
+            price.setAttribute('required', 'required');
+            promotion.setAttribute('required', 'required');
+        })
+    });
+</script>
+
+{% endblock %}
