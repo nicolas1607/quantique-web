@@ -36,14 +36,9 @@ class Website
     private $company;
 
     /**
-     * @ORM\OneToMany(targetEntity=Contract::class, mappedBy="website")
+     * @ORM\OneToMany(targetEntity=Contract::class, mappedBy="website", cascade={"remove"})
      */
     private $contracts;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Invoice::class, inversedBy="websites")
-     */
-    private $invoices;
 
     public function __construct()
     {
@@ -118,30 +113,6 @@ class Website
                 $contract->setWebsite(null);
             }
         }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Invoice[]
-     */
-    public function getInvoices(): Collection
-    {
-        return $this->invoices;
-    }
-
-    public function addInvoice(Invoice $invoice): self
-    {
-        if (!$this->invoices->contains($invoice)) {
-            $this->invoices[] = $invoice;
-        }
-
-        return $this;
-    }
-
-    public function removeInvoice(Invoice $invoice): self
-    {
-        $this->invoices->removeElement($invoice);
 
         return $this;
     }

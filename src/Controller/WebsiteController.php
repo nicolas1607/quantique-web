@@ -7,7 +7,6 @@ use App\Entity\Contract;
 use App\Entity\Website;
 use App\Form\WebsiteType;
 use App\Entity\TypeContract;
-use App\Form\ContractType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,9 +23,9 @@ class WebsiteController extends AbstractController
     }
 
     /**
-     * @Route("/website/add/{company}", name="add_website")
+     * @Route("/website/add/{company}", name="add_website_with_company")
      */
-    public function add(Request $request, Company $company): Response
+    public function addForCompany(Request $request, Company $company): Response
     {
         $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
 
@@ -66,7 +65,7 @@ class WebsiteController extends AbstractController
             return $this->redirectToRoute('show_company', ['company' => $company->getId()]);
         }
 
-        return $this->render('website/add.html.twig', [
+        return $this->render('website/add_with_company.html.twig', [
             'add_website_form' => $addWebsiteForm->createView(),
             'company' => $company,
             'typesContract' => $typesContract
@@ -83,7 +82,7 @@ class WebsiteController extends AbstractController
 
         if ($updateWebsiteForm->isSubmitted() && $updateWebsiteForm->isValid()) {
             $this->em->flush();
-            return $this->redirect($_SERVER['HTTP_REFERER']);
+            return $this->redirectToRoute('show_company', ['company' => $website->getCompany()->getId()]);
         }
 
         return $this->render('website/edit.html.twig', [
@@ -93,14 +92,14 @@ class WebsiteController extends AbstractController
     }
 
     /**
-     * @Route("/website/show/{website}", name="show_website")
+     * @Route("/website/delete/{website}", name="delete_website")
      */
-    public function show(Website $website): Response
+    public function delete(Website $website): Response
     {
-        $types = $this->em->getRepository(TypeContract::class)->findAll();
-        return $this->render('website/show.html.twig', [
-            'website' => $website,
-            'types' => $types
-        ]);
+        $website->getCompany()->removeWebsite($website);
+        $this->em->remove($website);
+        $this->em->flush();
+
+        return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 }

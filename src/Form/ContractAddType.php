@@ -2,41 +2,38 @@
 
 namespace App\Form;
 
-use App\Entity\Invoice;
-use App\Entity\TypeInvoice;
-use App\Entity\Website;
+use App\Entity\Contract;
+use App\Entity\TypeContract;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
-class InvoiceWebsiteType extends AbstractType
+class ContractAddType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('releasedAt', DateTimeType::class, [
-                'label' => 'Date de facturation',
-                'widget' => 'single_text',
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ])
-            ->add('file', FileType::class, [
-                'label' => 'Fichier PDF',
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ])
             ->add('type', EntityType::class, [
-                'class' => TypeInvoice::class,
+                'class' => TypeContract::class,
                 'choice_label' => 'name',
-                'label' => 'Type de facture',
+                'label' => 'Type',
                 'attr' => [
                     'class' => 'form-select'
+                ]
+            ])
+            ->add('price', NumberType::class, [
+                'label' => 'Prix initial',
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
+            ->add('promotion', NumberType::class, [
+                'label' => 'Promotion',
+                'attr' => [
+                    'class' => 'form-control'
                 ]
             ])
             ->add('submit', SubmitType::class, [
@@ -50,7 +47,7 @@ class InvoiceWebsiteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Invoice::class,
+            'data_class' => Contract::class,
         ]);
     }
 }

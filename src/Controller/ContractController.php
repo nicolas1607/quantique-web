@@ -7,10 +7,10 @@ use App\Entity\Website;
 use App\Entity\Contract;
 use App\Form\ContractType;
 use App\Entity\TypeContract;
+use App\Form\ContractAddType;
+use App\Form\ContractEditType;
 use App\Form\ContractInfoType;
 use App\Form\ContractUserType;
-use Doctrine\ORM\EntityManager;
-use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,96 +27,67 @@ class ContractController extends AbstractController
     }
 
     /**
-     * @Route("/contract/add", name="add_contract")
-     */
-    public function add(Request $request): Response
-    {
-        $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
-        $contract = new Contract();
-        $addContractForm = $this->createForm(ContractType::class, $contract);
-        $addContractForm->handleRequest($request);
-
-        if ($addContractForm->isSubmitted() && $addContractForm->isValid()) {
-            $contract = $addContractForm->getData();
-            $website = $contract->getWebsite();
-            $website->addContract($contract);
-
-            $this->em->persist($contract);
-            $this->em->persist($website);
-            $this->em->flush();
-
-            return $this->redirectToRoute('admin');
-        }
-
-        return $this->render('contract/add.html.twig', [
-            'add_contract_form' => $addContractForm->createView(),
-            'typesContract' => $typesContract
-        ]);
-    }
-
-    /**
      * @Route("/contract/add/{website}/{type}", name="add_contract_with_type")
      */
-    public function addWithType(Request $request, Website $website, TypeContract $type): Response
-    {
-        $contract = new Contract();
-        $addContractForm = $this->createForm(ContractInfoType::class, $contract);
-        $addContractForm->handleRequest($request);
-
-        if ($addContractForm->isSubmitted() && $addContractForm->isValid()) {
-            $contract = $addContractForm->getData();
-            $contract->setWebsite($website)
-                ->setType($type);
-            $website->addContract($contract);
-
-            $this->em->persist($contract);
-            $this->em->persist($website);
-            $this->em->flush();
-
-            return $this->redirectToRoute('show_website', ['website' => $website->getId()]);
-        }
-
-        return $this->render('contract/add_type.html.twig', [
-            'add_contract_form' => $addContractForm->createView(),
-            'website' => $website,
-            'type' => $type
-        ]);
-    }
-
-    /**
-     * @Route("/contract/add/{user}", name="add_contract_user")
-     */
-    // public function addForUser(Request $request, User $user): Response
+    // public function addWithType(Request $request, Website $website, TypeContract $type): Response
     // {
     //     $contract = new Contract();
-    //     $addContractForm = $this->createForm(ContractUserType::class, $contract);
+    //     $addContractForm = $this->createForm(ContractInfoType::class, $contract);
     //     $addContractForm->handleRequest($request);
 
     //     if ($addContractForm->isSubmitted() && $addContractForm->isValid()) {
     //         $contract = $addContractForm->getData();
-    //         $company = $addContractForm->getData('company');
-    //         $company->addContract($contract);
+    //         $contract->setWebsite($website)
+    //             ->setType($type);
+    //         $website->addContract($contract);
 
     //         $this->em->persist($contract);
-    //         $this->em->persist($company);
+    //         $this->em->persist($website);
     //         $this->em->flush();
 
-    //         // return $this->redirectToRoute('show_contracts_user', ['id' => $user->getId()]);
-    //         return $this->redirect($_SERVER['HTTP_REFERER']);
+    //         return $this->redirectToRoute('show_website', ['website' => $website->getId()]);
     //     }
 
-    //     return $this->render('contract/add_user.html.twig', [
-    //         'user' => $user,
-    //         'add_contract_form' => $addContractForm->createView()
+    //     return $this->render('contract/add_type.html.twig', [
+    //         'add_contract_form' => $addContractForm->createView(),
+    //         'website' => $website,
+    //         'type' => $type
     //     ]);
     // }
+
+    /**
+     * @Route("/contract/add/{website}", name="add_contract_with_website")
+     */
+    public function addWithWebsite(Request $request, Website $website): Response
+    {
+        $contract = new Contract();
+        $addContractForm = $this->createForm(ContractAddType::class, $contract);
+        $addContractForm->handleRequest($request);
+
+        if ($addContractForm->isSubmitted() && $addContractForm->isValid()) {
+            $contract = $addContractForm->getData();
+            $contract->setWebsite($website);
+            $website->addContract($contract);
+
+            $this->em->persist($contract);
+            $this->em->persist($website);
+            $this->em->flush();
+
+            return $this->redirectToRoute('show_company', ['company' => $website->getCompany()->getId()]);
+        }
+
+        return $this->render('contract/add_with_website.html.twig', [
+            'add_contract_form' => $addContractForm->createView(),
+            'website' => $website
+        ]);
+    }
 
     /**
      * @Route("/contract/edit/{contract}", name="edit_contract")
      */
     public function edit(Request $request, Contract $contract): Response
     {
-        $updateContractForm = $this->createForm(ContractUserType::class, $contract);
+        $updateContractForm = $this->createForm(ContractEditType::class, $contract);
         $updateContractForm->handleRequest($request);
 
         if ($updateContractForm->isSubmitted() && $updateContractForm->isValid()) {
@@ -135,6 +106,7 @@ class ContractController extends AbstractController
      */
     public function delete(Contract $contract): Response
     {
+        $contract->getWebsite()->removeContract($contract);
         $this->em->remove($contract);
         $this->em->flush();
 

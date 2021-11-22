@@ -60,24 +60,29 @@ class Company
     private $siret;
 
     /**
-     * @ORM\OneToMany(targetEntity=FacebookAccount::class, mappedBy="company")
+     * @ORM\OneToMany(targetEntity=FacebookAccount::class, mappedBy="company", cascade={"remove"})
      */
     private $facebook_account;
 
     /**
-     * @ORM\OneToMany(targetEntity=GoogleAccount::class, mappedBy="company")
+     * @ORM\OneToMany(targetEntity=GoogleAccount::class, mappedBy="company", cascade={"remove"})
      */
     private $google_account;
 
     /**
-     * @ORM\OneToMany(targetEntity=Website::class, mappedBy="company")
+     * @ORM\OneToMany(targetEntity=Website::class, mappedBy="company", cascade={"remove"})
      */
     private $websites;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="companies")
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="companies", cascade={"remove"})
      */
     private $users;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="company", cascade={"remove"})
+     */
+    private $invoices;
 
     public function __construct()
     {
@@ -305,6 +310,36 @@ class Company
     {
         if ($this->users->removeElement($user)) {
             $user->removeCompany($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Invoice[]
+     */
+    public function getInvoices(): Collection
+    {
+        return $this->invoices;
+    }
+
+    public function addInvoice(Invoice $invoice): self
+    {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices[] = $invoice;
+            $invoice->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): self
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getCompany() === $this) {
+                $invoice->setCompany(null);
+            }
         }
 
         return $this;

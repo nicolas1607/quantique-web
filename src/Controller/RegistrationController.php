@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\User;
+use App\Form\CompanyType;
+use App\Form\InvoiceType;
 use App\Form\RegistrationFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +23,10 @@ class RegistrationController extends AbstractController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
+
+        $company = new Company();
+        $addCompany = $this->createForm(CompanyType::class, $company);
+        $addCompany->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
@@ -40,6 +47,7 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'add_company_form' => $addCompany->createView()
         ]);
     }
 }

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quantique | Modifier un site{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1 class="form-title">Modifier un site</h1>
+    {{ form_start(edit_website_form) }}
+    <div class="cont-grid form-section">
+        {{ form_row(edit_website_form.name) }}
+        {{ form_row(edit_website_form.url) }}
+    </div>
+    <div class="cont-flex">
+        {{ form_row(edit_website_form.submit) }}
+    </div>
+    {{ form_end(edit_website_form) }}
+</div>
+
+{% endblock %}

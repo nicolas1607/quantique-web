@@ -1,24 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Quantique | Inscription{% endblock %}
+{% block title %}Quantique | Ajouter une entreprise{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1 class="form-title">Nouveau client</h1>
-    {{ form_start(registrationForm) }}
-    <div class="cont-grid form-section">
-        {{ form_row(registrationForm.firstname) }}
-        {{ form_row(registrationForm.lastname) }}
-    </div>
-    <div class="cont-grid form-section">
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.phone) }}
-    </div>
-    <div class="cont-grid form-section">
-        {{ form_row(registrationForm.password) }}
-    </div>
 
-    <h1>Entreprise</h1>
+<div class="container">
+    <h1 class="form-title">Ajouter une entreprise</h1>
+    {{ form_start(add_company_form) }}
+    <div class="form-section">
+        <label for="user">Client</label>
+        <input class="form-control" type="text" name="user" value="{{user.firstname}} {{user.lastname}}" readonly>
+    </div>
     <div class="cont-grid form-section">
         {{ form_row(add_company_form.name) }}
         {{ form_row(add_company_form.email) }}
@@ -35,10 +27,10 @@
         {{ form_row(add_company_form.numTVA) }}
         {{ form_row(add_company_form.siret) }}
     </div>
-    
     <div class="cont-flex">
-        {{ form_row(registrationForm.submit) }}
+        {{ form_row(add_company_form.submit) }}
     </div>
-    {{ form_end(registrationForm) }}
+    {{ form_end(add_company_form) }}
 </div>
+
 {% endblock %}

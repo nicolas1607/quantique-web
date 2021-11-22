@@ -138,12 +138,12 @@ class AppFixtures extends Fixture
         $typesInvoice = [];
 
         $abonnement = new TypeInvoice();
-        $abonnement->setName('Facture abonnement');
+        $abonnement->setName('Abonnement');
         $manager->persist($abonnement);
         $typesInvoice[] = $abonnement;
 
         $perso = new TypeInvoice();
-        $perso->setName('Facture personnalisée');
+        $perso->setName('Personnalisée');
         $manager->persist($perso);
         $typesInvoice[] = $perso;
 

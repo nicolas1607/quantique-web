@@ -27,34 +27,6 @@ class UserController extends AbstractController
         $this->userRepo = $userRepo;
     }
 
-    /**
-     * @Route("/add/user/{company}", name="add_user_company")
-     */
-    public function addForCompany(Request $request, Company $company, UserPasswordHasherInterface $encoder): Response
-    {
-        $user = new User();
-        $addUserForm = $this->createForm(RegistrationFormType::class, $user);
-        $addUserForm->handleRequest($request);
-
-        if ($addUserForm->isSubmitted() && $addUserForm->isValid()) {
-            $user = $addUserForm->getData();
-
-            $password = $user->getPassword();
-            $passwordEncoded = $encoder->hashPassword($user, $password);
-            $user->setPassword($passwordEncoded);
-
-            $this->em->persist($user);
-            $this->em->flush();
-
-            return $this->redirectToRoute('admin_users');
-        }
-
-        return $this->render('user/add_company.html.twig', [
-            'add_user_form' => $addUserForm->createView(),
-            'company' => $company
-        ]);
-    }
-
 
     // UTILISATEUR //
 
@@ -66,10 +38,56 @@ class UserController extends AbstractController
         return $this->render('user/profile.html.twig', []);
     }
 
+
+    // ADMINISTRATEUR //
+
     /**
-     * @Route("/user/edit/{id}", name="edit_user")
+     * @Route("/admin", name="admin")
      */
-    public function editUser(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
+    public function admin(): Response
+    {
+        $companies = $this->em->getRepository(Company::class)->findAll();
+        return $this->render('admin/admin.html.twig', [
+            'companies' => $companies
+        ]);
+    }
+
+    // GENERAL //
+
+    /**
+     * @Route("/add/user/{company}", name="add_user_with_company")
+     */
+    public function addForCompany(Request $request, Company $company, UserPasswordHasherInterface $encoder): Response
+    {
+        $user = new User();
+        $addUserForm = $this->createForm(RegistrationFormType::class, $user);
+        $addUserForm->handleRequest($request);
+
+        if ($addUserForm->isSubmitted() && $addUserForm->isValid()) {
+            $user = $addUserForm->getData();
+            $password = $user->getPassword();
+            $passwordEncoded = $encoder->hashPassword($user, $password);
+            $user->setPassword($passwordEncoded);
+
+            $company->addUser($user);
+
+            $this->em->persist($user);
+            $this->em->persist($company);
+            $this->em->flush();
+
+            return $this->redirectToRoute('show_contracts', ['company' => $company->getId()]);
+        }
+
+        return $this->render('user/add_with_company.html.twig', [
+            'add_user_form' => $addUserForm->createView(),
+            'company' => $company
+        ]);
+    }
+
+    /**
+     * @Route("/user/edit/{user}", name="edit_user")
+     */
+    public function edit(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
     {
         $editUserForm = $this->createForm(UserType::class, $user, ['method' => 'GET']);
 
@@ -114,104 +132,14 @@ class UserController extends AbstractController
         ]);
     }
 
-
-    // ADMINISTRATEUR USER //
-
     /**
-     * @Route("/admin/users", name="admin_users")
+     * @Route("/user/delete/{user}", name="delete_user")
      */
-    public function adminUsers(): Response
+    public function delete(User $user): Response
     {
-        $users = [];
-        foreach ($this->userRepo->findAll() as $user) {
-            $flag = true;
-            foreach ($user->getRoles() as $role) {
-                if ($role == 'ROLE_ADMIN') {
-                    $flag = false;
-                }
-            }
-            if ($flag) {
-                $users[] = $user;
-            }
-        }
-        return $this->render('admin/users/users.html.twig', [
-            'users' => $users
-        ]);
-    }
+        $this->em->remove($user);
+        $this->em->flush();
 
-    /**
-     * @Route("/user/companies/{id}", name="show_companies_user")
-     */
-    public function showCompanies(User $user): Response
-    {
-        return $this->render('admin/users/show_companies.html.twig', [
-            'user' => $user
-        ]);
-    }
-
-    /**
-     * @Route("/user/websites/{id}", name="show_websites_user")
-     */
-    public function showWebsite(User $user): Response
-    {
-        return $this->render('admin/users/show_websites.html.twig', [
-            'user' => $user
-        ]);
-    }
-
-    /**
-     * @Route("/user/contracts/{id}", name="show_contracts_user")
-     */
-    public function showContracts(User $user): Response
-    {
-        return $this->render('admin/users/show_contracts.html.twig', [
-            'user' => $user
-        ]);
-    }
-
-    /**
-     * @Route("/user/invoices/{id}", name="show_invoices_user")
-     */
-    public function showInvoices(Request $request, User $user): Response
-    {
-        $type = $request->query->get('typeContract');
-        if ($type == null) $type = 'all';
-
-        $res = [];
-        foreach ($user->getCompanies() as $company) {
-            foreach ($company->getContracts() as $contract) {
-                foreach ($contract->getInvoices() as $invoice) {
-                    if ($type != 'all') {
-                        if ($invoice->getContract()->getType()->getLib() == $type) {
-                            $res[] = $invoice;
-                        }
-                    } else {
-                        $res[] = $invoice;
-                    }
-                }
-            }
-        }
-        usort($res, function ($a, $b) {
-            return $a < $b ? -1 : 1;
-        });
-
-        return $this->render('admin/users/show_invoices.html.twig', [
-            'user' => $user,
-            'invoices' => $res,
-            'type' => $type
-        ]);
-    }
-
-    // ADMINISTRATION COMPANY //
-
-    /**
-     * @Route("/admin/companies", name="admin_companies")
-     */
-    public function adminCompanies(): Response
-    {
-        $companies = $this->em->getRepository(Company::class)->findAll();
-        return $this->render('admin/companies/companies.html.twig', [
-            'companies' => $companies
-        ]);
+        return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 }

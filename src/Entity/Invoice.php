@@ -36,9 +36,10 @@ class Invoice
     private $type;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Website::class, mappedBy="invoices")
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="invoices")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $websites;
+    private $company;
 
     public function __construct()
     {
@@ -86,29 +87,14 @@ class Invoice
         return $this;
     }
 
-    /**
-     * @return Collection|Website[]
-     */
-    public function getWebsites(): Collection
+    public function getCompany(): ?Company
     {
-        return $this->websites;
+        return $this->company;
     }
 
-    public function addWebsite(Website $website): self
+    public function setCompany(?Company $company): self
     {
-        if (!$this->websites->contains($website)) {
-            $this->websites[] = $website;
-            $website->addInvoice($this);
-        }
-
-        return $this;
-    }
-
-    public function removeWebsite(Website $website): self
-    {
-        if ($this->websites->removeElement($website)) {
-            $website->removeInvoice($this);
-        }
+        $this->company = $company;
 
         return $this;
     }

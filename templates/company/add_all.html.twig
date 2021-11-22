@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quantique | Ajouter une entreprise{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1 class="form-title">Ajouter une entreprise</h1>
+    {{ form_start(add_company_form) }}
+    <div class="cont-grid form-section">
+        {{ form_row(add_company_form.name) }}
+        {{ form_row(add_company_form.email) }}
+    </div>
+    <div class="cont-grid form-section">
+        {{ form_row(add_company_form.phone) }}
+        {{ form_row(add_company_form.address) }}
+    </div>
+    <div class="cont-grid form-section">
+        {{ form_row(add_company_form.postalCode) }}
+        {{ form_row(add_company_form.city) }}
+    </div>
+    <div class="cont-grid form-section">
+        {{ form_row(add_company_form.numTVA) }}
+        {{ form_row(add_company_form.siret) }}
+    </div>
+
+    <h1>Ajouter un abonnement</h1>
+    <div class="cont-grid">
+        <div>
+            <label for="website">Site internet</label>
+            <input class="form-control" type="text" name="website">
+        </div>
+        <div>
+            <label for="url">URL du site</label>
+            <input class="form-control" type="text" name="url">
+        </div>
+    </div>
+    <div class="form-section">
+        <div class="cont-flex-start">
+            <i class="fas fa-file-contract fa-2x"></i>
+            <h2>Ajouter des contrats</h2>
+        </div>
+        <div class="cont-grid">
+        {% for type in types %}
+            <div>
+                <input id="{{type.lib}}-check" type="checkbox" name="{{type.lib}}-check">
+                <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
+                <div class="">
+                    <div>
+                        <label for="{{type.lib}}-price">Prix initial</label>
+                        <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                    </div>
+                    <div>
+                        <label for="{{type.lib}}-promotion">Promotion</label>
+                        <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+    <div class="cont-flex">
+        {{ form_row(add_company_form.submit) }}
+    </div>
+    {{ form_end(add_company_form) }}
+</div>
+
+{% endblock %}
