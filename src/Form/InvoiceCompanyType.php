@@ -18,22 +18,25 @@ class InvoiceCompanyType extends AbstractType
     {
         $builder
             ->add('releasedAt', DateTimeType::class, [
-                'label' => 'Date de facturation',
+                'label' => 'Date de facturation *',
+                'required' => true,
                 'widget' => 'single_text',
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
             ->add('file', FileType::class, [
-                'label' => 'Fichier PDF',
+                'label' => 'Fichier PDF *',
+                'required' => false,
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
             ->add('type', EntityType::class, [
                 'class' => TypeInvoice::class,
+                'required' => false,
                 'choice_label' => 'name',
-                'label' => 'Type de facture',
+                'label' => 'Type *',
                 'attr' => [
                     'class' => 'form-select'
                 ]

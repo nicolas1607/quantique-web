@@ -27,12 +27,12 @@
     <h1>Ajouter un abonnement</h1>
     <div class="cont-grid">
         <div>
-            <label for="website">Site internet</label>
-            <input class="form-control" type="text" name="website">
+            <label for="website">Site internet *</label>
+            <input class="form-control" type="text" name="website" required>
         </div>
         <div>
-            <label for="url">URL du site</label>
-            <input class="form-control" type="text" name="url">
+            <label for="url">URL du site *</label>
+            <input class="form-control" type="text" name="url" required>
         </div>
     </div>
     <div class="form-section">
@@ -65,5 +65,20 @@
     </div>
     {{ form_end(add_company_form) }}
 </div>
+
+<script>
+    const types = ['vitrine', 'commerce', 'google', 'facebook']
+    types.forEach(function(type) {
+        const check = document.querySelector('#' + type + '-check');
+        const price = document.querySelector('#' + type + '-price');
+        check.addEventListener('click', () => {
+            if (check.checked == true) {
+                price.setAttribute('required', 'required');
+            } else {
+                price.removeAttribute('required')
+            }
+        })
+    });
+</script>
 
 {% endblock %}

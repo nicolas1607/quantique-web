@@ -5,63 +5,7 @@
 {% block body %}
 
 <div class="container">
-    <div class="cont-grid">
-        <div>
-            <div class="cont-flex-start">
-                <i class="fas fa-building fa-2x"></i>
-                <h2>{{company.name}}</h2>
-            </div>
-            <div class="cont-grid">
-                <p><strong>Numéro TVA : </strong></br>{{company.numTVA}}</p>
-                <p><strong>SIRET ou SIREN : </strong></br>{{company.siret}}</p>
-            </div>
-            <div class="cont-grid">
-                <p><strong>Email : </strong></br>{{company.email}}</p>
-                <p><strong>Téléphone : </strong></br>{{company.phone}}</p>
-            </div>
-            <p><strong>Adresse : </strong></br>{{company.address}}, {{company.city}} {{company.postalCode}}</p>
-        </div>
-        <div>
-            <div class="cont-flex-space">
-                <div class="cont-flex-start">
-                    <i class="fas fa-users fa-2x"></i>
-                    <h2>Clients</h2>
-                </div>
-                <a class="nav-link" href="{{path('add_user_with_company', {'company': company.id})}}">
-                    <i class="fas fa-plus-square fa-2x"></i>
-                </a>
-            </div>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Contact</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in company.users %}
-                    <tr class="table-light">
-                        <td>{{ user.firstname }} {{ user.lastname }}</td>
-                        <td>
-                            <ul class="action-list">
-                                <li class="action-item">
-                                    <a href="{{path('edit_user', {'user': user.id})}}" class="action-link">
-                                        <i class="fas fa-user-edit"></i>
-                                    </a>
-                                </li>
-                                <li class="action-item">
-                                    <a href="{{path('delete_user', {'user': user.id})}}" class="action-link">
-                                        <i class="fas fa-times"></i>                                   
-                                    </a>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+    {% include "partials/_company_info.html.twig" %}
 
     <a class="btn-type right" href="{{path('add_invoice_with_company', {'company': company.id})}}">Nouvelle facture</a>
 

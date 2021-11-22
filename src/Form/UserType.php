@@ -18,24 +18,28 @@ class UserType extends AbstractType
         $builder
             ->add('firstname', TextType::class, [
                 'label' => 'Prénom',
+                'required' => false,
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'Nom de famille',
+                'required' => false,
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
             ->add('email', TextType::class, [
-                'label' => 'Email',
+                'label' => 'Email *',
+                'required' => true,
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
             ->add('phone', TextType::class, [
                 'label' => 'Contact',
+                'required' => false,
                 'attr' => [
                     'class' => 'form-control'
                 ]

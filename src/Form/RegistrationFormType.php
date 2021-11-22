@@ -23,24 +23,28 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('firstname', TextType::class, [
                 'label' => 'Prénom',
+                'required' => false,
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'Nom de famille',
+                'required' => false,
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
             ->add('phone', TextType::class, [
                 'label' => 'Numéro de téléphone',
+                'required' => false,
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
             ->add('email', EmailType::class, [
-                'label' => 'Email',
+                'label' => 'Email *',
+                'required' => true,
                 'attr' => [
                     'class' => 'form-control input'
                 ]
@@ -49,13 +53,15 @@ class RegistrationFormType extends AbstractType
                 'type' => PasswordType::class,
                 'invalid_message' => 'Mot de passe invalide',
                 'first_options' => [
-                    'label' => 'Choisissez un mot de passe',
+                    'label' => 'Choisir un mot de passe *',
+                    'required' => true,
                     'attr' => [
                         'class' => 'form-control mt-3'
                     ]
                 ],
                 'second_options' => [
-                    'label' => 'Confirmez ce mot de passe',
+                    'label' => 'Confirmer le mot de passe *',
+                    'required' => true,
                     'attr' => [
                         'class' => 'form-control mt-3'
                     ]

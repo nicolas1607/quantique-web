@@ -53,14 +53,11 @@
     types.forEach(function(type) {
         const check = document.querySelector('#' + type + '-check');
         const price = document.querySelector('#' + type + '-price');
-        const promotion = document.querySelector('#' + type + '-promotion');
         check.addEventListener('click', () => {
             if (check.checked == true) {
                 price.setAttribute('required', 'required');
-                promotion.setAttribute('required', 'required');
             } else {
                 price.removeAttribute('required')
-                promotion.removeAttribute('required')
             }
         })
     });

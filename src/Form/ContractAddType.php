@@ -19,19 +19,22 @@ class ContractAddType extends AbstractType
             ->add('type', EntityType::class, [
                 'class' => TypeContract::class,
                 'choice_label' => 'name',
-                'label' => 'Type',
+                'required' => true,
+                'label' => 'Type *',
                 'attr' => [
                     'class' => 'form-select'
                 ]
             ])
             ->add('price', NumberType::class, [
-                'label' => 'Prix initial',
+                'label' => 'Prix initial *',
+                'required' => true,
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
             ->add('promotion', NumberType::class, [
                 'label' => 'Promotion',
+                'required' => false,
                 'attr' => [
                     'class' => 'form-control'
                 ]
