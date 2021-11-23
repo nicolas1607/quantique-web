@@ -7,7 +7,9 @@
 <div class="container">
     {% include "partials/_company_info.html.twig" %}
 
+    {% if is_granted('ROLE_ADMIN') %}
     <a class="btn-type right" href="{{path('add_website_with_company', {'company': company.id})}}">Nouvel abonnement</a>
+    {% endif %}
 
     <ul class="nav nav-tabs nav-tabs-company">
         <li class="nav-item">
@@ -16,9 +18,15 @@
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
         </li>
+        {% if is_granted('ROLE_ADMIN') %}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="{{path('show_accounts', {'company': company.id})}}">Comptes</a>
         </li>
+        {% elseif app.user %}
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
+        </li>
+        {% endif %}
     </ul>
 
     <div>
@@ -29,6 +37,7 @@
                     <div class="cont-flex">
                         <h3 class="contract-title"><a class="action-link" href="{{website.url}}">{{website.name}}</a></h3>
                     </div>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <div class="cont-flex">
                         <a href="{{path('edit_website', {'website': website.id})}}" class="action-link">
                             <i class="fas fa-edit fa-lg"></i>
@@ -36,7 +45,11 @@
                         <a class="nav-link" href="{{path('add_contract_with_website', {'website': website.id})}}">
                             <i class="fas fa-plus-square fa-lg"></i>
                         </a>
+                        <a class="nav-link" href="{{path('delete_website', {'website': website.id})}}">
+                            <i class="fas fa-times fa-lg"></i>
+                        </a>
                     </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="contract-content">
@@ -56,6 +69,7 @@
                             </p>
                         </div>
                     </div>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <div class="cont-flex-end">
                         <a class="action-link" href="{{path('edit_contract', {'contract': contract.id})}}">
                             <i class="fas fa-edit fa-lg"></i>
@@ -64,6 +78,7 @@
                             <i class="fas fa-times fa-lg"></i>
                         </a>
                     </div>
+                    {% endif %}
                 </div>
                 {% endfor %} 
             </div>

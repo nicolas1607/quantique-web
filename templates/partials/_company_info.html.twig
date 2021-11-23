@@ -22,9 +22,11 @@
                 <i class="fas fa-users fa-2x"></i>
                 <h2>Clients</h2>
             </div>
+            {% if is_granted('ROLE_ADMIN') %}
             <a class="nav-link" href="{{path('add_user_with_company', {'company': company.id})}}">
                 <i class="fas fa-plus-square fa-2x"></i>
             </a>
+            {% endif %} 
         </div>
         <table class="table table-client table-hover">
             <thead>
@@ -32,7 +34,9 @@
                     <th scope="col">Contact</th>
                     <th scope="col">Email</th>
                     <th scope="col">Téléphone</th>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <th scope="col">Action</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -45,6 +49,7 @@
                     <td>{{ user.firstname }} {{ user.lastname }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.phone }}</td>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <td>
                         <ul class="action-list">
                             <li class="action-item">
@@ -59,6 +64,7 @@
                             </li>
                         </ul>
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

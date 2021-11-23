@@ -27,6 +27,46 @@ class CompanyController extends AbstractController
     }
 
     /**
+     * @Route("/company/show/contracts/{company}", name="show_contracts")
+     */
+    public function showContracts(Company $company): Response
+    {
+        return $this->render('company/show_contracts.html.twig', [
+            'company' => $company
+        ]);
+    }
+
+    /**
+     * @Route("/company/show/invoices/{company}", name="show_invoices")
+     */
+    public function showInvoices(Company $company): Response
+    {
+        return $this->render('company/show_invoices.html.twig', [
+            'company' => $company
+        ]);
+    }
+
+    /**
+     * @Route("/company/show/accounts/{company}", name="show_accounts")
+     */
+    public function showAccounts(Company $company): Response
+    {
+        return $this->render('company/show_accounts.html.twig', [
+            'company' => $company
+        ]);
+    }
+
+    /**
+     * @Route("/company/show/stats/{company}", name="show_stats")
+     */
+    public function showStats(Company $company): Response
+    {
+        return $this->render('company/show_stats.html.twig', [
+            'company' => $company
+        ]);
+    }
+
+    /**
      * @Route("/company/add", name="add_company")
      */
     public function add(Request $request): Response
@@ -122,36 +162,6 @@ class CompanyController extends AbstractController
 
         return $this->render('company/edit.html.twig', [
             'edit_company_form' => $updateContractForm->createView(),
-            'company' => $company,
-        ]);
-    }
-
-    /**
-     * @Route("/company/show/contracts/{company}", name="show_contracts")
-     */
-    public function showContracts(Company $company): Response
-    {
-        return $this->render('company/show_contracts.html.twig', [
-            'company' => $company,
-        ]);
-    }
-
-    /**
-     * @Route("/company/show/invoices/{company}", name="show_invoices")
-     */
-    public function showInvoices(Company $company): Response
-    {
-        return $this->render('company/show_invoices.html.twig', [
-            'company' => $company,
-        ]);
-    }
-
-    /**
-     * @Route("/company/show/accounts/{company}", name="show_accounts")
-     */
-    public function showAccounts(Company $company): Response
-    {
-        return $this->render('company/show_accounts.html.twig', [
             'company' => $company,
         ]);
     }

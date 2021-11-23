@@ -14,9 +14,15 @@
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
         </li>
+        {% if is_granted('ROLE_ADMIN') %}
         <li class="nav-item">
             <a class="nav-link active" data-bs-toggle="tab" href="{{path('show_accounts', {'company': company.id})}}">Comptes</a>
         </li>
+        {% elseif app.user %}
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
+        </li>
+        {% endif %}
     </ul>
 
     <div class="cont-grid section">

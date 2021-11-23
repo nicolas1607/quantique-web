@@ -62,7 +62,7 @@ class WebsiteController extends AbstractController
             $this->em->persist($company);
             $this->em->flush();
 
-            return $this->redirectToRoute('show_company', ['company' => $company->getId()]);
+            return $this->redirectToRoute('show_contracts', ['company' => $company->getId()]);
         }
 
         return $this->render('website/add_with_company.html.twig', [

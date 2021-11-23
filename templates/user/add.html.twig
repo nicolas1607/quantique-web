@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quantique | Inscription{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="form-title">Nouveau client</h1>
+    {{ form_start(add_user_form) }}
+    <div class="form-section">
+        <label for="company">Entreprise</label>
+        <select class="form-select" name="company">
+            {% for company in companies %}
+            <option value="{{company.id}}">{{company.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="cont-grid form-section">
+        {{ form_row(add_user_form.firstname) }}
+        {{ form_row(add_user_form.lastname) }}
+    </div>
+    <div class="cont-grid form-section">
+        {{ form_row(add_user_form.email) }}
+        {{ form_row(add_user_form.phone) }}
+    </div>
+    
+    <div class="cont-grid form-section">
+        {{ form_row(add_user_form.password) }}
+    </div>
+    <div class="cont-flex">
+        {{ form_row(add_user_form.submit) }}
+    </div>
+    {{ form_end(add_user_form) }}
+</div>
+{% endblock %}

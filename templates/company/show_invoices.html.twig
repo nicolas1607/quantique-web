@@ -7,7 +7,9 @@
 <div class="container">
     {% include "partials/_company_info.html.twig" %}
 
+    {% if is_granted('ROLE_ADMIN') %}
     <a class="btn-type right" href="{{path('add_invoice_with_company', {'company': company.id})}}">Nouvelle facture</a>
+    {% endif %}
 
     <ul class="nav nav-tabs nav-tabs-company">
         <li class="nav-item">
@@ -16,9 +18,15 @@
         <li class="nav-item">
             <a class="nav-link active" data-bs-toggle="tab" href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
         </li>
+        {% if is_granted('ROLE_ADMIN') %}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="{{path('show_accounts', {'company': company.id})}}">Comptes</a>
         </li>
+        {% elseif app.user %}
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
+        </li>
+        {% endif %}
     </ul>
 
     <div>
@@ -28,7 +36,9 @@
                     <th scope="col">Date</th>
                     <th scope="col">Type</th>
                     <th scope="col">Nom</th>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <th scope="col">Action</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -37,6 +47,7 @@
                     <td>{{ invoice.releasedAt|date("d/m/Y") }}</td>
                     <td>{{ invoice.type.name }}</td>
                     <td>{{ invoice.file }}</td>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <td>
                         <ul class="action-list">
                             <li class="action-item cont-flex-space">
@@ -50,6 +61,7 @@
                             </li>
                         </ul>
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

@@ -255,6 +255,13 @@ input[type='checkbox'] {
   gap: 1rem 2rem;
 }
 
+.cont-grid-3 {
+  margin-top: 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+}
+
 .right {
   float: right;
 }
