@@ -17,7 +17,7 @@ class ContractEditType extends AbstractType
     {
         $builder
             ->add('price', NumberType::class, [
-                'label' => 'Prix initial',
+                'label' => 'Prix initial *',
                 'required' => true,
                 'attr' => [
                     'class' => 'form-control'

@@ -33,7 +33,7 @@ class ContractAddType extends AbstractType
                 ]
             ])
             ->add('promotion', NumberType::class, [
-                'label' => 'Promotion',
+                'label' => 'Prix réduit',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control'

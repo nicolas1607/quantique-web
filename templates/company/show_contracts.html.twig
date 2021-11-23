@@ -60,11 +60,11 @@
                         <div class="cont-flex-space">
                             <p>
                                 <i class="fas fa-chevron-right"></i> 
-                                {% if contract.promotion == 0 %}
-                                <mark>{{contract.price}}€ / mois</mark>
+                                {% if contract.promotion %}
+                                    <strike>{{contract.price}}€ / mois</strike> => 
+                                    <mark>{{contract.promotion}}€ / mois</mark>
                                 {% else %}
-                                <strike>{{contract.price}}€ / mois</strike> => 
-                                <mark>{{contract.price - contract.promotion}}€ / mois</mark>
+                                    <mark>{{contract.price}}€ / mois</mark>
                                 {% endif %}
                             </p>
                         </div>
