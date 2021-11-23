@@ -64,7 +64,13 @@ class InvoiceController extends AbstractController
                 $this->em->flush();
             }
 
-            return $this->redirectToRoute('admin');
+            // Envoie d'un mail de confirmation
+            return $this->redirectToRoute('email', [
+                'company' => $company->getId(),
+                'invoice' => $invoice->getId()
+            ]);
+
+            // return $this->redirectToRoute('admin');
         }
 
         $companies = $this->companyRepo->findAll();
@@ -113,7 +119,11 @@ class InvoiceController extends AbstractController
                 $this->em->flush();
             }
 
-            return $this->redirectToRoute('show_invoices', ['company' => $company->getId()]);
+            // Envoie d'un mail de confirmation
+            return $this->redirectToRoute('email_invoice_confirmation', [
+                'company' => $company->getId(),
+                'invoice' => $invoice->getId()
+            ]);
         }
 
         return $this->render('invoice/add_with_company.html.twig', [

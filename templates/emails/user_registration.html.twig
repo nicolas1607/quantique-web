@@ -1,0 +1,58 @@
+{% apply inline_css %}
+
+<style>
+    .email {
+        background-color: white;
+        text-align: center;
+      }
+
+      .email-title {
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+      
+      .email-content {
+        padding: 2rem;
+        font-size: 1rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+      
+      .email-link {
+        padding: 1rem 2rem;
+        background-color: #F3AA10;
+        color: white;
+        border-radius: 2rem;
+        font-weight: bold;
+        text-align: center;
+        box-shadow: 1px 1px 4px 1px #F3AA10;
+      }
+      
+      .email-footer {
+        margin-top: 6rem;
+        font-size: .6rem;
+      }
+</style>
+
+<div>
+    <img src="{{ email.image('@images/logo-quantique-web.png') }}" alt="Logo">
+
+    <div class="email">
+
+        <div class="email-content">
+            <p class="email-title">Bonjour {{user.firstname}} {{user.lastname}},</p>
+            <p>Une nouvelle facture concernant {{company.name}} a été ajoutée au back office de Quantique Web.</p>
+            <p>Téléchargez votre document en pièce jointe ou consultez le sur votre espace client.</p>
+        </div>
+
+        <div class="email-btn">
+            <a class="email-link" href="office.quantique-web.fr">Espace client</a>
+        </div>
+            
+        <div class="email-footer">
+            <p>Ceci est un message automatique, veuillez ne pas répondre. Il s'agit d'un courrier électronique de service. Contactez Quantique Web si vous ne souhaitez plus recevoir ces emails.</p>
+        </div>
+    </div>
+</div>
+
+{% endapply %}

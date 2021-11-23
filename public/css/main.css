@@ -237,6 +237,13 @@ input[type='checkbox'] {
   height: 5rem;
 }
 
+.cont-flex-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .cont-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -360,6 +367,8 @@ h3 .action-link {
   width: 100%;
 }
 
+
+
 /* Admin */
 
 .nav-tabs {
@@ -409,7 +418,7 @@ h3 .action-link {
   margin-bottom: 0;
 }
 
-.filter {
+/* .filter {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -423,7 +432,7 @@ h3 .action-link {
 
 .filter input {
   width: 10rem;
-}
+} */
 
 /* Company vue */
 
@@ -462,6 +471,10 @@ h3 .action-link {
   margin-bottom: 0;
 }
 
+
+
+
+
 /* Facebook & Google */
 
 .form-account {
@@ -481,29 +494,3 @@ h3 .action-link {
   width: 25%;
   margin-right: 4rem;
 } 
-
-/* Modal Preview */
-
-.mini-preview-wrapper {
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-  position: absolute;
-  overflow: hidden;
-  z-index: -1;
-  opacity: 0;
-  margin-top: 4;
-  border: solid 1px #000;
-  box-shadow: 4px 4px 6px rgba(0, 0, 0, .3);
-  transition: z-index steps(1) .3s, opacity .3s, margin-top .3s;
-}
-
-.mini-preview-anchor:hover .mini-preview-wrapper {
-  z-index: 2;
-  opacity: 1;
-  margin-top: 6px;
-  transition: opacity .3s, margin-top .3s;
-}
-
-.mini-preview-cover {
-  background-color: rgba(0, 0, 0, 0); /* IE fix */
-}
