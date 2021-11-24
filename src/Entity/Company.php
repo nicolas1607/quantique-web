@@ -60,16 +60,6 @@ class Company
     private $siret;
 
     /**
-     * @ORM\OneToMany(targetEntity=FacebookAccount::class, mappedBy="company", cascade={"remove"})
-     */
-    private $facebook_account;
-
-    /**
-     * @ORM\OneToMany(targetEntity=GoogleAccount::class, mappedBy="company", cascade={"remove"})
-     */
-    private $google_account;
-
-    /**
      * @ORM\OneToMany(targetEntity=Website::class, mappedBy="company", cascade={"remove"})
      */
     private $websites;
@@ -194,66 +184,6 @@ class Company
     public function setSiret(?string $siret): self
     {
         $this->siret = $siret;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|FacebookAccount[]
-     */
-    public function getFacebookAccount(): Collection
-    {
-        return $this->facebook_account;
-    }
-
-    public function addFacebookAccount(FacebookAccount $facebookAccount): self
-    {
-        if (!$this->facebook_account->contains($facebookAccount)) {
-            $this->facebook_account[] = $facebookAccount;
-            $facebookAccount->setCompany($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFacebookAccount(FacebookAccount $facebookAccount): self
-    {
-        if ($this->facebook_account->removeElement($facebookAccount)) {
-            // set the owning side to null (unless already changed)
-            if ($facebookAccount->getCompany() === $this) {
-                $facebookAccount->setCompany(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|GoogleAccount[]
-     */
-    public function getGoogleAccount(): Collection
-    {
-        return $this->google_account;
-    }
-
-    public function addGoogleAccount(GoogleAccount $googleAccount): self
-    {
-        if (!$this->google_account->contains($googleAccount)) {
-            $this->google_account[] = $googleAccount;
-            $googleAccount->setCompany($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGoogleAccount(GoogleAccount $googleAccount): self
-    {
-        if ($this->google_account->removeElement($googleAccount)) {
-            // set the owning side to null (unless already changed)
-            if ($googleAccount->getCompany() === $this) {
-                $googleAccount->setCompany(null);
-            }
-        }
 
         return $this;
     }

@@ -27,12 +27,6 @@ class GoogleAccount
      */
     private $password;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="google_account")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $company;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -58,18 +52,6 @@ class GoogleAccount
     public function setPassword(string $password): self
     {
         $this->password = $password;
-
-        return $this;
-    }
-
-    public function getCompany(): ?Company
-    {
-        return $this->company;
-    }
-
-    public function setCompany(?Company $company): self
-    {
-        $this->company = $company;
 
         return $this;
     }

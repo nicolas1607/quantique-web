@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Company;
 use App\Entity\Website;
 use App\Entity\Contract;
@@ -14,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Google\AdsApi\Examples\AdWords\v201809\BasicOperations\GetCampaigns;
 
 class CompanyController extends AbstractController
 {

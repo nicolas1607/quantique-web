@@ -41,6 +41,11 @@ class Contract
      */
     private $website;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $numIdent;
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
@@ -95,6 +100,18 @@ class Contract
     public function setWebsite(?Website $website): self
     {
         $this->website = $website;
+
+        return $this;
+    }
+
+    public function getNumIdent(): ?string
+    {
+        return $this->numIdent;
+    }
+
+    public function setNumIdent(?string $numIdent): self
+    {
+        $this->numIdent = $numIdent;
 
         return $this;
     }

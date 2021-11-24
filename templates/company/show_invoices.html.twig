@@ -18,15 +18,15 @@
         <li class="nav-item">
             <a class="nav-link active" data-bs-toggle="tab" href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
         </li>
-        {% if is_granted('ROLE_ADMIN') %}
+        {# {% if is_granted('ROLE_ADMIN') %}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="{{path('show_accounts', {'company': company.id})}}">Comptes</a>
         </li>
-        {% elseif app.user %}
+        {% elseif app.user %} #}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
         </li>
-        {% endif %}
+        {# {% endif %} #}
     </ul>
 
     <div>
@@ -36,9 +36,7 @@
                     <th scope="col">Date</th>
                     <th scope="col">Type</th>
                     <th scope="col">Nom</th>
-                    {% if is_granted('ROLE_ADMIN') %}
                     <th scope="col">Action</th>
-                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -47,13 +45,12 @@
                     <td>{{ invoice.releasedAt|date("d/m/Y") }}</td>
                     <td>{{ invoice.type.name }}</td>
                     <td>{{ invoice.file }}</td>
-                    {% if is_granted('ROLE_ADMIN') %}
                     <td>
                         <ul class="action-list">
                             <li class="action-item cont-flex-space">
-                                <a id="invoice" href="" class="action-link">
+                                {# <a id="invoice" href="" class="action-link">
                                     <i class="fas fa-lg fa-eye"></i>
-                                </a>
+                                </a> #}
                                 <a href="{{path('download_invoice', {'id': invoice.id})}}"
                                     class="action-link">
                                     <i class="fas fa-lg fa-file-download"></i>
@@ -61,7 +58,6 @@
                             </li>
                         </ul>
                     </td>
-                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

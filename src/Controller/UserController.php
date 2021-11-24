@@ -87,7 +87,8 @@ class UserController extends AbstractController
             $this->em->persist($company);
             $this->em->flush();
 
-            return $this->redirectToRoute('show_contracts', ['company' => $company->getId()]);
+            return $this->redirectToRoute('email_user_confirmation', ['user' => $user->getId()]);
+            // return $this->redirectToRoute('show_contracts', ['company' => $company->getId()]);
         }
 
         return $this->render('user/add_with_company.html.twig', [

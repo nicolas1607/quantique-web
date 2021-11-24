@@ -190,10 +190,16 @@ class AppFixtures extends Fixture
         //     $manager->persist($companies[$i]);
         //     $googleAccounts[] = $googleAccount;
         // }
+        $googleAccount = new GoogleAccount();
+        $googleAccount->setEmail('quantique.web.office@gmail.com')
+            ->setPassword('$2y$13$jTy0IgABUuBgmCjm5b9KaOvGB042BSRFI2jHdpyeFUqiq5TkmiYMu');
+        $manager->persist($googleAccount);
 
         // Admin
         $admin = $this->createAdmin();
         $manager->persist($admin);
+        $quantique = $this->createAdminQuantique();
+        $manager->persist($quantique);
 
         // User
         // $user = $this->createUser();
@@ -207,10 +213,21 @@ class AppFixtures extends Fixture
         $admin = new User();
         $admin->setFirstname('Nicolas')
             ->setLastname('Mormiche')
-            ->setPhone('06 27 71 24 03')
+            ->setPhone('0627712403')
             ->setRoles(['ROLE_ADMIN'])
             ->setEmail('nicolas160796@gmail.com')
             ->setPassword('$2y$13$gOxWfP/wFyivsBfnKq1DGuRtWgGEYSFbBClRk3fcGxkXA54EYdQc6'); // test
+        return $admin;
+    }
+
+    public function createAdminQuantique(): User
+    {
+        $admin = new User();
+        $admin->setFirstname('Florent')
+            ->setLastname('Pietrangeli')
+            ->setRoles(['ROLE_ADMIN'])
+            ->setEmail('contact@quantique-web.fr')
+            ->setPassword('$2y$13$2M/fJC1d0A9eQ3oiV9sB.OdVM2u0YntJVkvp9ukVKbDJTBCwX6Tbq'); // Quantique2021-
         return $admin;
     }
 
