@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4"
+  },
+  "dependencies": {
+    "encore": "^0.0.30-beta"
+  }
+}
