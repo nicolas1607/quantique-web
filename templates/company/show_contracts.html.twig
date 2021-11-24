@@ -37,7 +37,7 @@
                     <div class="cont-flex">
                         <h3 class="contract-title"><a class="action-link" href="{{website.url}}">{{website.name}}</a></h3>
                     </div>
-                    {% if is_granted('ROLE_ADMIN') %}
+                    {% if is_granted('ROLE_ADMIN') and website.id %}
                     <div class="cont-flex">
                         <a href="{{path('edit_website', {'website': website.id})}}" class="action-link">
                             <i class="fas fa-edit fa-lg"></i>

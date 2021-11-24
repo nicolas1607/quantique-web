@@ -3,14 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\UserType;
 use App\Entity\Company;
 use App\Form\UserAddType;
 use App\Form\UserEditType;
 use App\Entity\GoogleAccount;
+use App\Form\UserPasswordType;
 use App\Entity\FacebookAccount;
 use App\Form\RegistrationFormType;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,7 +42,7 @@ class UserController extends AbstractController
     /**
      * @Route("/add/user", name="add_user")
      */
-    public function add(Request $request, UserPasswordHasherInterface $encoder): Response
+    public function add(Request $request): Response
     {
         $user = new User();
         $addUserForm = $this->createForm(UserAddType::class, $user);
@@ -51,10 +50,6 @@ class UserController extends AbstractController
 
         if ($addUserForm->isSubmitted() && $addUserForm->isValid()) {
             $user = $addUserForm->getData();
-            $password = $user->getPassword();
-            $passwordEncoded = $encoder->hashPassword($user, $password);
-            $user->setPassword($passwordEncoded);
-
             $company = $this->em->getRepository(Company::class)->findOneBy(['id' => $request->get('company')]);
             $company->addUser($user);
             $user->addCompany($company);
@@ -63,7 +58,7 @@ class UserController extends AbstractController
             $this->em->persist($company);
             $this->em->flush();
 
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('email_user_confirmation', ['user' => $user->getId()]);
         }
 
         $companies = $this->em->getRepository(Company::class)->findAll();
@@ -77,7 +72,7 @@ class UserController extends AbstractController
     /**
      * @Route("/add/user/{company}", name="add_user_with_company")
      */
-    public function addForCompany(Request $request, Company $company, UserPasswordHasherInterface $encoder): Response
+    public function addForCompany(Request $request, Company $company): Response
     {
         $user = new User();
         $addUserForm = $this->createForm(RegistrationFormType::class, $user);
@@ -85,10 +80,7 @@ class UserController extends AbstractController
 
         if ($addUserForm->isSubmitted() && $addUserForm->isValid()) {
             $user = $addUserForm->getData();
-            $password = $user->getPassword();
-            $passwordEncoded = $encoder->hashPassword($user, $password);
-            $user->setPassword($passwordEncoded);
-
+            $user->addCompany($company);
             $company->addUser($user);
 
             $this->em->persist($user);
@@ -147,6 +139,60 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', [
+            'edit_user_form' => $editUserForm->createView(),
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * @Route("/add/user/password/{user}", name="add_user_password")
+     */
+    public function addPassword(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
+    {
+        $addUserForm = $this->createForm(UserPasswordType::class, $user);
+        $addUserForm->handleRequest($request);
+
+        if ($addUserForm->isSubmitted() && $addUserForm->isValid()) {
+            $user = $addUserForm->getData();
+            $password = $user->getPassword();
+            $passwordEncoded = $encoder->hashPassword($user, $password);
+            $user->setPassword($passwordEncoded);
+
+            $this->em->persist($user);
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('user/add_password.html.twig', [
+            'add_user_form' => $addUserForm->createView(),
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * @Route("/user/edit/password/{user}", name="edit_user_password")
+     */
+    public function editPassword(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
+    {
+        $editUserForm = $this->createForm(UserPasswordType::class, $user);
+
+        $editUserForm->handleRequest($request);
+
+        if ($editUserForm->isSubmitted() && $editUserForm->isValid()) {
+            $user = $editUserForm->getData();
+
+            $password = $user->getPassword();
+            $passwordEncoded = $encoder->hashPassword($user, $password);
+            $user->setPassword($passwordEncoded);
+
+            $this->em->persist($user);
+            $this->em->flush();
+
+            return $this->redirectToRoute('admin_users');
+        }
+
+        return $this->render('user/edit_password.html.twig', [
             'edit_user_form' => $editUserForm->createView(),
             'user' => $user
         ]);

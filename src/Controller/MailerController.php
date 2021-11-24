@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Company;
 use App\Entity\Invoice;
+use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Mailer\MailerInterface;
@@ -12,6 +13,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class MailerController extends AbstractController
 {
+    /**
+     * @Route("/email/{user}", name="email_user_confirmation")
+     */
+    public function userConfirmation(MailerInterface $mailer, User $user): Response
+    {
+        $email = (new TemplatedEmail())
+            ->from('nicolas160796@gmail.com')
+            ->to($user->getEmail())
+            ->subject('Accédez à votre compte Quantique Web Office !')
+            ->htmlTemplate('emails/user_confirmation.html.twig')
+            ->context([
+                'user' => $user,
+            ]);
+
+        $mailer->send($email);
+
+        return $this->redirectToRoute('admin');
+    }
+
     /**
      * @Route("/email/{company}/{invoice}", name="email_invoice_confirmation")
      */

@@ -30,14 +30,6 @@ class WebsiteType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            // ->add('company', EntityType::class, [
-            //     'class' => Company::class,
-            //     'choice_label' => 'name',
-            //     'label' => 'Entreprise',
-            //     'attr' => [
-            //         'class' => 'form-select'
-            //     ]
-            // ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer',
                 'attr' => [

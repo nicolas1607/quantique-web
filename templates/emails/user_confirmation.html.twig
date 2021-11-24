@@ -15,7 +15,10 @@
         padding: 2rem;
         font-size: 1rem;
         margin-top: 2rem;
-        margin-bottom: 2rem;
+      }
+
+      .email-btn {
+        margin-top: 2rem;
       }
       
       .email-link {
@@ -41,12 +44,19 @@
 
         <div class="email-content">
             <p class="email-title">Bonjour {{user.firstname}} {{user.lastname}},</p>
-            <p>Une nouvelle facture concernant {{company.name}} a été ajoutée au back office de Quantique Web.</p>
-            <p>Téléchargez votre document en pièce jointe ou consultez le sur votre espace client.</p>
+            <p>Quantique Web évolue et vous fournit désormais un compte utilisateur avec un espace client dédié à vos sites internets.</p>
+            <br><br>
+            <p class="email-title">L'application vous permet : <br>
+              <br>- de consulter l'historique de vos factures<br>
+              <br>- un accès total à vos abonnements en cours<br>
+              <br>- de voir vos statistiques concernant la publicité et le référencement</p>
+            <br><br>
+            <p class="email-title">Identifiant :</p>
+            <p>{{user.email}}</p>
         </div>
 
         <div class="email-btn">
-            <a class="email-link" href="office.quantique-web.fr">Espace client</a>
+            <a class="email-link" href="">Créer votre mot de passe</a>
         </div>
             
         <div class="email-footer">

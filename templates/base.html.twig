@@ -3,51 +3,25 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>{% block title %}Quantique Web Office{% endblock %}</title>
     {# Run `composer require symfony/webpack-encore-bundle`
     and uncomment the following Encore helpers to start using Symfony UX #}
     {% block stylesheets %}
-    {{ encore_entry_link_tags('app') }}
+    {# {{ encore_entry_link_tags('app') }} #}
     <link rel="icon" href="{{asset('images/icons/favicon.png')}}">
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
     {% endblock %}
 
     {% block javascripts %}
-    {{ encore_entry_script_tags('app') }}
+    {# {{ encore_entry_script_tags('app') }} #}
     {% endblock %}
 </head>
 
 <body>
     {% include "partials/_navbar.html.twig" %}
 
-    {# {% include "partials/_modal_invoice.html.twig" %} #}
-
     {% block body %}{% endblock %}
 </body>
-
-<script>
-    //const modalUser = document.querySelector('#modal-user');
-    //const user = modalUser;
-    //const modalContract = document.querySelector('#modal-contract');
-    //const contract = modalContract;
-    //const modalInvoice = document.querySelector('#modal-invoice');
-    //const invoice = modalInvoice;
-    
-    //modalInvoice.remove();
-    //console.log(invoice);
-
-    //window.onkeydown = function( event ) {
-    //    if ( event.keyCode == 27 ) {
-    //        document.getElementsByClassName('modal').forEach(modal => modal.style.display = 'none');
-    //    }
-    //};
-
-    //const modalInvoiceLink = document.querySelector('#nav-link-modal-invoice');
-    //modalInvoiceLink.addEventListener('click', () => {
-    //    modalInvoice.style.display = 'block';
-    //});
-
-</script>
 
 </html>

@@ -81,10 +81,14 @@ class CompanyController extends AbstractController
             $company = $addCompanyForm->getData();
 
             // Abonnement
-            $website = new Website();
-            $website->setName($request->get('website'))
-                ->setUrl($request->get('url'))
-                ->setCompany($company);
+            if ($request->get('website') != '' && $request->get('url') != '') {
+                $website = new Website();
+                $website->setName($request->get('website'))
+                    ->setUrl($request->get('url'))
+                    ->setCompany($company);
+                $company->addWebsite($website);
+                $this->em->persist($website);
+            }
 
             // Liste des contrats ajoutés
             $types = ['vitrine', 'commerce', 'google', 'facebook'];
@@ -105,10 +109,8 @@ class CompanyController extends AbstractController
                 }
             }
 
-            $company->addWebsite($website);
 
             $this->em->persist($company);
-            $this->em->persist($website);
             $this->em->flush();
 
             return $this->redirectToRoute('admin');
