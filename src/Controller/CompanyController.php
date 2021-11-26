@@ -9,11 +9,19 @@ use App\Form\CompanyType;
 use App\Entity\TypeContract;
 use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClient;
+use Google\AdsApi\AdWords\AdWordsServices;
+use Google\AdsApi\AdWords\v201809\cm\Paging;
+use Google\AdsApi\Common\OAuth2TokenBuilder;
+use Google\AdsApi\AdWords\v201809\cm\OrderBy;
 use Symfony\Component\HttpFoundation\Request;
+use Google\AdsApi\AdWords\v201809\cm\Selector;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Google\AdsApi\AdWords\AdWordsSessionBuilder;
+use Google\AdsApi\AdWords\v201809\cm\CampaignService;
+use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClientBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Google\AdsApi\Examples\AdWords\v201809\BasicOperations\GetCampaigns;
 
 class CompanyController extends AbstractController
 {
@@ -61,6 +69,31 @@ class CompanyController extends AbstractController
      */
     public function showStats(Company $company): Response
     {
+        $oAuth2Credential = (new OAuth2TokenBuilder())
+            ->fromFile()
+            ->build();
+
+        $session = (new AdWordsSessionBuilder())
+            ->fromFile()
+            ->withOAuth2Credential($oAuth2Credential)
+            ->build();
+
+        $adWordsServices = new AdWordsServices();
+
+        $campaignService = $adWordsServices->get($session, CampaignService::class);
+
+        // Create selector.
+        $selector = new Selector();
+        $selector->setFields(array('Id', 'Name'));
+        $selector->setOrdering(array(new OrderBy('Name', 'ASCENDING')));
+
+        // Create paging controls.
+        $selector->setPaging(new Paging(0, 100));
+
+        // Make the get request.
+        // $page = $campaignService->get($selector);
+
+
         return $this->render('company/show_stats.html.twig', [
             'company' => $company
         ]);
