@@ -2,15 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Website;
 use App\Entity\Contract;
-use App\Form\ContractType;
-use App\Entity\TypeContract;
 use App\Form\ContractAddType;
 use App\Form\ContractEditType;
-use App\Form\ContractInfoType;
-use App\Form\ContractUserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,7 +68,7 @@ class ContractController extends AbstractController
             $this->em->persist($website);
             $this->em->flush();
 
-            return $this->redirectToRoute('show_company', ['company' => $website->getCompany()->getId()]);
+            return $this->redirectToRoute('show_contracts', ['company' => $website->getCompany()->getId()]);
         }
 
         return $this->render('contract/add_with_website.html.twig', [

@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Note;
+use App\Form\NoteType;
 use App\Entity\Company;
 use App\Entity\Website;
 use App\Entity\Contract;
@@ -9,7 +11,6 @@ use App\Form\CompanyType;
 use App\Entity\TypeContract;
 use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClient;
 use Google\AdsApi\AdWords\AdWordsServices;
 use Google\AdsApi\AdWords\v201809\cm\Paging;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
@@ -18,9 +19,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Google\AdsApi\AdWords\v201809\cm\Selector;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClient;
 use Google\AdsApi\AdWords\AdWordsSessionBuilder;
 use Google\AdsApi\AdWords\v201809\cm\CampaignService;
 use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClientBuilder;
+use Google\AdsApi\Examples\AdWords\v201809\BasicOperations\GetCampaigns;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CompanyController extends AbstractController
@@ -37,7 +40,7 @@ class CompanyController extends AbstractController
     /**
      * @Route("/company/show/contracts/{company}", name="show_contracts")
      */
-    public function showContracts(Company $company): Response
+    public function showContracts(Request $request, Company $company): Response
     {
         return $this->render('company/show_contracts.html.twig', [
             'company' => $company
@@ -82,16 +85,23 @@ class CompanyController extends AbstractController
 
         $campaignService = $adWordsServices->get($session, CampaignService::class);
 
-        // Create selector.
-        $selector = new Selector();
-        $selector->setFields(array('Id', 'Name'));
-        $selector->setOrdering(array(new OrderBy('Name', 'ASCENDING')));
+        // // Create selector.
+        // $selector = new Selector();
+        // $selector->setFields(array('Id', 'Name'));
+        // $selector->setOrdering(array(new OrderBy('Name', 'ASCENDING')));
 
-        // Create paging controls.
-        $selector->setPaging(new Paging(0, 100));
+        // // Create paging controls.
+        // $selector->setPaging(new Paging(0, 100));
 
-        // Make the get request.
+        // // Make the get request.
         // $page = $campaignService->get($selector);
+
+
+
+
+
+        // $campaigns = new GetCampaigns();
+        // $campaigns->runExample($adWordsServices, $session);
 
 
         return $this->render('company/show_stats.html.twig', [

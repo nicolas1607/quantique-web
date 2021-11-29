@@ -27,11 +27,11 @@
     <h1>Ajouter un site internet</h1>
     <div class="cont-grid">
         <div>
-            <label for="website">Site internet *</label>
+            <label for="website">Site internet</label>
             <input class="form-control" type="text" name="website">
         </div>
         <div>
-            <label for="url">URL du site *</label>
+            <label for="url">URL du site</label>
             <input class="form-control" type="text" name="url">
         </div>
     </div>
@@ -41,7 +41,7 @@
             <h2>Ajouter des abonnements</h2>
         </div>
         <div class="cont-grid">
-        {% for type in types %}
+            {% for type in types %}
             <div>
                 <input id="{{type.lib}}-check" type="checkbox" name="{{type.lib}}-check">
                 <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
         </div>
     </div>
 
@@ -68,7 +68,7 @@
 
 <script>
     const types = ['vitrine', 'commerce', 'google', 'facebook']
-    types.forEach(function(type) {
+    types.forEach(function (type) {
         const check = document.querySelector('#' + type + '-check');
         const price = document.querySelector('#' + type + '-price');
         check.addEventListener('click', () => {

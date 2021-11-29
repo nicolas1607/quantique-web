@@ -4,86 +4,206 @@
 
 {% block body %}
 
-<div class="container">
-    {% include "partials/_company_info.html.twig" %}
-
-    {% if is_granted('ROLE_ADMIN') %}
-    <a class="btn-type right" href="{{path('add_website_with_company', {'company': company.id})}}">Nouvel abonnement</a>
-    {% endif %}
-
-    <ul class="nav nav-tabs nav-tabs-company">
-        <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab" href="{{path('show_contracts', {'company': company.id})}}">Abonnements</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
-        </li>
-        {# {% if is_granted('ROLE_ADMIN') %}
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="{{path('show_accounts', {'company': company.id})}}">Comptes</a>
-        </li>
-        {% elseif app.user %} #}
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
-        </li>
-        {# {% endif %} #}
-    </ul>
-
-    <div>
-        {% for website in company.websites %}
-        <div class="contract">
-            <div class="contract-header">
-                <div class="cont-flex-space">
-                    <div class="cont-flex">
-                        <h3 class="contract-title"><a class="action-link" href="{{website.url}}">{{website.name}}</a></h3>
-                    </div>
-                    {% if is_granted('ROLE_ADMIN') and website.id %}
-                    <div class="cont-flex">
-                        <a href="{{path('edit_website', {'website': website.id})}}" class="action-link">
-                            <i class="fas fa-edit fa-lg"></i>
-                        </a>
-                        <a class="nav-link" href="{{path('add_contract_with_website', {'website': website.id})}}">
-                            <i class="fas fa-plus-square fa-lg"></i>
-                        </a>
-                        <a class="nav-link" href="{{path('delete_website', {'website': website.id})}}">
-                            <i class="fas fa-times fa-lg"></i>
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
+{% for website in company.websites %}
+{% for contract in website.contracts %}
+<div id="notepad{{contract.id}}" class="notepad" data-backdrop="static" data-keyboard="false">
+    <div class="notepad-header cont-flex-space">
+        <p class="notepad-title">{{website.name}} : {{contract.type.name}}</p>
+        <a id="notepad-close{{contract.id}}" class="nav-link">✖</a>
+    </div>
+    <div class="notepad-content">
+        <div class="notepad-notes">
+            {% for note in contract.notes|reverse %}
+            <div class="notepad-item">
+                <p class="note-date">{{note.releasedAt|date("d/m/Y")}}</p>
+                <p class="note-msg">{{note.message}}</p>
+                <a class="nav-link" href="{{path('delete_note', {'note': note.id})}}">
+                    <i class="fas fa-times"></i>
+                </a>
             </div>
-            <div class="contract-content">
-                {% for contract in website.contracts %}
-                <div class="cont-flex-space">
-                    <div class="cont-flex contract-info">
-                        <h3 class="cont-flex-start contract-title">{{contract.type.name}}</h3>
-                        <div class="cont-flex-space">
-                            <p>
-                                <i class="fas fa-chevron-right"></i> 
-                                {% if contract.promotion %}
-                                    <strike>{{contract.price}}€ / mois</strike> => 
-                                    <mark>{{contract.promotion}}€ / mois</mark>
-                                {% else %}
-                                    <mark>{{contract.price}}€ / mois</mark>
-                                {% endif %}
-                            </p>
-                        </div>
-                    </div>
-                    {% if is_granted('ROLE_ADMIN') %}
-                    <div class="cont-flex-end">
-                        <a class="action-link" href="{{path('edit_contract', {'contract': contract.id})}}">
-                            <i class="fas fa-edit fa-lg"></i>
-                        </a>
-                        <a class="action-link" href="{{path('delete_contract', {'contract': contract.id})}}">
-                            <i class="fas fa-times fa-lg"></i>
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
-                {% endfor %} 
-            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+        <form class="cont-note" action="{{path('add_note', {'contract': contract.id})}}">
+            <div>
+                <label for="message">Message</label>
+                <textarea class="form-control" name="message" rows="1" required></textarea>
+            </div>
+            <button class="btn-type btn-form notepad-btn" type="submit">Envoyer</button>
+        </form>
     </div>
 </div>
+{% endfor %}
+{% endfor %}
+
+<body>
+
+    <div class="container">
+        {% include "partials/_company_info.html.twig" %}
+
+        {% if is_granted('ROLE_ADMIN') %}
+        <a class="btn-type right" href="{{path('add_website_with_company', {'company': company.id})}}">Nouvel
+            abonnement</a>
+        {% endif %}
+
+        <ul class="nav nav-tabs nav-tabs-company">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab"
+                    href="{{path('show_contracts', {'company': company.id})}}">Abonnements</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab"
+                    href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab"
+                    href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
+            </li>
+        </ul>
+
+        <div class="contracts">
+            {% for website in company.websites %}
+            <div class="contract">
+                <div class="contract-header">
+                    <div class="cont-flex-space">
+                        <div class="cont-flex">
+                            <h3 class="contract-title"><a class="action-link"
+                                    href="{{website.url}}">{{website.name}}</a>
+                            </h3>
+                        </div>
+                        {% if is_granted('ROLE_ADMIN') and website.id %}
+                        <div class="cont-flex">
+                            <a class="nav-link" href="{{path('edit_website', {'website': website.id})}}">
+                                <i class="fas fa-edit fa-lg"></i>
+                            </a>
+                            <a class="nav-link" href="{{path('add_contract_with_website', {'website': website.id})}}">
+                                <i class="fas fa-plus-square fa-lg"></i>
+                            </a>
+                            <a class="nav-link" href="{{path('delete_website', {'website': website.id})}}">
+                                <i class="fas fa-times fa-lg"></i>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="contract-notes">
+                    {% for contract in website.contracts %}
+                    <div class="cont-contract contract-item contract-content">
+                        <div id="contract{{contract.id}}" class="cont-flex-start contract-info">
+                            <h3 class="cont-flex-start contract-title">{{contract.type.name}}</h3>
+                            <div class="cont-flex-space">
+                                <p>
+                                    <i class="fas fa-chevron-right"></i>
+                                    {% if contract.promotion %}
+                                    <strike>{{contract.price}}€ / mois</strike> =>
+                                    <mark>{{contract.promotion}}€ / mois</mark>
+                                    {% else %}
+                                    <mark>{{contract.price}}€ / mois</mark>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <div class="cont-flex-end">
+                            {# <a id="note-link{{contract.id}}" class="action-link note-link">
+                                <i class="fas fa-clipboard fa-lg"></i>
+                            </a> #}
+                            <a class="action-link" href="{{path('edit_contract', {'contract': contract.id})}}">
+                                <i class="fas fa-edit fa-lg"></i>
+                            </a>
+                            <a class="action-link" href="{{path('delete_contract', {'contract': contract.id})}}">
+                                <i class="fas fa-times fa-lg"></i>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {# <div id="notepad{{contract.id}}" class="notepad">
+                        <div class="notepad-header">
+                            <p class="notepad-title">{{website.name}} : {{contract.type.name}}</p>
+                            <a id="notepad-close{{contract.id}}">✖</a>
+                        </div>
+                        <div class="notepad-content">
+                            <div class="notepad-notes">
+                                {% for note in contract.notes %}
+                                <div class="notepad-item cont-flex">
+                                    <p class="note-date">{{note.releasedAt|date("d/m/Y")}}</p>
+                                    <p class="note-msg">{{note.message}}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <form class="cont-note" action="{{path('add_note', {'contract': contract.id})}}">
+                                <div>
+                                    <label for="message">Message</label>
+                                    <textarea class="form-control" name="message" rows="1"></textarea>
+                                </div>
+                                <button class="btn-type btn-form notepad-btn" type="submit">Envoyer</button>
+                            </form>
+                        </div>
+                    </div> #}
+
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <script>
+
+            const cont = document.querySelector('.container');
+            const navbar = document.querySelector('.navbar');
+            const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
+            const noteLinks = document.getElementsByClassName('contract-info');
+
+            for (let i = 0; i < noteLinks.length; i++) {
+                const noteLink = noteLinks[i];
+                const id = noteLink.id.substr(-1);
+                const notepad = document.querySelector('#notepad' + id)
+                const close = document.querySelector('#notepad-close' + id);
+
+                noteLink.addEventListener('click', () => {
+                    if (notepad.style.visibility = 'hidden') {
+                        notepad.style.visibility = 'visible';
+                        navbar.style.opacity = 0.4;
+                        cont.style.opacity = 0.4;
+                        buttons.forEach(function (btn) {
+                            btn.style.pointerEvents = 'none';
+                        });
+                    }
+                });
+
+                close.addEventListener('click', () => {
+                    if (notepad.style.visibility = 'visible') {
+                        notepad.style.visibility = 'hidden';
+                        navbar.style.opacity = 1;
+                        cont.style.opacity = 1;
+                        buttons.forEach(function (btn) {
+                            btn.style.pointerEvents = 'auto';
+                        });
+                    }
+                });
+            };
+
+
+
+            const notepads = document.getElementsByClassName('notepad');
+            window.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    for (let i = 0; i < notepads.length; i++) {
+                        if (notepads[i].style.visibility = 'visible') {
+                            notepads[i].style.visibility = 'hidden';
+                            navbar.style.opacity = 1;
+                            cont.style.opacity = 1;
+                            buttons.forEach(function (btn) {
+                                btn.style.pointerEvents = 'auto';
+                            });
+                        }
+                    }
+                }
+            });
+
+        </script>
+
+</body>
+
+
 {% endblock %}

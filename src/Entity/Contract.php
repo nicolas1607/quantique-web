@@ -46,9 +46,15 @@ class Contract
      */
     private $numIdent;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="contract", orphanRemoval=true)
+     */
+    private $notes;
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,6 +118,36 @@ class Contract
     public function setNumIdent(?string $numIdent): self
     {
         $this->numIdent = $numIdent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Note[]
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes[] = $note;
+            $note->setContract($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getContract() === $this) {
+                $note->setContract(null);
+            }
+        }
 
         return $this;
     }

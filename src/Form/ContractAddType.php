@@ -25,13 +25,13 @@ class ContractAddType extends AbstractType
                     'class' => 'form-select'
                 ]
             ])
-            ->add('numIdent', NumberType::class, [
-                'label' => 'Identifiant Google ou Facebook',
-                'required' => true,
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ])
+            // ->add('numIdent', NumberType::class, [
+            //     'label' => 'Identifiant Google ou Facebook',
+            //     'required' => true,
+            //     'attr' => [
+            //         'class' => 'form-control'
+            //     ]
+            // ])
             ->add('price', NumberType::class, [
                 'label' => 'Prix initial *',
                 'required' => true,
