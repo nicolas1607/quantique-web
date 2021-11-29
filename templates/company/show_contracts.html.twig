@@ -17,7 +17,7 @@
             <div class="notepad-item">
                 <p class="note-date">{{note.releasedAt|date("d/m/Y")}}</p>
                 <p class="note-msg">{{note.message}}</p>
-                <a class="nav-link" href="{{path('delete_note', {'note': note.id})}}">
+                <a class="nav-link" href="{{path('delete_note', {'note': note.id})}}" title="Supprimer la note">
                     <i class="fas fa-times"></i>
                 </a>
             </div>
@@ -72,13 +72,16 @@
                         </div>
                         {% if is_granted('ROLE_ADMIN') and website.id %}
                         <div class="cont-flex">
-                            <a class="nav-link" href="{{path('edit_website', {'website': website.id})}}">
-                                <i class="fas fa-edit fa-lg"></i>
-                            </a>
-                            <a class="nav-link" href="{{path('add_contract_with_website', {'website': website.id})}}">
+                            <a class="nav-link" href="{{path('add_contract_with_website', {'website': website.id})}}"
+                                title="Ajouter un abonnement">
                                 <i class="fas fa-plus-square fa-lg"></i>
                             </a>
-                            <a class="nav-link" href="{{path('delete_website', {'website': website.id})}}">
+                            <a class="nav-link" href="{{path('edit_website', {'website': website.id})}}"
+                                title="Modifier le site internet">
+                                <i class="fas fa-edit fa-lg"></i>
+                            </a>
+                            <a class="nav-link" href="{{path('delete_website', {'website': website.id})}}"
+                                title="Supprimer le site internet">
                                 <i class="fas fa-times fa-lg"></i>
                             </a>
                         </div>
@@ -104,43 +107,17 @@
                         </div>
                         {% if is_granted('ROLE_ADMIN') %}
                         <div class="cont-flex-end">
-                            {# <a id="note-link{{contract.id}}" class="action-link note-link">
-                                <i class="fas fa-clipboard fa-lg"></i>
-                            </a> #}
-                            <a class="action-link" href="{{path('edit_contract', {'contract': contract.id})}}">
+                            <a class="action-link" href="{{path('edit_contract', {'contract': contract.id})}}"
+                                title="Modifier l'abonnement">
                                 <i class="fas fa-edit fa-lg"></i>
                             </a>
-                            <a class="action-link" href="{{path('delete_contract', {'contract': contract.id})}}">
+                            <a class="action-link" href="{{path('delete_contract', {'contract': contract.id})}}"
+                                title="Supprimer l'abonnement">
                                 <i class="fas fa-times fa-lg"></i>
                             </a>
                         </div>
                         {% endif %}
                     </div>
-
-                    {# <div id="notepad{{contract.id}}" class="notepad">
-                        <div class="notepad-header">
-                            <p class="notepad-title">{{website.name}} : {{contract.type.name}}</p>
-                            <a id="notepad-close{{contract.id}}">✖</a>
-                        </div>
-                        <div class="notepad-content">
-                            <div class="notepad-notes">
-                                {% for note in contract.notes %}
-                                <div class="notepad-item cont-flex">
-                                    <p class="note-date">{{note.releasedAt|date("d/m/Y")}}</p>
-                                    <p class="note-msg">{{note.message}}</p>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            <form class="cont-note" action="{{path('add_note', {'contract': contract.id})}}">
-                                <div>
-                                    <label for="message">Message</label>
-                                    <textarea class="form-control" name="message" rows="1"></textarea>
-                                </div>
-                                <button class="btn-type btn-form notepad-btn" type="submit">Envoyer</button>
-                            </form>
-                        </div>
-                    </div> #}
-
                     {% endfor %}
                 </div>
                 {% endfor %}

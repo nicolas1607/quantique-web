@@ -2,18 +2,20 @@
 
 namespace App\Controller;
 
-use App\Entity\Note;
-use App\Form\NoteType;
+use FacebookAds\Api;
+use Facebook\Facebook;
 use App\Entity\Company;
 use App\Entity\Website;
 use App\Entity\Contract;
 use App\Form\CompanyType;
 use App\Entity\TypeContract;
+use FacebookAds\Object\User;
 use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Google\AdsApi\AdWords\AdWordsServices;
 use Google\AdsApi\AdWords\v201809\cm\Paging;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
+use Facebook\Exceptions\FacebookSDKException;
 use Google\AdsApi\AdWords\v201809\cm\OrderBy;
 use Symfony\Component\HttpFoundation\Request;
 use Google\AdsApi\AdWords\v201809\cm\Selector;
@@ -21,10 +23,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClient;
 use Google\AdsApi\AdWords\AdWordsSessionBuilder;
+
+use Facebook\Exceptions\FacebookResponseException;
 use Google\AdsApi\AdWords\v201809\cm\CampaignService;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClientBuilder;
-use Google\AdsApi\Examples\AdWords\v201809\BasicOperations\GetCampaigns;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Google\AdsApi\Examples\AdWords\v201809\BasicOperations\GetCampaigns;
 
 class CompanyController extends AbstractController
 {
@@ -72,18 +77,18 @@ class CompanyController extends AbstractController
      */
     public function showStats(Company $company): Response
     {
-        $oAuth2Credential = (new OAuth2TokenBuilder())
-            ->fromFile()
-            ->build();
+        // $oAuth2Credential = (new OAuth2TokenBuilder())
+        //     ->fromFile()
+        //     ->build();
 
-        $session = (new AdWordsSessionBuilder())
-            ->fromFile()
-            ->withOAuth2Credential($oAuth2Credential)
-            ->build();
+        // $session = (new AdWordsSessionBuilder())
+        //     ->fromFile()
+        //     ->withOAuth2Credential($oAuth2Credential)
+        //     ->build();
 
-        $adWordsServices = new AdWordsServices();
+        // $adWordsServices = new AdWordsServices();
 
-        $campaignService = $adWordsServices->get($session, CampaignService::class);
+        // $campaignService = $adWordsServices->get($session, CampaignService::class);
 
         // // Create selector.
         // $selector = new Selector();
@@ -104,6 +109,31 @@ class CompanyController extends AbstractController
         // $campaigns->runExample($adWordsServices, $session);
 
 
+
+
+
+
+
+        // FACEBOOK & INSTAGRAM //
+
+        // $fb = new Facebook([
+        //     'app_id' => '603614854173588',
+        //     'app_secret' => 'f47a275c069c8759904cfca950d8a8ee',
+        // ]);
+
+        // try {
+        //     // Returns a `Facebook\FacebookResponse` object
+        //     $response = $fb->get('/4932955780050365', 'EAAIkZCAj205QBAJzADpssZBZCnFjiGvDgZAojV22iK2jNbjp5CXpyIo8wN8VDpMyWQei4NUlhD1G3aZCBAKyTbDnaWFeFovXNdxLmrFKiaqcYcuoVJmQQab0RhIj2cuOcWRuKQKAS07ZARvV2ZCF0kkfCkTFZBYJyB1ZBxwFBTAgLBGPi8JUe0A5UNLT2L1slUNtYUAGUW1UcgMZCLAlFq500s');
+        // } catch (FacebookResponseException $e) {
+        //     echo 'Graph returned an error: ' . $e->getMessage();
+        //     exit;
+        // } catch (FacebookSDKException $e) {
+        //     echo 'Facebook SDK returned an error: ' . $e->getMessage();
+        //     exit;
+        // }
+        // $graphNode = $response->getGraphNode();
+        // var_dump($graphNode);
+
         return $this->render('company/show_stats.html.twig', [
             'company' => $company
         ]);
@@ -114,6 +144,9 @@ class CompanyController extends AbstractController
      */
     public function add(Request $request): Response
     {
+        // $session = new Session();
+        // $session->start();
+
         $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
 
         $company = new Company();

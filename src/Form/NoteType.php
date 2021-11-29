@@ -21,7 +21,7 @@ class NoteType extends AbstractType
                 ]
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Envoyer',
+                'label' => 'Créer',
                 'attr' => [
                     'class' => 'btn-type btn-form'
                 ]

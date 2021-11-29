@@ -6,16 +6,17 @@
 
 <div class="container">
     <h1>Espace administration</h1>
-    <div class="cont-flex-end">
+    {# <div class="cont-flex-end">
         <span class="nav-link-header">Ajouter :</span>
-        <a class="nav-link" href="{{ path('add_user') }}">Client</a>
         <a class="nav-link" href="{{ path('add_company') }}">Entreprise</a>
+        <a class="nav-link" href="{{ path('add_user') }}">Client</a>
         <a class="nav-link" href="{{ path('add_invoice') }}">Facture</a>
-    </div>
+    </div> #}
+    <a class="btn-type right" href="{{ path('add_company') }}">Nouvelle entreprise</a>
 
     <ul class="nav nav-tabs nav-tabs-admin">
         <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab" href="{{path('admin')}}">Les entreprises</a>
+            <a class="nav-link active" data-bs-toggle="tab" href="{{path('admin')}}">Entreprises</a>
         </li>
     </ul>
 
@@ -37,27 +38,32 @@
                 <td>
                     <ul class="action-list">
                         <li class="action-item">
-                            <a href="{{path('add_user_with_company', {'company': company.id})}}" class="action-link">
+                            <a href="{{path('add_user_with_company', {'company': company.id})}}" class="action-link"
+                                title="Ajouter un utilisateur">
                                 <i class="fas fa-user-plus fa-lg"></i>
                             </a>
                         </li>
                         <li class="action-item">
-                            <a href="{{path('add_invoice_with_company', {'company': company.id})}}" class="action-link">
+                            <a href="{{path('add_invoice_with_company', {'company': company.id})}}" class="action-link"
+                                title="Ajouter une facture">
                                 <i class="fas fa-file-upload fa-lg"></i>
                             </a>
                         </li>
                         <li class="action-item">
-                            <a href="{{path('show_contracts', {'company': company.id})}}" class="action-link">
+                            <a href="{{path('show_contracts', {'company': company.id})}}" class="action-link"
+                                title="Voir l'entreprise">
                                 <i class="fas fa-eye fa-lg"></i>
                             </a>
                         </li>
                         <li class="action-item">
-                            <a href="{{path('edit_company', {'company': company.id})}}" class="action-link">
+                            <a href="{{path('edit_company', {'company': company.id})}}" class="action-link"
+                                title="Modifier l'entreprise">
                                 <i class="fas fa-edit fa-lg"></i>
                             </a>
                         </li>
                         <li class="action-item">
-                            <a href="{{path('delete_company', {'company': company.id})}}" class="action-link">
+                            <a href="{{path('delete_company', {'company': company.id})}}" class="action-link"
+                                title="Supprimer l'entreprise">
                                 <i class="fas fa-times fa-lg"></i>
                             </a>
                         </li>

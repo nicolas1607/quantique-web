@@ -23,10 +23,11 @@
                 <h2>Clients</h2>
             </div>
             {% if is_granted('ROLE_ADMIN') %}
-            <a class="nav-link" href="{{path('add_user_with_company', {'company': company.id})}}">
+            <a class="nav-link" href="{{path('add_user_with_company', {'company': company.id})}}"
+                title="Ajouter un utilisateur">
                 <i class="fas fa-plus-square fa-2x"></i>
             </a>
-            {% endif %} 
+            {% endif %}
         </div>
         <table class="table table-client table-hover">
             <thead>
@@ -59,7 +60,7 @@
                             </li>
                             <li class="action-item">
                                 <a href="{{path('delete_user', {'user': user.id})}}" class="action-link">
-                                    <i class="fas fa-times"></i>                                   
+                                    <i class="fas fa-times"></i>
                                 </a>
                             </li>
                         </ul>
