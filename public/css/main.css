@@ -397,6 +397,22 @@ h3 .action-link {
 
 /* Admin */
 
+.search {
+  margin-top: 2rem;
+  padding-right: 2rem;
+}
+
+#search-form {
+  position: relative;
+}
+
+#search-delete {
+  position: absolute;
+  top: .7rem;
+  right: 3rem;
+  cursor: pointer;
+}
+
 .nav-tabs {
   margin-top: 4rem;
 }
@@ -406,7 +422,7 @@ h3 .action-link {
 }
 
 .nav-tabs-admin {
-  margin-top: 6rem;
+  margin-top: 0;
 }
 
 .nav-tabs-company {

@@ -10,6 +10,7 @@ use App\Entity\GoogleAccount;
 use App\Form\UserPasswordType;
 use App\Entity\FacebookAccount;
 use App\Form\RegistrationFormType;
+use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,20 +21,30 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserController extends AbstractController
 {
     private EntityManagerInterface $em;
+    private CompanyRepository $companyRepo;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, CompanyRepository $companyRepo)
     {
         $this->em = $em;
+        $this->companyRepo = $companyRepo;
     }
 
     /**
      * @Route("/admin", name="admin")
      */
-    public function admin(): Response
+    public function admin(Request $request): Response
     {
-        $companies = $this->em->getRepository(Company::class)->findAll();
+        $search = $request->get('search');
+        if ($search != null) {
+            $companies = $this->companyRepo->findSearch($search);
+        } else {
+            $companies = $this->em->getRepository(Company::class)->findAll();
+        }
+        // var_dump($search);
+        // $request->request->set('search', $search);
         return $this->render('admin/admin.html.twig', [
-            'companies' => $companies
+            'companies' => $companies,
+            'search' => $search
         ]);
     }
 

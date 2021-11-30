@@ -12,7 +12,14 @@
         <a class="nav-link" href="{{ path('add_user') }}">Client</a>
         <a class="nav-link" href="{{ path('add_invoice') }}">Facture</a>
     </div> #}
-    <a class="btn-type right" href="{{ path('add_company') }}">Nouvelle entreprise</a>
+    <div class="cont-flex-end">
+        <form id="search-form" action="{{path('admin')}}" class="search">
+            <input id="search-input" class="form-control" type="text" name="search" placeholder="Rechercher"
+                aria-label="Rechercher">
+            <a id="search-delete"><i class="fas fa-times"></i></a>
+        </form>
+        <a class="btn-type right" href="{{ path('add_company') }}">Nouvelle entreprise</a>
+    </div>
 
     <ul class="nav nav-tabs nav-tabs-admin">
         <li class="nav-item">
@@ -31,7 +38,7 @@
         </thead>
         <tbody>
             {% for company in companies %}
-            <tr id="company{{company.id}}" class="table-light company">
+            <tr id="company{{company.id}}" class="table-light company {{company.name}}">
                 <td>{{ company.name }}</td>
                 <td>{{ company.phone }}</td>
                 <td>{{ company.email }}</td>
@@ -90,6 +97,40 @@
         });
     }
 
+    // function search
+    const input = document.querySelector('#search-input');
+    input.value = window.location.search.substr(8);
+    input.addEventListener('keyup', () => {
+        for (let i = 0; i < companies.length; i++) {
+            const company = companies[i];
+            const companyName = company.className.substr(20);
+            if (input.value != "") {
+                if (companyName.toUpperCase().includes(input.value.toUpperCase())) {
+                    company.style.display = null;
+                } else {
+                    company.style.display = 'none';
+                }
+            } else {
+                company.style.display = null;
+            }
+        }
+    });
+
+    // function delete
+    const cross = document.querySelector('#search-delete');
+    cross.addEventListener('click', () => {
+        for (let i = 0; i < companies.length; i++) {
+            input.value = "";
+            companies[i].style.display = null;
+        }
+    });
+
+</script>
+
+<script>
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+    }
 </script>
 
 {% endblock %}
