@@ -29,7 +29,8 @@ class NoteController extends AbstractController
         $note = new Note();
         $note->setMessage($request->get('message'))
             ->setReleasedAt(new DateTime())
-            ->setContract($contract);
+            ->setContract($contract)
+            ->setUser($this->getUser());
         $contract->addNote($note);
 
         $this->em->persist($note);
@@ -45,6 +46,8 @@ class NoteController extends AbstractController
     public function delete(Note $note): Response
     {
         $this->em->remove($note);
+        $note->getUser()->removeNote($note);
+        $this->em->persist($note->getUser());
         $this->em->flush();
 
         return $this->redirect($_SERVER['HTTP_REFERER']);

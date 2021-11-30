@@ -189,7 +189,7 @@ class CompanyController extends AbstractController
             $this->em->persist($company);
             $this->em->flush();
 
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('admin_companies');
         }
 
         $typesContract = $this->em->getRepository(TypeContract::class)->findAll();

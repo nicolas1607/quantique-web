@@ -31,20 +31,20 @@
         <thead>
             <tr>
                 <th scope="col">Date</th>
-                {# <th scope="col">Admin</th> #}
                 <th scope="col">Site internet</th>
                 <th scope="col">Contrat</th>
                 <th scope="col">Notes</th>
+                <th scope="col">Admin</th>
             </tr>
         </thead>
         <tbody>
             {% for note in notes|reverse %}
             <tr id="note{{note.id}}" class="table-light note {{note.contract.website.name}}">
                 <td>{{ note.releasedAt|date("d/m/Y") }}</td>
-                {# <td>{{ note.admin }}</td> #}
                 <td>{{ note.contract.website.name }}</td>
                 <td>{{ note.contract.type.name }}</td>
                 <td>{{ note.message }}</td>
+                <td>{{ note.user.firstname }} {{ note.user.lastname }}</td>
                 <td>
                     <ul class="action-list">
                         {# <li class="action-item">

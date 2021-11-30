@@ -41,7 +41,7 @@
         {% include "partials/_company_info.html.twig" %}
 
         {% if is_granted('ROLE_ADMIN') %}
-        <a class="btn-type right" href="{{path('add_website_with_company', {'company': company.id})}}">Nouvel
+        <a class="btn-type right btn10" href="{{path('add_website_with_company', {'company': company.id})}}">Nouvel
             abonnement</a>
         {% endif %}
 

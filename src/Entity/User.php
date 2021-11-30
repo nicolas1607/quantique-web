@@ -60,11 +60,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $companies;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="user")
+     */
+    private $notes;
+
     public function __construct()
     {
         $this->companies = new ArrayCollection();
         $this->contracts = new ArrayCollection();
         $this->companies = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -212,6 +218,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeCompany(Company $company): self
     {
         $this->companies->removeElement($company);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Note[]
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes[] = $note;
+            $note->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getUser() === $this) {
+                $note->setUser(null);
+            }
+        }
 
         return $this;
     }

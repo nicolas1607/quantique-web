@@ -4,9 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Company;
 use App\Entity\Invoice;
+use App\Form\InvoiceType;
 use App\Form\InvoiceCompanyType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -80,8 +83,9 @@ class InvoiceController extends AbstractController
     /**
      * @Route("/invoice/add/{company}", name="add_invoice_with_company")
      */
-    public function addForCompany(Request $request, Company $company, SluggerInterface $slugger): Response
+    public function addForCompany(MailerInterface $mailer, Request $request, Company $company, SluggerInterface $slugger): Response
     {
+        $invoices = [];
         $invoice = new Invoice();
         $addInvoiceForm = $this->createForm(InvoiceCompanyType::class, $invoice);
         $addInvoiceForm->handleRequest($request);
@@ -115,21 +119,33 @@ class InvoiceController extends AbstractController
                     $invoice->setFile($newFilename);
                     $company->addInvoice($invoice);
 
-                    // var_dump($invoice->getFiles());
-                    // var_dump($company);
-
                     $this->em->persist($invoice);
                     $this->em->persist($company);
 
                     $this->em->flush();
+                    $invoices[] = $invoice;
                 }
             }
 
             // Envoie d'un mail de confirmation
-            return $this->redirectToRoute('email_invoice_confirmation', [
-                'company' => $company->getId(),
-                'invoice' => $invoice->getId()
-            ]);
+            foreach ($company->getUsers() as $user) {
+                $email = (new TemplatedEmail())
+                    ->from('nicolas160796@gmail.com')
+                    ->to($user->getEmail())
+                    ->subject('Une nouvelle facture pour ' . $company->getName() . ' est disponible !')
+                    ->htmlTemplate('emails/invoice_confirmation.html.twig')
+                    ->context([
+                        'user' => $user,
+                        'company' => $company
+                    ]);
+                foreach ($invoices as $invoice) {
+                    $email->attachFromPath($this->getParameter('invoices') . '/' . $invoice->getFile());
+                }
+
+                $mailer->send($email);
+            }
+
+            return $this->redirectToRoute('show_invoices', ['company' => $company->getId()]);
         }
 
         return $this->render('invoice/add_with_company.html.twig', [
