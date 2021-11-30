@@ -60,6 +60,7 @@ h3 {
 
 body {
   position: relative;
+  margin-top: 6rem;
 }
 
 mark {
@@ -313,6 +314,11 @@ input[type='checkbox'] {
 .navbar {
   padding-top: 1rem;
   padding-bottom: 1rem;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  background-color: var(--white);
 }
 
 .navbar-container {
@@ -399,17 +405,22 @@ h3 .action-link {
 
 .search {
   margin-top: 2rem;
-  padding-right: 2rem;
+  padding-right: 0rem;
 }
 
 #search-form {
   position: relative;
 }
 
+#search-input {
+  font-size: 1rem;
+  width: 12rem;
+}
+
 #search-delete {
   position: absolute;
-  top: .7rem;
-  right: 3rem;
+  top: .6rem;
+  right: 1rem;
   cursor: pointer;
 }
 
@@ -499,10 +510,6 @@ h3 .action-link {
 .contract-info {
   margin-left: 1rem;
   text-align: left;
-}
-
-.contract-info h3 {
-  margin-right: 1rem;
 }
 
 .contract-info p {

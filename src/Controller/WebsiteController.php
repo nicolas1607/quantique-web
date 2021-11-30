@@ -50,9 +50,11 @@ class WebsiteController extends AbstractController
                     $promotion = $request->query->get($type . '-promotion');
                     $contract = new Contract;
                     $contract->setPrice($price)
-                        ->setPromotion($promotion)
                         ->setType($typeContract)
                         ->setWebsite($website);
+                    if (($promotion != $price) && ($promotion != null)) {
+                        $contract->setPromotion($promotion);
+                    }
                     $website->addContract($contract);
                     $this->em->persist($contract);
                 }

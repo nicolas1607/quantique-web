@@ -29,7 +29,7 @@ class MailerController extends AbstractController
 
         $mailer->send($email);
 
-        return $this->redirectToRoute('admin');
+        return $this->redirectToRoute('admin_users');
     }
 
     /**
@@ -56,6 +56,6 @@ class MailerController extends AbstractController
             $mailer->send($email);
         }
 
-        return $this->redirectToRoute('admin');
+        return $this->redirectToRoute('admin_users');
     }
 }

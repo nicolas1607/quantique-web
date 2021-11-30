@@ -9,8 +9,10 @@ use App\Form\UserEditType;
 use App\Entity\GoogleAccount;
 use App\Form\UserPasswordType;
 use App\Entity\FacebookAccount;
+use App\Entity\Note;
 use App\Form\RegistrationFormType;
 use App\Repository\CompanyRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,17 +24,19 @@ class UserController extends AbstractController
 {
     private EntityManagerInterface $em;
     private CompanyRepository $companyRepo;
+    private UserRepository $userRepo;
 
-    public function __construct(EntityManagerInterface $em, CompanyRepository $companyRepo)
+    public function __construct(EntityManagerInterface $em, CompanyRepository $companyRepo, UserRepository $userRepo)
     {
         $this->em = $em;
         $this->companyRepo = $companyRepo;
+        $this->userRepo = $userRepo;
     }
 
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/admin/companies", name="admin_companies")
      */
-    public function admin(Request $request): Response
+    public function companies(Request $request): Response
     {
         $search = $request->get('search');
         if ($search != null) {
@@ -40,10 +44,42 @@ class UserController extends AbstractController
         } else {
             $companies = $this->em->getRepository(Company::class)->findAll();
         }
-        // var_dump($search);
-        // $request->request->set('search', $search);
-        return $this->render('admin/admin.html.twig', [
+        return $this->render('admin/companies.html.twig', [
             'companies' => $companies,
+            'search' => $search
+        ]);
+    }
+
+    /**
+     * @Route("/admin/users", name="admin_users")
+     */
+    public function users(Request $request): Response
+    {
+        $search = $request->get('search');
+        if ($search != null) {
+            $users = $this->userRepo->findSearch($search);
+        } else {
+            $users = $this->em->getRepository(User::class)->findAll();
+        }
+        return $this->render('admin/users.html.twig', [
+            'users' => $users,
+            'search' => $search
+        ]);
+    }
+
+    /**
+     * @Route("/admin/notes", name="admin_notes")
+     */
+    public function notes(Request $request): Response
+    {
+        $search = $request->get('search');
+        if ($search != null) {
+            $notes = $this->noteRepo->findSearch($search);
+        } else {
+            $notes = $this->em->getRepository(Note::class)->findAll();
+        }
+        return $this->render('admin/notes.html.twig', [
+            'notes' => $notes,
             'search' => $search
         ]);
     }
@@ -121,24 +157,24 @@ class UserController extends AbstractController
             $user = $editUserForm->getData();
 
             // On créer les comptes Google & Facebook
-            $emailGoogle = $request->query->get('emailGoogle');
-            $mdpGoogle = $request->query->get('mdpGoogle');
-            if ($emailGoogle && $mdpGoogle) {
-                $accountGoogle = new GoogleAccount();
-                $accountGoogle->setEmail($emailGoogle)
-                    ->setPassword($encoder->hashPassword($user, $mdpGoogle));
-                $user->setGoogleAccount($accountGoogle);
-                $this->em->persist($accountGoogle);
-            }
-            $emailFb = $request->query->get('emailFb');
-            $mdpFb = $request->query->get('mdpFb');
-            if ($emailFb && $mdpFb) {
-                $accountFb = new FacebookAccount();
-                $accountFb->setEmail($emailFb)
-                    ->setPassword($encoder->hashPassword($user, $mdpFb));
-                $user->setGoogleFacebook($accountFb);
-                $this->em->persist($accountFb);
-            }
+            // $emailGoogle = $request->query->get('emailGoogle');
+            // $mdpGoogle = $request->query->get('mdpGoogle');
+            // if ($emailGoogle && $mdpGoogle) {
+            //     $accountGoogle = new GoogleAccount();
+            //     $accountGoogle->setEmail($emailGoogle)
+            //         ->setPassword($encoder->hashPassword($user, $mdpGoogle));
+            //     $user->setGoogleAccount($accountGoogle);
+            //     $this->em->persist($accountGoogle);
+            // }
+            // $emailFb = $request->query->get('emailFb');
+            // $mdpFb = $request->query->get('mdpFb');
+            // if ($emailFb && $mdpFb) {
+            //     $accountFb = new FacebookAccount();
+            //     $accountFb->setEmail($emailFb)
+            //         ->setPassword($encoder->hashPassword($user, $mdpFb));
+            //     $user->setGoogleFacebook($accountFb);
+            //     $this->em->persist($accountFb);
+            // }
 
             $password = $user->getPassword();
             $passwordEncoded = $encoder->hashPassword($user, $password);

@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quantique | Clients{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1>Espace administration</h1>
+    <div class="cont-flex-end">
+        <form id="search-form" class="search">
+            <input id="search-input" class="form-control" type="text" name="search" placeholder="Contact"
+                aria-label="Rechercher">
+            <a id="search-delete"><i class="fas fa-times"></i></a>
+        </form>
+        <a class="btn-type right btn10" href="{{ path('add_user') }}">Nouveau client</a>
+    </div>
+
+    <ul class="nav nav-tabs nav-tabs-admin">
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="{{path('admin_companies')}}">Entreprises</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="{{path('admin_users')}}">Utilisateurs</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="{{path('admin_notes')}}">Historique</a>
+        </li>
+    </ul>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Prénom</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Téléphone</th>
+                <th scope="col">Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users|reverse %}
+            <tr id="user{{user.id}}" class="table-light user {{user.firstname}} {{user.lastname}}">
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.phone }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <ul class="action-list">
+                        {# <li class="action-item">
+                            <a href="{{path('add_user_with_company', {'company': company.id})}}" class="action-link"
+                                title="Ajouter un utilisateur">
+                                <i class="fas fa-user-plus fa-lg"></i>
+                            </a>
+                        </li>
+                        <li class="action-item">
+                            <a href="{{path('add_invoice_with_company', {'company': company.id})}}" class="action-link"
+                                title="Ajouter une facture">
+                                <i class="fas fa-file-upload fa-lg"></i>
+                            </a>
+                        </li>
+                        <li class="action-item">
+                            <a href="{{path('show_contracts', {'company': company.id})}}" class="action-link"
+                                title="Voir l'entreprise">
+                                <i class="fas fa-eye fa-lg"></i>
+                            </a>
+                        </li> #}
+                        <li class="action-item">
+                            <a href="{{path('edit_user', {'user': user.id})}}" class="action-link"
+                                title="Modifier l'entreprise">
+                                <i class="fas fa-edit fa-lg"></i>
+                            </a>
+                        </li>
+                        <li class="action-item">
+                            <a href="{{path('delete_user', {'user': user.id})}}" class="action-link"
+                                title="Supprimer l'entreprise">
+                                <i class="fas fa-times fa-lg"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            </a>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+
+    const users = document.getElementsByClassName('user');
+
+    // function search
+    const input = document.querySelector('#search-input');
+    input.value = window.location.search.substr(8);
+    input.addEventListener('keyup', () => {
+        for (let i = 0; i < users.length; i++) {
+            const user = users[i];
+            const userName = user.className.substr(17);
+            console.log(userName);
+            if (input.value != "") {
+                if (userName.toUpperCase().includes(input.value.toUpperCase())) {
+                    user.style.display = null;
+                } else {
+                    user.style.display = 'none';
+                }
+            } else {
+                user.style.display = null;
+            }
+        }
+    });
+
+    // function delete
+    const cross = document.querySelector('#search-delete');
+    cross.addEventListener('click', () => {
+        for (let i = 0; i < users.length; i++) {
+            input.value = "";
+            users[i].style.display = null;
+        }
+    });
+
+</script>
+
+{% endblock %}
