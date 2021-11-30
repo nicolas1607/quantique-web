@@ -9,7 +9,7 @@
     <div class="cont-flex-start">
         <i class="fas fa-globe-americas fa-2x"></i>
         <h2>Nouvel abonnement</h2>
-    </div> 
+    </div>
     <div class="form-section">
         <label for="company">Entreprise</label>
         <input class="form-control" type="text" name="company" value="{{company.name}}" readonly>
@@ -21,10 +21,10 @@
     <div class="form-section">
         <div class="cont-flex-start">
             <i class="fas fa-file-contract fa-2x"></i>
-            <h2>Ajouter des contrats</h2>
+            <h2>Nouveaux contrats</h2>
         </div>
         <div class="cont-grid">
-        {% for type in typesContract %}
+            {% for type in typesContract %}
             <div>
                 <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox" name="{{type.lib}}-check">
                 <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
         </div>
     </div>
     <div class="cont-flex">
@@ -50,7 +50,7 @@
 
 <script>
     const types = ['vitrine', 'commerce', 'google', 'facebook']
-    types.forEach(function(type) {
+    types.forEach(function (type) {
         const check = document.querySelector('#' + type + '-check');
         const price = document.querySelector('#' + type + '-price');
         check.addEventListener('click', () => {

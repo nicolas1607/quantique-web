@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Website;
 use App\Entity\Contract;
+use App\Entity\TypeContract;
 use App\Form\ContractAddType;
 use App\Form\ContractEditType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -51,30 +52,49 @@ class ContractController extends AbstractController
     // }
 
     /**
-     * @Route("/contract/add/{website}", name="add_contract_with_website")
+     * @Route("/contract/add/{website}", name="add_contract")
+     */
+    public function add(Request $request, Website $website): Response
+    {
+        $types = $this->em->getRepository(TypeContract::class)->findAll();
+
+        return $this->render('contract/add_with_website.html.twig', [
+            'website' => $website,
+            'types' => $types
+        ]);
+    }
+
+    /**
+     * @Route("/contract/add/website/{website}", name="add_contract_with_website")
      */
     public function addWithWebsite(Request $request, Website $website): Response
     {
         $contract = new Contract();
-        $addContractForm = $this->createForm(ContractAddType::class, $contract);
-        $addContractForm->handleRequest($request);
 
-        if ($addContractForm->isSubmitted() && $addContractForm->isValid()) {
-            $contract = $addContractForm->getData();
-            $contract->setWebsite($website);
-            $website->addContract($contract);
-
-            $this->em->persist($contract);
-            $this->em->persist($website);
-            $this->em->flush();
-
-            return $this->redirectToRoute('show_contracts', ['company' => $website->getCompany()->getId()]);
+        $types = ['vitrine', 'commerce', 'google', 'facebook'];
+        foreach ($types as $type) {
+            $check = $request->get($type . '-check');
+            if ($check == 'on') {
+                $typeContract = $this->em->getRepository(TypeContract::class)
+                    ->findOneBy(['lib' => $type]);
+                $price = $request->get($type . '-price');
+                $promotion = $request->get($type . '-promotion');
+                $contract = new Contract;
+                $contract->setPrice($price)
+                    ->setType($typeContract)
+                    ->setWebsite($website);
+                if ($promotion && $promotion != $price) {
+                    $contract->setPromotion($promotion);
+                }
+                $website->addContract($contract);
+                $this->em->persist($contract);
+            }
         }
 
-        return $this->render('contract/add_with_website.html.twig', [
-            'add_contract_form' => $addContractForm->createView(),
-            'website' => $website
-        ]);
+        $this->em->persist($website);
+        $this->em->flush();
+
+        return $this->redirectToRoute('show_contracts', ['company' => $website->getCompany()->getId()]);
     }
 
     /**

@@ -144,11 +144,6 @@ class CompanyController extends AbstractController
      */
     public function add(Request $request): Response
     {
-        // $session = new Session();
-        // $session->start();
-
-        $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
-
         $company = new Company();
         $addCompanyForm = $this->createForm(CompanyType::class, $company);
         $addCompanyForm->handleRequest($request);
@@ -157,6 +152,7 @@ class CompanyController extends AbstractController
             $company = $addCompanyForm->getData();
 
             // Abonnement
+            $website = null;
             if ($request->get('website') != '' && $request->get('url') != '') {
                 $website = new Website();
                 $website->setName($request->get('website'))
@@ -167,21 +163,25 @@ class CompanyController extends AbstractController
             }
 
             // Liste des contrats ajoutés
-            $types = ['vitrine', 'commerce', 'google', 'facebook'];
-            foreach ($types as $type) {
-                $check = $request->get($type . '-check');
-                if ($check == 'on') {
-                    $typeContract = $this->em->getRepository(TypeContract::class)
-                        ->findOneBy(['lib' => $type]);
-                    $price = $request->get($type . '-price');
-                    $promotion = $request->get($type . '-promotion');
-                    $contract = new Contract;
-                    $contract->setPrice($price)
-                        ->setPromotion($promotion)
-                        ->setType($typeContract)
-                        ->setWebsite($website);
-                    $website->addContract($contract);
-                    $this->em->persist($contract);
+            if ($website != null) {
+                $types = ['vitrine', 'commerce', 'google', 'facebook'];
+                foreach ($types as $type) {
+                    $check = $request->get($type . '-check');
+                    if ($check == 'on') {
+                        $typeContract = $this->em->getRepository(TypeContract::class)
+                            ->findOneBy(['lib' => $type]);
+                        $price = $request->get($type . '-price');
+                        $promotion = $request->get($type . '-promotion');
+                        $contract = new Contract;
+                        $contract->setPrice($price)
+                            ->setType($typeContract)
+                            ->setWebsite($website);
+                        if ($promotion && $promotion != $price) {
+                            $contract->setPromotion($promotion);
+                        }
+                        $website->addContract($contract);
+                        $this->em->persist($contract);
+                    }
                 }
             }
 
@@ -191,6 +191,8 @@ class CompanyController extends AbstractController
 
             return $this->redirectToRoute('admin');
         }
+
+        $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
 
         return $this->render('company/add_all.html.twig', [
             'add_company_form' => $addCompanyForm->createView(),

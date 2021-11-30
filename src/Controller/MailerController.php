@@ -43,11 +43,15 @@ class MailerController extends AbstractController
                 ->to($user->getEmail())
                 ->subject('Une nouvelle facture pour ' . $company->getName() . ' est disponible !')
                 ->htmlTemplate('emails/invoice_confirmation.html.twig')
-                ->attachFromPath($this->getParameter('invoices') . '/' . $invoice->getFile())
                 ->context([
                     'user' => $user,
                     'company' => $company
                 ]);
+            var_dump($invoice->getFiles());
+            for ($i = 0; $i < $invoice->getFiles(); $i++) {
+                var_dump($invoice->getFiles()[$i]);
+                $email->attachFromPath($this->getParameter('invoices') . '/' . $invoice->getFiles()[$i]);
+            }
 
             $mailer->send($email);
         }

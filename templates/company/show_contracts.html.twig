@@ -72,7 +72,7 @@
                         </div>
                         {% if is_granted('ROLE_ADMIN') and website.id %}
                         <div class="cont-flex">
-                            <a class="nav-link" href="{{path('add_contract_with_website', {'website': website.id})}}"
+                            <a class="nav-link" href="{{path('add_contract', {'website': website.id})}}"
                                 title="Ajouter un abonnement">
                                 <i class="fas fa-plus-square fa-lg"></i>
                             </a>

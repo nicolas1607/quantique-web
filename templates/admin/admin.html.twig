@@ -31,7 +31,7 @@
         </thead>
         <tbody>
             {% for company in companies %}
-            <tr class="table-light">
+            <tr id="company{{company.id}}" class="table-light company">
                 <td>{{ company.name }}</td>
                 <td>{{ company.phone }}</td>
                 <td>{{ company.email }}</td>
@@ -70,10 +70,26 @@
                     </ul>
                 </td>
             </tr>
+            </a>
             {% endfor %}
         </tbody>
     </table>
 
 </div>
+
+<script>
+
+    const companies = document.getElementsByClassName('company');
+    for (let i = 0; i < companies.length; i++) {
+        const company = companies[i];
+        const id = company.id.substr(7);
+        const tr = document.querySelector('#company' + id);
+        tr.style.cursor = 'pointer';
+        tr.addEventListener('click', () => {
+            window.open(window.location.protocol + '/company/show/contracts/' + id, "_self");
+        });
+    }
+
+</script>
 
 {% endblock %}

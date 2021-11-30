@@ -1,18 +1,21 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %}
 
 {% block title %}Quantique | Ajouter une facture{% endblock %}
 
 {% block body %}
 
 <div class="container">
-    <h1 class="form-title">Ajouter une facture</h1>
     {{ form_start(add_invoice_form) }}
+    <div class="cont-flex-start">
+        <i class="fas fa-file-upload fa-lg"></i>
+        <h2>Ajouter une facture</h2>
+    </div>
     <div class="cont-grid form-section">
         <div>
             <label for="company">Entreprise</label>
             <select id="company" class="form-select company" name="company">
                 {% for company in companies %}
-                    <option value="{{company.id}}">{{company.name}}</option>
+                <option value="{{company.id}}">{{company.name}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -28,4 +31,4 @@
     {{ form_end(add_invoice_form) }}
 </div>
 
-{% endblock %}
+{% endblock %} #}

@@ -32,7 +32,7 @@
 
 h1, h2, h3 {
   font-family: Poppins-Bold;
-  margin-top: 1rem;
+  margin-top: 2rem;
   margin-bottom: 2rem;
 }
 
@@ -208,6 +208,10 @@ input[type='checkbox'] {
   padding-left: 8rem;
   padding-right: 8rem;
   margin-bottom: 8rem;
+}
+
+.cont-title {
+  margin-bottom: 2rem;
 }
 
 .cont-flex {

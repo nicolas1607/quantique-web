@@ -5,24 +5,45 @@
 {% block body %}
 
 <div class="container">
-    <h1 class="form-title">Nouveau contrat</span></h1>
-    {{ form_start(add_contract_form) }}
-    <div>
-        <label for="website">Site internet</label>
-        <input class="form-control" type="text" name="website" value="{{website.name}}" readonly>
-    </div>
-    <div class="form-section cont-grid">
-        {{ form_row(add_contract_form.type) }}
-        {# {{ form_row(add_contract_form.numIdent) }} #}
-    </div>
-    <div class="form-section cont-grid">
-        {{ form_row(add_contract_form.price) }}
-        {{ form_row(add_contract_form.promotion) }}
-    </div>
-    <div class="cont-flex">
-        {{ form_row(add_contract_form.submit) }}
-    </div>
-    {{ form_end(add_contract_form) }}
+    <form action="{{path('add_contract_with_website', {'website': website.id})}}">
+        <div class="cont-flex-start cont-title">
+            <i class="fas fa-file-contract fa-2x"></i>
+            <h2>Nouveaux contrats</h2>
+        </div>
+        <div class="form-section cont-grid">
+            <div>
+                <label for="company">Entreprise</label>
+                <input class="form-control" type="text" name="company" value="{{website.company.name}}" readonly>
+            </div>
+            <div>
+                <label for="website">Site internet</label>
+                <input class="form-control" type="text" name="website" value="{{website.name}}" readonly>
+            </div>
+        </div>
+        <div class="form-section">
+            <div class="cont-grid">
+                {% for type in types %}
+                <div>
+                    <input id="{{type.lib}}-check" type="checkbox" name="{{type.lib}}-check">
+                    <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
+                    <div class="">
+                        <div>
+                            <label for="{{type.lib}}-price">Prix initial</label>
+                            <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                        </div>
+                        <div>
+                            <label for="{{type.lib}}-promotion">Prix réduit</label>
+                            <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="cont-flex">
+            <button class="btn-type btn-form" type="submit">Créer</button>
+        </div>
+    </form>
 </div>
 
 {% endblock %}

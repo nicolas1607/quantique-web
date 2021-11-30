@@ -5,8 +5,11 @@
 {% block body %}
 
 <div class="container">
-    <h1 class="form-title">Modifier un site</h1>
     {{ form_start(edit_website_form) }}
+    <div class="cont-flex-start">
+        <i class="fas fa-globe-americas fa-2x"></i>
+        <h2>Modifier un abonnement</h2>
+    </div>
     <div class="cont-grid form-section">
         {{ form_row(edit_website_form.name) }}
         {{ form_row(edit_website_form.url) }}

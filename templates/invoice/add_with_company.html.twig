@@ -5,8 +5,11 @@
 {% block body %}
 
 <div class="container">
-    <h1 class="form-title">Ajouter une facture</h1>
     {{ form_start(add_invoice_form) }}
+    <div class="cont-flex-start cont-title">
+        <i class="fas fa-file-upload fa-2x"></i>
+        <h2>Ajouter une facture</h2>
+    </div>
     <div class="cont-grid form-section">
         <div>
             <label for="company">Entreprise</label>
@@ -15,7 +18,11 @@
         {{ form_row(add_invoice_form.type) }}
     </div>
     <div class="cont-grid form-section">
-        {{ form_row(add_invoice_form.file) }}
+        {{ form_row(add_invoice_form.files) }}
+        {# <div>
+            <label for="file[]">Fichiers PDF *</label>
+            <input id="files" class="form-control" type="file" name="file[]" required multiple>
+        </div> #}
         {{ form_row(add_invoice_form.releasedAt) }}
     </div>
     <div class="cont-flex">

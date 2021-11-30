@@ -27,7 +27,7 @@ class Invoice
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $file;
+    private $files;
 
     /**
      * @ORM\ManyToOne(targetEntity=TypeInvoice::class, inversedBy="invoices")
@@ -41,9 +41,14 @@ class Invoice
      */
     private $company;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $file;
+
     public function __construct()
     {
-        $this->websites = new ArrayCollection();
+        $this->files = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -63,17 +68,35 @@ class Invoice
         return $this;
     }
 
-    public function getFile(): ?string
+    /**
+     * @return Collection|String[]
+     */
+    public function getFiles(): ?string
     {
-        return $this->file;
+        return $this->files->first();
     }
 
-    public function setFile(string $file): self
+    public function addFile(String $file): self
     {
-        $this->file = $file;
+        if (!$this->files->contains($file)) {
+            $this->files[] = $file;
+        }
 
         return $this;
     }
+
+    public function removeFile(String $file): self
+    {
+        $this->files->removeElement($file);
+        return $this;
+    }
+
+    // public function setFile(string $file): self
+    // {
+    //     $this->file = $file;
+
+    //     return $this;
+    // }
 
     public function getType(): ?TypeInvoice
     {
@@ -95,6 +118,18 @@ class Invoice
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    public function getFile(): ?string
+    {
+        return $this->file;
+    }
+
+    public function setFile(string $file): self
+    {
+        $this->file = $file;
 
         return $this;
     }
