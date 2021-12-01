@@ -35,9 +35,7 @@
                     <th scope="col">Contact</th>
                     <th scope="col">Email</th>
                     <th scope="col">Téléphone</th>
-                    {% if is_granted('ROLE_ADMIN') %}
                     <th scope="col">Action</th>
-                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -54,17 +52,36 @@
                     <td>
                         <ul class="action-list">
                             <li class="action-item">
-                                <a href="{{path('edit_user', {'user': user.id})}}" class="action-link">
+                                <a href="{{path('edit_user', {'user': user.id})}}" class="action-link"
+                                    title="Modifier l'utilisateur">
                                     <i class="fas fa-user-edit fa-lg"></i>
                                 </a>
                             </li>
                             <li class="action-item">
-                                <a href="{{path('delete_user', {'user': user.id})}}" class="action-link">
+                                <a href="{{path('delete_user', {'user': user.id})}}" class="action-link"
+                                    title="Supprimer l'utilisateur">
                                     <i class="fas fa-times fa-lg"></i>
                                 </a>
                             </li>
                         </ul>
                     </td>
+                    {% elseif app.user.id == user.id %}
+                    <td class="cont-flex">
+                        <li class="action-item">
+                            <a href="{{path('edit_user', {'user': user.id})}}" class="action-link"
+                                title="Modifier mon profil">
+                                <i class="fas fa-user-edit fa-lg"></i>
+                            </a>
+                        </li>
+                        <li class="action-item">
+                            <a href="{{path('edit_user_password', {'user': user.id})}}" class="action-link"
+                                title="Modifier mon mot de passe">
+                                <i class="fas fa-key"></i>
+                            </a>
+                        </li>
+                    </td>
+                    {% else %}
+                    <td></td>
                     {% endif %}
                 </tr>
                 {% endfor %}

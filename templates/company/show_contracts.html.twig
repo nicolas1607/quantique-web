@@ -4,6 +4,7 @@
 
 {% block body %}
 
+{% if is_granted('ROLE_ADMIN') %}
 {% for website in company.websites %}
 {% for contract in website.contracts %}
 <div id="notepad{{contract.id}}" class="notepad" data-backdrop="static" data-keyboard="false">
@@ -34,6 +35,7 @@
 </div>
 {% endfor %}
 {% endfor %}
+{% endif %}
 
 <body>
 
@@ -131,38 +133,40 @@
             const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
             const noteLinks = document.getElementsByClassName('contract-info');
 
-            for (let i = 0; i < noteLinks.length; i++) {
-                const noteLink = noteLinks[i];
-                const id = noteLink.id.substr(8);
-                const notepad = document.querySelector('#notepad' + id)
-                const close = document.querySelector('#notepad-close' + id);
+            if (document.querySelector('.notepad')) {
+                for (let i = 0; i < noteLinks.length; i++) {
+                    const noteLink = noteLinks[i];
+                    const id = noteLink.id.substr(8);
+                    const notepad = document.querySelector('#notepad' + id)
+                    const close = document.querySelector('#notepad-close' + id);
 
-                noteLink.addEventListener('click', () => {
-                    if (notepad.style.visibility = 'hidden') {
-                        notepad.style.visibility = 'visible';
-                        navbar.style.opacity = 0.4;
-                        cont.style.opacity = 0.4;
-                        buttons.forEach(function (btn) {
-                            btn.style.pointerEvents = 'none';
-                        });
-                    }
-                });
-
-                // fermer la modal
-                if (close) {
-                    close.addEventListener('click', () => {
-                        if (notepad.style.visibility = 'visible') {
-                            notepad.style.visibility = 'hidden';
-                            navbar.style.opacity = 1;
-                            cont.style.opacity = 1;
+                    noteLink.addEventListener('click', () => {
+                        if (notepad.style.visibility = 'hidden') {
+                            notepad.style.visibility = 'visible';
+                            navbar.style.opacity = 0.4;
+                            cont.style.opacity = 0.4;
                             buttons.forEach(function (btn) {
-                                btn.style.pointerEvents = 'auto';
+                                btn.style.pointerEvents = 'none';
                             });
                         }
                     });
-                }
 
-            };
+                    // fermer la modal
+                    if (close) {
+                        close.addEventListener('click', () => {
+                            if (notepad.style.visibility = 'visible') {
+                                notepad.style.visibility = 'hidden';
+                                navbar.style.opacity = 1;
+                                cont.style.opacity = 1;
+                                buttons.forEach(function (btn) {
+                                    btn.style.pointerEvents = 'auto';
+                                });
+                            }
+                        });
+                    }
+
+                };
+            }
 
             // fermer la modal
             const notepads = document.getElementsByClassName('notepad');

@@ -46,24 +46,24 @@ class UserEditType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'first_options' => [
-                    'label' => 'Choisir un mot de passe *',
-                    'required' => true,
-                    'attr' => [
-                        'class' => 'form-control'
-                    ]
-                ],
-                'second_options' => [
-                    'label' => 'Confirmer le mot de passe *',
-                    'required' => true,
-                    'attr' => [
-                        'class' => 'form-control'
-                    ]
-                ],
-                'required' => true
-            ])
+            // ->add('password', RepeatedType::class, [
+            //     'type' => PasswordType::class,
+            //     'first_options' => [
+            //         'label' => 'Choisir un mot de passe *',
+            //         'required' => true,
+            //         'attr' => [
+            //             'class' => 'form-control'
+            //         ]
+            //     ],
+            //     'second_options' => [
+            //         'label' => 'Confirmer le mot de passe *',
+            //         'required' => true,
+            //         'attr' => [
+            //             'class' => 'form-control'
+            //         ]
+            //     ],
+            //     'required' => true
+            // ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Modifier',
                 'attr' => [

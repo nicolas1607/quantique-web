@@ -188,7 +188,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/edit/{user}", name="edit_user")
      */
-    public function edit(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
+    public function edit(Request $request, User $user): Response
     {
         $editUserForm = $this->createForm(UserEditType::class, $user, ['method' => 'GET']);
 
@@ -217,14 +217,14 @@ class UserController extends AbstractController
             //     $this->em->persist($accountFb);
             // }
 
-            $password = $user->getPassword();
-            $passwordEncoded = $encoder->hashPassword($user, $password);
-            $user->setPassword($passwordEncoded);
-
             $this->em->persist($user);
             $this->em->flush();
 
-            return $this->redirectToRoute('admin_users');
+            if ($this->getUser()->getRoles()[0] == 'ROLE_ADMIN') {
+                return $this->redirectToRoute('admin_users');
+            } else {
+                return $this->redirectToRoute('show_contracts', ['company' => $this->getUser()->getCompanies()[0]->getId()]);
+            }
         }
 
         return $this->render('user/edit.html.twig', [
