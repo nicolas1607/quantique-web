@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Note;
 use App\Entity\User;
 use App\Entity\Company;
 use App\Form\UserAddType;
@@ -9,12 +10,13 @@ use App\Form\UserEditType;
 use App\Entity\GoogleAccount;
 use App\Form\UserPasswordType;
 use App\Entity\FacebookAccount;
-use App\Entity\Note;
 use App\Form\RegistrationFormType;
-use App\Repository\CompanyRepository;
 use App\Repository\UserRepository;
+use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -89,7 +91,7 @@ class UserController extends AbstractController
     /**
      * @Route("/add/user", name="add_user")
      */
-    public function add(Request $request): Response
+    public function add(Request $request, UserPasswordHasherInterface $encoder, MailerInterface $mailer): Response
     {
         $user = new User();
         $addUserForm = $this->createForm(UserAddType::class, $user);
@@ -101,11 +103,28 @@ class UserController extends AbstractController
             $company->addUser($user);
             $user->addCompany($company);
 
+            $password = 'Quantique2021-';
+            $passwordEncoded = $encoder->hashPassword($user, $password);
+            $user->setPassword($passwordEncoded);
+
             $this->em->persist($user);
             $this->em->persist($company);
             $this->em->flush();
 
-            return $this->redirectToRoute('email_user_confirmation', ['user' => $user->getId()]);
+            // mail de confirmation
+            $email = (new TemplatedEmail())
+                ->from('nicolas160796@gmail.com')
+                ->to($user->getEmail())
+                ->subject('Accédez à votre compte Quantique Web Office !')
+                ->htmlTemplate('emails/user_confirmation.html.twig')
+                ->context([
+                    'user' => $user,
+                    'password' => 'Quantique2021-'
+                ]);
+
+            $mailer->send($email);
+
+            return $this->redirectToRoute('admin_users');
         }
 
         $companies = $this->em->getRepository(Company::class)->findAll();
@@ -119,7 +138,7 @@ class UserController extends AbstractController
     /**
      * @Route("/add/user/{company}", name="add_user_with_company")
      */
-    public function addForCompany(Request $request, Company $company): Response
+    public function addForCompany(Request $request, Company $company, MailerInterface $mailer, UserPasswordHasherInterface $encoder): Response
     {
         $user = new User();
         $addUserForm = $this->createForm(RegistrationFormType::class, $user);
@@ -130,11 +149,33 @@ class UserController extends AbstractController
             $user->addCompany($company);
             $company->addUser($user);
 
+            $password = 'Quantique2021-';
+            $passwordEncoded = $encoder->hashPassword($user, $password);
+            $user->setPassword($passwordEncoded);
+
             $this->em->persist($user);
             $this->em->persist($company);
             $this->em->flush();
 
-            return $this->redirectToRoute('email_user_confirmation', ['user' => $user->getId()]);
+            // mail de confirmation
+            $email = (new TemplatedEmail())
+                ->from('nicolas160796@gmail.com')
+                ->to($user->getEmail())
+                ->subject('Accédez à votre compte Quantique Web Office !')
+                ->htmlTemplate('emails/user_confirmation.html.twig')
+                ->context([
+                    'user' => $user,
+                    'password' => 'Quantique2021-'
+                ]);
+
+            $mailer->send($email);
+
+            return $this->redirectToRoute('admin_users');
+
+            // return $this->redirectToRoute('email_user_confirmation', [
+            //     'user' => $user->getId(),
+            //     'password' => $password
+            // ]);
             // return $this->redirectToRoute('show_contracts', ['company' => $company->getId()]);
         }
 
@@ -237,7 +278,7 @@ class UserController extends AbstractController
             $this->em->persist($user);
             $this->em->flush();
 
-            return $this->redirectToRoute('admin_users');
+            return $this->redirectToRoute('show_contracts', ['company' => $user->getCompanies()[0]->getId()]);
         }
 
         return $this->render('user/edit_password.html.twig', [

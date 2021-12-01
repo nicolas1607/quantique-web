@@ -72,7 +72,7 @@
                         </div>
                         {% if is_granted('ROLE_ADMIN') and website.id %}
                         <div class="cont-flex">
-                            <a class="nav-link" href="{{path('add_contract', {'website': website.id})}}"
+                            <a class="nav-link" href="{{path('add_contract_website', {'website': website.id})}}"
                                 title="Ajouter un abonnement">
                                 <i class="fas fa-plus-square fa-lg"></i>
                             </a>
@@ -133,7 +133,7 @@
 
             for (let i = 0; i < noteLinks.length; i++) {
                 const noteLink = noteLinks[i];
-                const id = noteLink.id.substr(-1);
+                const id = noteLink.id.substr(8);
                 const notepad = document.querySelector('#notepad' + id)
                 const close = document.querySelector('#notepad-close' + id);
 
@@ -148,20 +148,23 @@
                     }
                 });
 
-                close.addEventListener('click', () => {
-                    if (notepad.style.visibility = 'visible') {
-                        notepad.style.visibility = 'hidden';
-                        navbar.style.opacity = 1;
-                        cont.style.opacity = 1;
-                        buttons.forEach(function (btn) {
-                            btn.style.pointerEvents = 'auto';
-                        });
-                    }
-                });
+                // fermer la modal
+                if (close) {
+                    close.addEventListener('click', () => {
+                        if (notepad.style.visibility = 'visible') {
+                            notepad.style.visibility = 'hidden';
+                            navbar.style.opacity = 1;
+                            cont.style.opacity = 1;
+                            buttons.forEach(function (btn) {
+                                btn.style.pointerEvents = 'auto';
+                            });
+                        }
+                    });
+                }
+
             };
 
-
-
+            // fermer la modal
             const notepads = document.getElementsByClassName('notepad');
             window.addEventListener('keydown', function (event) {
                 if (event.key === 'Escape') {

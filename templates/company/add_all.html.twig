@@ -33,7 +33,7 @@
 
     <div class="form-section">
         <div class="cont-flex-start cont-title">
-            <i class="fas fa-file-contract fa-2x"></i>
+            <i class="fas fa-globe-americas fa-2x"></i>
             <h2>Abonnement</h2>
         </div>
         <div class="cont-grid">
@@ -105,7 +105,7 @@
             const price = document.querySelector('#' + type + '-price');
             if (form.style.display == 'none') {
                 price.setAttribute('required', 'required');
-                form.style.display = 'flex';
+                form.style.display = 'grid';
                 check.checked = true;
                 btn.setAttribute('style', 'background-color : #333');
                 btn.innerHTML = '- ' + type;

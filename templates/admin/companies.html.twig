@@ -51,9 +51,21 @@
                             </a>
                         </li>
                         <li class="action-item">
+                            <a href="{{path('add_contract_company', {'company': company.id})}}" class="action-link"
+                                title="Ajouter un contrat">
+                                <i class="fas fa-file-contract fa-lg"></i>
+                            </a>
+                        </li>
+                        <li class="action-item">
                             <a href="{{path('add_invoice_with_company', {'company': company.id})}}" class="action-link"
                                 title="Ajouter une facture">
                                 <i class="fas fa-file-upload fa-lg"></i>
+                            </a>
+                        </li>
+                        <li class="action-item">
+                            <a href="{{path('add_website_with_company', {'company': company.id})}}" class="action-link"
+                                title="Ajouter un abonnement">
+                                <i class="fas fa-globe-americas fa-lg"></i>
                             </a>
                         </li>
                         <li class="action-item">

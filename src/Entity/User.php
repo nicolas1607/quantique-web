@@ -65,6 +65,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $notes;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $nbConnection;
+
     public function __construct()
     {
         $this->companies = new ArrayCollection();
@@ -248,6 +253,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $note->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNbConnection(): ?int
+    {
+        return $this->nbConnection;
+    }
+
+    public function setNbConnection(?int $nbConnection): self
+    {
+        $this->nbConnection = $nbConnection;
 
         return $this;
     }
