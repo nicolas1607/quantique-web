@@ -17,19 +17,18 @@ class UserPasswordType extends AbstractType
         $builder
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'Mot de passe invalide',
                 'first_options' => [
                     'label' => 'Choisir un mot de passe *',
                     'required' => true,
                     'attr' => [
-                        'class' => 'form-control mt-3'
+                        'class' => 'form-control'
                     ]
                 ],
                 'second_options' => [
                     'label' => 'Confirmer le mot de passe *',
                     'required' => true,
                     'attr' => [
-                        'class' => 'form-control mt-3'
+                        'class' => 'form-control'
                     ]
                 ],
                 'required' => true

@@ -60,7 +60,7 @@ h3 {
 
 body {
   position: relative;
-  margin-top: 6rem;
+  margin-top: 8rem;
 }
 
 mark {
@@ -108,7 +108,7 @@ li {
 
 tr, td {
   text-align: center;
-  vertical-align:middle;
+  vertical-align: middle;
 }
 
 .table {
@@ -281,15 +281,16 @@ input[type='checkbox'] {
 
 .cont-contract {
   display: grid;
-  grid-template-columns: 92% 8%;
+  grid-template-columns: 85% 15%;
 }
 
 .cont-note {
   display: grid;
-  grid-template-columns: 12fr 1fr;
+  grid-template-columns: 9fr 2fr;
   gap: 2rem;
   margin-bottom: 2rem;
   margin-bottom: 4rem;
+  position: relative;
 }
 
 .cont-note button {
@@ -320,6 +321,7 @@ input[type='checkbox'] {
   right: 0;
   top: 0;
   background-color: var(--white);
+  /* box-shadow: 4px 4px 4px .1rem rgba(0,0,0,.4); */
 }
 
 .navbar-container {
@@ -490,27 +492,41 @@ h3 .action-link {
   padding: .2rem 2rem .2rem 1rem;
 }
 
-.contract-content div {
-  padding: 0 1rem;
-}
-
 .contract-item {
   border-bottom: solid 1px #cacdcf;
   cursor: pointer;
+  min-height: 5.1rem;
 }
 
 .contract-item:hover {
   background-color: #f8f9fa;
 }
 
+.contract-item:hover .contract-action {
+  display: flex;
+}
+
+.contract-action {
+  display: none;
+  padding-right: 2rem;
+}
+
+.contract-action a {
+  opacity: 0.6;
+}
+
 .contract-title {
   margin-top: 1rem;
   margin-bottom: 1rem;
+  margin-left: 1rem;
 }
 
 .contract-info {
-  margin-left: 1rem;
+  margin-left: 4rem;
   text-align: left;
+  width: 100%;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .contract-info p {
@@ -589,8 +605,11 @@ h3 .action-link {
 }
 
 .notepad-btn {
+  position: absolute;
   cursor: pointer;
-  margin-top: 1.5rem;
+  /* max-height: 4rem; */
+  bottom: 0;
+  right: 6rem;
 }
 
 

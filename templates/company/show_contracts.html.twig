@@ -90,7 +90,7 @@
                 </div>
                 <div class="contract-notes">
                     {% for contract in website.contracts %}
-                    <div class="cont-contract contract-item contract-content">
+                    <div class="cont-flex-space contract-item contract-content">
                         <div id="contract{{contract.id}}" class="cont-flex-start contract-info">
                             <h3 class="cont-flex-start contract-title">{{contract.type.name}}</h3>
                             <div class="cont-flex-space">
@@ -106,12 +106,12 @@
                             </div>
                         </div>
                         {% if is_granted('ROLE_ADMIN') %}
-                        <div class="cont-flex-end">
-                            <a class="action-link" href="{{path('edit_contract', {'contract': contract.id})}}"
+                        <div class="cont-flex contract-action">
+                            <a class="nav-link" href="{{path('edit_contract', {'contract': contract.id})}}"
                                 title="Modifier l'abonnement">
                                 <i class="fas fa-edit fa-lg"></i>
                             </a>
-                            <a class="action-link" href="{{path('delete_contract', {'contract': contract.id})}}"
+                            <a class="nav-link" href="{{path('delete_contract', {'contract': contract.id})}}"
                                 title="Supprimer l'abonnement">
                                 <i class="fas fa-times fa-lg"></i>
                             </a>

@@ -42,25 +42,24 @@ class UserAddType extends AbstractType
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'Mot de passe invalide',
                 'first_options' => [
                     'label' => 'Choisir un mot de passe *',
                     'required' => true,
                     'attr' => [
-                        'class' => 'form-control mt-3'
+                        'class' => 'form-control'
                     ]
                 ],
                 'second_options' => [
                     'label' => 'Confirmer le mot de passe *',
                     'required' => true,
                     'attr' => [
-                        'class' => 'form-control mt-3'
+                        'class' => 'form-control'
                     ]
                 ],
                 'required' => true
             ])
             ->add('phone', TextType::class, [
-                'label' => 'Contact',
+                'label' => 'Téléphone',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control'

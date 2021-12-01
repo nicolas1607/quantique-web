@@ -132,7 +132,7 @@ class InvoiceController extends AbstractController
                 $email = (new TemplatedEmail())
                     ->from('nicolas160796@gmail.com')
                     ->to($user->getEmail())
-                    ->subject('Une nouvelle facture pour ' . $company->getName() . ' est disponible !')
+                    ->subject('Nouvelle(s) facture(s) pour ' . $company->getName() . ' disponible(s) !')
                     ->htmlTemplate('emails/invoice_confirmation.html.twig')
                     ->context([
                         'user' => $user,

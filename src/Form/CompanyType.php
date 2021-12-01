@@ -65,7 +65,7 @@ class CompanyType extends AbstractType
                 ]
             ])
             ->add('phone', TextType::class, [
-                'label' => 'Numéro de téléphone',
+                'label' => 'Téléphone',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control'
