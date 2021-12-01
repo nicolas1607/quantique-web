@@ -8,7 +8,7 @@
     {{ form_start(add_website_form) }}
     <div class="cont-flex-start">
         <i class="fas fa-globe-americas fa-2x"></i>
-        <h2>Nouvel abonnement</h2>
+        <h2>Abonnement</h2>
     </div>
     <div class="form-section">
         <label for="company">Entreprise</label>
@@ -21,28 +21,43 @@
     <div class="form-section">
         <div class="cont-flex-start">
             <i class="fas fa-file-contract fa-2x"></i>
-            <h2>Nouveaux contrats</h2>
-        </div>
-        <div class="cont-grid">
+            <h2>Contrats</h2>
             {% for type in typesContract %}
             <div>
-                <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox" name="{{type.lib}}-check">
-                <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
                 <div class="">
-                    <div>
-                        <label for="{{type.lib}}-price">Prix initial</label>
-                        <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
-                    </div>
-                    <div>
-                        <label for="{{type.lib}}-promotion">Prix réduit</label>
-                        <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
-                    </div>
+                    <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn btn5" type="button">+
+                        {{type.lib}}</button>
                 </div>
             </div>
             {% endfor %}
         </div>
+        <div>
+            {% for type in typesContract %}
+            <div>
+                <div id="{{type.lib}}-form" class="form-type form-contract cont-grid-contract" style="display: none">
+                    <div class="form-contract-title">
+                        <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox"
+                            name="{{type.lib}}-check" hidden>
+                        <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
+                    </div>
+                    <div class="cont-grid">
+                        <div>
+                            <label for="{{type.lib}}-price">Prix initial *</label>
+                            <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                        </div>
+                        <div>
+                            <label for="{{type.lib}}-promotion">Prix réduit</label>
+                            <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+        </div>
     </div>
-    <div class="cont-flex">
+    <div class="cont-flex form-submit">
+        {# <button class="add-abo-btn btn-type btn10 right" type="button">+ Abonnement</button> #}
         {{ form_row(add_website_form.submit) }}
     </div>
     {{ form_end(add_website_form) }}
@@ -51,15 +66,26 @@
 <script>
     const types = ['vitrine', 'commerce', 'google', 'facebook']
     types.forEach(function (type) {
-        const check = document.querySelector('#' + type + '-check');
-        const price = document.querySelector('#' + type + '-price');
-        check.addEventListener('click', () => {
-            if (check.checked == true) {
+        const btn = document.querySelector('#' + type + '-btn');
+        btn.addEventListener('click', () => {
+            const form = document.querySelector('#' + type + '-form');
+            const check = document.querySelector('#' + type + '-check');
+            const price = document.querySelector('#' + type + '-price');
+            if (form.style.display == 'none') {
                 price.setAttribute('required', 'required');
+                form.style.display = 'flex';
+                check.checked = true;
+                btn.setAttribute('style', 'background-color : #333');
+                btn.innerHTML = '- ' + type;
+
             } else {
-                price.removeAttribute('required')
+                price.removeAttribute('required');
+                form.style.display = 'none';
+                check.checked = false;
+                btn.setAttribute('style', 'background-color : #F3AA10');
+                btn.innerHTML = '+ ' + type;
             }
-        })
+        });
     });
 </script>
 

@@ -43,6 +43,7 @@ h1 {
 h2 {
   font-size: 1.8rem;
   margin-left: 2rem;
+  margin-right: 1rem;
 }
 
 h3 {
@@ -130,13 +131,18 @@ a:hover {
   background-color: var(--orange);
   color: var(--white);
   border-radius: .2rem;
-  font-weight: bold;
   text-align: center;
   box-shadow: 4px 4px 10px rgba(0,0,0,.1);
 }
 
 .btn-type:hover {
   transform: scaleY(-1rem);
+}
+
+.btn5 {
+  width: 9rem;
+  margin-left: 1rem;
+  font-size: .8rem;
 }
 
 .btn10 {
@@ -151,7 +157,6 @@ a:hover {
 .btn-form {
   width: 12rem;
   margin-top: 2rem;
-  box-shadow: 1px 1px 4px 1px var(--color2);
 }
 
 .btn-type:hover {
@@ -178,6 +183,11 @@ form {
 .form-check label {
   margin-left: 1rem;
   margin-top: -.3rem;
+}
+
+.form-submit button {
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 label {
@@ -207,8 +217,8 @@ input[type='checkbox'] {
 }
 
 .container {
-  padding-left: 8rem;
-  padding-right: 8rem;
+  padding-left: 7rem;
+  padding-right: 7rem;
   margin-bottom: 8rem;
 }
 
@@ -277,6 +287,17 @@ input[type='checkbox'] {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 2rem;
+}
+
+.cont-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.cont-grid-contract{
+  display: grid;
+  grid-template-columns: 1fr 3fr 3fr 3fr;
 }
 
 .cont-contract {
@@ -377,9 +398,8 @@ h3 .action-link {
   align-items: center;
   background-color: var(--white);
   padding: 8rem 6rem;
-  margin-top: 2rem;
   border-radius: 2rem;
-  box-shadow: 6px 6px 20px 2px var(--color2);
+  box-shadow: 2px 4px 8px 6px rgba(0,0,0,.1);
 }
 
 .login-form form {
@@ -531,6 +551,21 @@ h3 .action-link {
 
 .contract-info p {
   margin-bottom: 0;
+}
+
+.form-contract {
+  display: none;
+  margin-top: 2rem;
+}
+
+.form-contract-title {
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  margin-right: 2rem;
+}
+
+.add-abo-btn {
+  margin-top: 2rem;
 }
 
 /* Modal Notepad */

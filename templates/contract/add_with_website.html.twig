@@ -6,9 +6,9 @@
 
 <div class="container">
     <form action="{{path('add_contract_with_website', {'website': website.id})}}">
-        <div class="cont-flex-start cont-title">
-            <i class="fas fa-file-contract fa-2x"></i>
-            <h2>Nouveaux contrats</h2>
+        <div class="cont-flex-start">
+            <i class="fas fa-globe-americas fa-2x"></i>
+            <h2>Abonnement</h2>
         </div>
         <div class="form-section cont-grid">
             <div>
@@ -21,22 +21,41 @@
             </div>
         </div>
         <div class="form-section">
-            <div class="cont-grid">
+            <div class="cont-flex-start">
+                <i class="fas fa-file-contract fa-2x"></i>
+                <h2>Contrats</h2>
                 {% for type in types %}
                 <div>
-                    <input id="{{type.lib}}-check" type="checkbox" name="{{type.lib}}-check">
-                    <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
                     <div class="">
-                        <div>
-                            <label for="{{type.lib}}-price">Prix initial</label>
-                            <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                        <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn btn5" type="button">+
+                            {{type.lib}}</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div>
+                {% for type in types %}
+                <div>
+                    <div id="{{type.lib}}-form" class="form-type form-contract cont-grid-contract"
+                        style="display: none">
+                        <div class="form-contract-title">
+                            <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox"
+                                name="{{type.lib}}-check" hidden>
+                            <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
                         </div>
-                        <div>
-                            <label for="{{type.lib}}-promotion">Prix réduit</label>
-                            <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                        <div class="cont-grid">
+                            <div>
+                                <label for="{{type.lib}}-price">Prix initial *</label>
+                                <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                            </div>
+                            <div>
+                                <label for="{{type.lib}}-promotion">Prix réduit</label>
+                                <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                            </div>
                         </div>
                     </div>
                 </div>
+
                 {% endfor %}
             </div>
         </div>
@@ -45,5 +64,31 @@
         </div>
     </form>
 </div>
+
+<script>
+    const types = ['vitrine', 'commerce', 'google', 'facebook']
+    types.forEach(function (type) {
+        const btn = document.querySelector('#' + type + '-btn');
+        btn.addEventListener('click', () => {
+            const form = document.querySelector('#' + type + '-form');
+            const check = document.querySelector('#' + type + '-check');
+            const price = document.querySelector('#' + type + '-price');
+            if (form.style.display == 'none') {
+                price.setAttribute('required', 'required');
+                form.style.display = 'flex';
+                check.checked = true;
+                btn.setAttribute('style', 'background-color : #333');
+                btn.innerHTML = '- ' + type;
+
+            } else {
+                price.removeAttribute('required');
+                form.style.display = 'none';
+                check.checked = false;
+                btn.setAttribute('style', 'background-color : #F3AA10');
+                btn.innerHTML = '+ ' + type;
+            }
+        });
+    });
+</script>
 
 {% endblock %}
