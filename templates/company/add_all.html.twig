@@ -95,30 +95,6 @@
     {{ form_end(add_company_form) }}
 </div>
 
-<script>
-    const types = ['vitrine', 'commerce', 'google', 'facebook']
-    types.forEach(function (type) {
-        const btn = document.querySelector('#' + type + '-btn');
-        btn.addEventListener('click', () => {
-            const form = document.querySelector('#' + type + '-form');
-            const check = document.querySelector('#' + type + '-check');
-            const price = document.querySelector('#' + type + '-price');
-            if (form.style.display == 'none') {
-                price.setAttribute('required', 'required');
-                form.style.display = 'grid';
-                check.checked = true;
-                btn.setAttribute('style', 'background-color : #333');
-                btn.innerHTML = '- ' + type;
-
-            } else {
-                price.removeAttribute('required');
-                form.style.display = 'none';
-                check.checked = false;
-                btn.setAttribute('style', 'background-color : #F3AA10');
-                btn.innerHTML = '+ ' + type;
-            }
-        });
-    });
-</script>
+<script src="{{asset('js/add_multiple_contract.js')}}"></script>
 
 {% endblock %}

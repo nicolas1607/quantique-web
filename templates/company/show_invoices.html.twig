@@ -4,73 +4,148 @@
 
 {% block body %}
 
-<div class="container">
-    {% include "partials/_company_info.html.twig" %}
+<!-- MODAL DELETE USER -->
+{% include "partials/_modal_delete_user.html.twig" %}
+<!-- MODAL DELETE INVOICE -->
+{% include "partials/_modal_delete_invoice.html.twig" %}
 
-    {% if is_granted('ROLE_ADMIN') %}
-    <a class="btn-type right btn10" href="{{path('add_invoice_with_company', {'company': company.id})}}">Nouvelle
-        facture</a>
-    {% endif %}
+<body>
 
-    <ul class="nav nav-tabs nav-tabs-company">
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab"
-                href="{{path('show_contracts', {'company': company.id})}}">Abonnements</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab"
-                href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
-        </li>
-        {# {% if is_granted('ROLE_ADMIN') %}
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab"
-                href="{{path('show_accounts', {'company': company.id})}}">Comptes</a>
-        </li>
-        {% elseif app.user %} #}
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab"
-                href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
-        </li>
-        {# {% endif %} #}
-    </ul>
+    <div class="container">
+        {% include "partials/_company_info.html.twig" %}
 
-    <div>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for invoice in company.invoices %}
-                <tr class="table-light">
-                    <td>{{ invoice.releasedAt|date("d/m/Y") }}</td>
-                    <td>{{ invoice.type.name }}</td>
-                    <td>{{ invoice.file }}</td>
-                    <td>
-                        <ul class="action-list">
-                            <li class="action-item cont-flex-space">
-                                <a href="{{path('download_invoice', {'id': invoice.id})}}" class="action-link"
-                                    title="Télécharger la facture">
-                                    <i class="fas fa-lg fa-file-download"></i>
-                                </a>
-                            </li>
-                            <li class="action-item">
-                                <a href="{{path('delete_invoice', {'invoice': invoice.id})}}" class="action-link"
-                                    title="Supprimer la facture">
-                                    <i class="fas fa-times fa-lg"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {% if is_granted('ROLE_ADMIN') %}
+        <a class="btn-type right btn10" href="{{path('add_invoice_with_company', {'company': company.id})}}">Nouvelle
+            facture</a>
+        {% endif %}
+
+        <ul class="nav nav-tabs nav-tabs-company">
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab"
+                    href="{{path('show_contracts', {'company': company.id})}}">Abonnements</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab"
+                    href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
+            </li>
+            {# {% if is_granted('ROLE_ADMIN') %}
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab"
+                    href="{{path('show_accounts', {'company': company.id})}}">Comptes</a>
+            </li>
+            {% elseif app.user %} #}
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab"
+                    href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
+            </li>
+            {# {% endif %} #}
+        </ul>
+
+        <div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in company.invoices %}
+                    <tr class="table-light">
+                        <td>{{ invoice.releasedAt|date("d/m/Y") }}</td>
+                        <td>{{ invoice.type.name }}</td>
+                        <td>{{ invoice.file }}</td>
+                        <td>
+                            <ul class="action-list">
+                                <li class="action-item cont-flex-space">
+                                    <a href="{{path('download_invoice', {'id': invoice.id})}}" class="action-link"
+                                        title="Télécharger la facture">
+                                        <i class="fas fa-lg fa-file-download"></i>
+                                    </a>
+                                </li>
+                                <li class="action-item">
+                                    <a id="delete-invoice{{invoice.id}}" class="action-link delete-invoice"
+                                        title="Supprimer la facture">
+                                        <i class="fas fa-times fa-lg"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+
+</body>
+
+<script>
+    const cont = document.querySelector('.container');
+    const navbar = document.querySelector('.navbar');
+    const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
+
+    // function delete invoice / user
+    const typeDelete = ['invoice', 'user'];
+    typeDelete.forEach(function (type) {
+        let deletes = document.querySelectorAll('.delete-' + type);
+        for (let i = 0; i < deletes.length; i++) {
+            let id;
+            let del = deletes[i];
+            if (type == 'invoice') id = del.id.substr(14);
+            else if (type == 'user') id = del.id.substr(11);
+            let modal = document.querySelector('#modal-' + type + id);
+            del.addEventListener('click', () => {
+                modal.style.visibility = 'visible';
+                navbar.style.opacity = 0.4;
+                cont.style.opacity = 0.4;
+                buttons.forEach(function (btn) {
+                    btn.style.pointerEvents = 'none';
+                });
+            });
+        }
+    });
+    const closes = document.querySelectorAll('.mdl-close');
+    const modal = document.querySelectorAll('.mdl-delete');
+    closes.forEach(function (close) {
+        close.addEventListener('click', () => {
+            for (let i = 0; i < modal.length; i++) {
+                modal[i].style.visibility = 'hidden';
+                navbar.style.opacity = 1;
+                cont.style.opacity = 1;
+                buttons.forEach(function (btn) {
+                    btn.style.pointerEvents = 'auto';
+                });
+            }
+        });
+    });
+    const cancel = document.querySelectorAll('.btn-cancel');
+    cancel.forEach(function (close) {
+        close.addEventListener('click', () => {
+            for (let i = 0; i < modal.length; i++) {
+                modal[i].style.visibility = 'hidden';
+                navbar.style.opacity = 1;
+                cont.style.opacity = 1;
+                buttons.forEach(function (btn) {
+                    btn.style.pointerEvents = 'auto';
+                });
+            }
+        });
+    });
+    window.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            for (let i = 0; i < modal.length; i++) {
+                modal[i].style.visibility = 'hidden';
+                navbar.style.opacity = 1;
+                cont.style.opacity = 1;
+                buttons.forEach(function (btn) {
+                    btn.style.pointerEvents = 'auto';
+                });
+            }
+        }
+    });
+</script>
 
 {% endblock %}

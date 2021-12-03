@@ -2,11 +2,17 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Note;
 use App\Entity\User;
 use App\Entity\Company;
+use App\Entity\Invoice;
+use App\Entity\Contract;
+use App\Form\InvoiceType;
 use App\Form\UserAddType;
 use App\Form\UserEditType;
+use App\Entity\TypeInvoice;
+use App\Entity\TypeContract;
 use App\Entity\GoogleAccount;
 use App\Form\UserPasswordType;
 use App\Entity\FacebookAccount;
@@ -46,9 +52,21 @@ class UserController extends AbstractController
         } else {
             $companies = $this->em->getRepository(Company::class)->findAll();
         }
+
+        $invoice = new Invoice();
+        $addInvoiceForm = $this->createForm(InvoiceType::class, $invoice);
+
+        $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
+        $typesInvoice = $this->em->getRepository(TypeInvoice::class)->findAll();
+        $currentDate = new DateTime();
+
         return $this->render('admin/companies.html.twig', [
             'companies' => $companies,
-            'search' => $search
+            'search' => $search,
+            'typesContract' => $typesContract,
+            'typesInvoice' => $typesInvoice,
+            'currentDate' => $currentDate,
+            'add_invoice_form' => $addInvoiceForm->createView()
         ]);
     }
 
@@ -113,7 +131,7 @@ class UserController extends AbstractController
 
             // mail de confirmation
             $email = (new TemplatedEmail())
-                ->from('nicolas160796@gmail.com')
+                ->from('Quantique Web')
                 ->to($user->getEmail())
                 ->subject('Accédez à votre compte Quantique Web Office !')
                 ->htmlTemplate('emails/user_confirmation.html.twig')
@@ -159,7 +177,7 @@ class UserController extends AbstractController
 
             // mail de confirmation
             $email = (new TemplatedEmail())
-                ->from('nicolas160796@gmail.com')
+                ->from('Quantique Web')
                 ->to($user->getEmail())
                 ->subject('Accédez à votre compte Quantique Web Office !')
                 ->htmlTemplate('emails/user_confirmation.html.twig')
@@ -296,5 +314,53 @@ class UserController extends AbstractController
         $this->em->flush();
 
         return $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+
+    // MODAL EVENT //
+
+    /**
+     * @Route("/user/add/modal", name="add_user_modal")
+     */
+    public function addFromModal(Request $request, UserPasswordHasherInterface $encoder, MailerInterface $mailer): Response
+    {
+        $user = new User();
+
+        $firstname = $request->get('firstname');
+        $lastname = $request->get('lastname');
+        $email = $request->get('email');
+        $phone = $request->get('phone');
+        $company = $this->em->getRepository(Company::class)->findOneBy(['name' => $request->get('company')]);
+
+        $user->setFirstname($firstname)
+            ->setLastname($lastname)
+            ->setEmail($email)
+            ->setPhone($phone)
+            ->addCompany($company);
+
+        $company->addUser($user);
+
+        $password = 'Quantique2021-';
+        $passwordEncoded = $encoder->hashPassword($user, $password);
+        $user->setPassword($passwordEncoded);
+
+        $this->em->persist($user);
+        $this->em->persist($company);
+        $this->em->flush();
+
+        // mail de confirmation
+        $email = (new TemplatedEmail())
+            ->from('Quantique Web')
+            ->to($user->getEmail())
+            ->subject('Accédez à votre compte Quantique Web Office !')
+            ->htmlTemplate('emails/user_confirmation.html.twig')
+            ->context([
+                'user' => $user,
+                'password' => 'Quantique2021-'
+            ]);
+
+        $mailer->send($email);
+
+        return $this->redirectToRoute('admin_companies');
     }
 }

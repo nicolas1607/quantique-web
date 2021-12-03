@@ -1,0 +1,66 @@
+<div id="modal-website{{company.id}}" class="mdl-add-website">
+    <div class="cont-flex-start mdl-header-form">
+        <div class="cont-flex">
+            <i class="fas fa-globe-americas fa-2x"></i>
+            <h2>Abonnement</h2>
+        </div>
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    <form action="{{path('add_website_modal', {'company': company.id})}}">
+        <div class="form-section">
+            <label for="company">Entreprise</label>
+            <input class="form-control" type="text" name="company" value="{{company.name}}" readonly>
+        </div>
+        <div class="cont-grid form-section">
+            <div>
+                <label for="name">Nom du site *</label>
+                <input class="form-control" type="text" name="name">
+            </div>
+            <div>
+                <label for="url">URL du site *</label>
+                <input class="form-control" type="text" name="url">
+            </div>
+        </div>
+        <div class="form-section">
+            <div class="cont-flex-start">
+                <i class="fas fa-file-contract fa-2x"></i>
+                <h2>Contrats</h2>
+                
+            </div>
+            <div>
+                <div class="cont-flex-space mdl-btn-contract">
+                    {% for type in typesContract %}
+                    <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn" type="button">+
+                                    {{type.lib}}</button>
+                    {% endfor %}
+                </div>
+                <div>
+                {% for type in typesContract %}
+                    <div id="{{type.lib}}-form" class="form-type form-contract cont-grid-contract mdl-form-contract"
+                        style="display: none">
+                        <div class="form-contract-title">
+                            <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox"
+                                name="{{type.lib}}-check" hidden>
+                            <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
+                        </div>
+                        <div class="cont-grid">
+                            <div>
+                                <label for="{{type.lib}}-price">Prix initial *</label>
+                                <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                            </div>
+                            <div>
+                                <label for="{{type.lib}}-promotion">Prix réduit</label>
+                                <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                            </div>
+                        </div>
+                    </div>    
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="cont-flex-space mdl-btn">
+            <button class="btn-type btn-form btn-alert" type="submit">Créer</button>
+            <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+        </div>
+    </form>
+</div>

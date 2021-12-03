@@ -6,7 +6,6 @@ use App\Entity\Company;
 use App\Entity\Website;
 use App\Entity\Contract;
 use App\Entity\TypeContract;
-use App\Form\ContractAddType;
 use App\Form\ContractEditType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,38 +23,9 @@ class ContractController extends AbstractController
     }
 
     /**
-     * @Route("/contract/add/{website}/{type}", name="add_contract_with_type")
-     */
-    // public function addWithType(Request $request, Website $website, TypeContract $type): Response
-    // {
-    //     $contract = new Contract();
-    //     $addContractForm = $this->createForm(ContractInfoType::class, $contract);
-    //     $addContractForm->handleRequest($request);
-
-    //     if ($addContractForm->isSubmitted() && $addContractForm->isValid()) {
-    //         $contract = $addContractForm->getData();
-    //         $contract->setWebsite($website)
-    //             ->setType($type);
-    //         $website->addContract($contract);
-
-    //         $this->em->persist($contract);
-    //         $this->em->persist($website);
-    //         $this->em->flush();
-
-    //         return $this->redirectToRoute('show_website', ['website' => $website->getId()]);
-    //     }
-
-    //     return $this->render('contract/add_type.html.twig', [
-    //         'add_contract_form' => $addContractForm->createView(),
-    //         'website' => $website,
-    //         'type' => $type
-    //     ]);
-    // }
-
-    /**
      * @Route("/contract/add/{company}", name="add_contract_company")
      */
-    public function addFromCompany(Request $request, Company $company): Response
+    public function addFromCompany(Company $company): Response
     {
         $types = $this->em->getRepository(TypeContract::class)->findAll();
 
@@ -100,9 +70,9 @@ class ContractController extends AbstractController
     }
 
     /**
-     * @Route("/contract/add/{website}", name="add_contract_website")
+     * @Route("/contract/add/new/{website}", name="add_contract_website")
      */
-    public function addFromWebsite(Request $request, Website $website): Response
+    public function addFromWebsite(Website $website): Response
     {
         $types = $this->em->getRepository(TypeContract::class)->findAll();
 
@@ -128,11 +98,11 @@ class ContractController extends AbstractController
                 $price = $request->get($type . '-price');
                 $promotion = $request->get($type . '-promotion');
                 $contract = new Contract;
-                $contract->setPrice($price)
+                $contract->setPrice(floatval($price))
                     ->setType($typeContract)
                     ->setWebsite($website);
                 if ($promotion && $promotion != $price) {
-                    $contract->setPromotion($promotion);
+                    $contract->setPromotion(floatval($promotion));
                 }
                 $website->addContract($contract);
                 $this->em->persist($contract);
@@ -155,7 +125,7 @@ class ContractController extends AbstractController
 
         if ($updateContractForm->isSubmitted() && $updateContractForm->isValid()) {
             $this->em->flush();
-            return $this->redirectToRoute('show_website', ['website' => $contract->getWebsite()->getId()]);
+            return $this->redirectToRoute('show_contracts', ['company' => $contract->getWebsite()->getCompany()->getId()]);
         }
 
         return $this->render('contract/edit.html.twig', [
@@ -174,5 +144,41 @@ class ContractController extends AbstractController
         $this->em->flush();
 
         return $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    // MODAL EVENT //
+
+    /**
+     * @Route("/contract/add/modal/{company}", name="add_contract_modal")
+     */
+    public function addFromModal(Request $request, Company $company): Response
+    {
+        $contract = new Contract();
+        $website = $this->em->getRepository(Website::class)->findOneBy(['name' => $request->get('website')]);
+
+        $types = ['vitrine', 'commerce', 'google', 'facebook'];
+        foreach ($types as $type) {
+            $check = $request->get($type . '-check');
+            if ($check == 'on') {
+                $typeContract = $this->em->getRepository(TypeContract::class)
+                    ->findOneBy(['lib' => $type]);
+                $price = $request->get($type . '-price');
+                $promotion = $request->get($type . '-promotion');
+                $contract = new Contract;
+                $contract->setPrice(floatval($price))
+                    ->setType($typeContract)
+                    ->setWebsite($website);
+                if ($promotion && $promotion != $price) {
+                    $contract->setPromotion(floatval($promotion));
+                }
+                $website->addContract($contract);
+                $this->em->persist($contract);
+            }
+        }
+
+        $this->em->persist($company);
+        $this->em->flush();
+
+        return $this->redirectToRoute('show_contracts', ['company' => $company->getId()]);
     }
 }

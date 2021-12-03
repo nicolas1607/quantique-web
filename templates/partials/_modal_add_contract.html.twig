@@ -1,15 +1,12 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Quantique | Ajouter un contrat{% endblock %}
-
-{% block body %}
-
-<div class="container">
-    <form action="{{path('add_contract_with_company', {'company': company.id})}}">
-        <div class="cont-flex-start">
+<div id="modal-contract{{company.id}}" class="mdl-add-contract">
+    <div class="cont-flex-space mdl-header-form">
+        <div class="cont-flex">
             <i class="fas fa-globe-americas fa-2x"></i>
             <h2>Abonnement</h2>
         </div>
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    <form action="{{path('add_contract_modal', {'company': company.id})}}">
         <div class="form-section cont-grid">
             <div>
                 <label for="company">Entreprise</label>
@@ -28,19 +25,18 @@
             <div class="cont-flex-start">
                 <i class="fas fa-file-contract fa-2x"></i>
                 <h2>Contrats</h2>
-                {% for type in types %}
-                <div>
-                    <div class="">
-                        <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn btn5" type="button">+
-                            {{type.lib}}</button>
-                    </div>
-                </div>
-                {% endfor %}
+                
             </div>
             <div>
-                {% for type in types %}
+                <div class="cont-flex-space mdl-btn-contract">
+                    {% for type in typesContract %}
+                    <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn" type="button">+
+                                    {{type.lib}}</button>
+                    {% endfor %}
+                </div>
                 <div>
-                    <div id="{{type.lib}}-form" class="form-type form-contract cont-grid-contract"
+                {% for type in typesContract %}
+                    <div id="{{type.lib}}-form" class="form-type form-contract cont-grid-contract mdl-form-contract"
                         style="display: none">
                         <div class="form-contract-title">
                             <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox"
@@ -57,18 +53,14 @@
                                 <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
                             </div>
                         </div>
-                    </div>
-                </div>
-
+                    </div>    
                 {% endfor %}
+                </div>
             </div>
         </div>
-        <div class="cont-flex">
-            <button class="btn-type btn-form" type="submit">Créer</button>
+        <div class="cont-flex-space mdl-btn">
+            <button class="btn-type btn-form btn-alert" type="submit">Créer</button>
+            <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
         </div>
     </form>
 </div>
-
-<script src="{{asset('js/add_multiple_contract.js')}}"></script>
-
-{% endblock %}

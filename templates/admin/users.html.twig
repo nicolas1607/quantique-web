@@ -4,6 +4,24 @@
 
 {% block body %}
 
+<!-- MODAL DELETE USER -->
+{% for user in users|reverse %}
+<div id="modal{{user.id}}" class="mdl-delete">
+    <div class="mdl-header">
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    <div class="mdl-content">
+        <p>Êtes vous sûr de vouloir supprimer l'utilisateur suivant : <strong>{{user.firstname}}
+                {{user.lastname}}</strong> ?</p>
+        <div class="cont-flex-space">
+            <a class="btn-type btn-form btn-alert btn-danger"
+                href="{{path('delete_user', {'user': user.id})}}">Supprimer</a>
+            <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
 <div class="container">
     <h1>Espace administration</h1>
     <div class="cont-flex-end">
@@ -33,6 +51,7 @@
                 <th scope="col">Contact</th>
                 <th scope="col">Téléphone</th>
                 <th scope="col">Email</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -68,7 +87,7 @@
                             </a>
                         </li>
                         <li class="action-item">
-                            <a href="{{path('delete_user', {'user': user.id})}}" class="action-link"
+                            <a id="delete-user{{user.id}}" class="action-link delete-user"
                                 title="Supprimer l'entreprise">
                                 <i class="fas fa-times fa-lg"></i>
                             </a>
@@ -85,16 +104,14 @@
 
 <script>
 
-    const users = document.getElementsByClassName('user');
-
     // function search
+    const users = document.getElementsByClassName('user');
     const input = document.querySelector('#search-input');
     input.value = window.location.search.substr(8);
     input.addEventListener('keyup', () => {
         for (let i = 0; i < users.length; i++) {
             const user = users[i];
             const userName = user.className.substr(17);
-            console.log(userName);
             if (input.value != "") {
                 if (userName.toUpperCase().includes(input.value.toUpperCase())) {
                     user.style.display = null;
@@ -107,13 +124,67 @@
         }
     });
 
-    // function delete
+    // function delete search
     const cross = document.querySelector('#search-delete');
     cross.addEventListener('click', () => {
         for (let i = 0; i < users.length; i++) {
             input.value = "";
             users[i].style.display = null;
         }
+    });
+
+    // function delete user
+    const cont = document.querySelector('.container');
+    const navbar = document.querySelector('.navbar');
+    const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
+    const deletes = document.querySelectorAll('.delete-user');
+    deletes.forEach(function (del) {
+        const id = del.id.substr(11);
+        const modal = document.querySelector('#modal' + id);
+        del.addEventListener('click', () => {
+            modal.style.visibility = 'visible';
+            navbar.style.opacity = 0.4;
+            cont.style.opacity = 0.4;
+            buttons.forEach(function (btn) {
+                btn.style.pointerEvents = 'none';
+            });
+        });
+    });
+
+    // function fermer une modale
+    const modalElements = document.querySelectorAll('.mdl-delete');
+    modalElements.forEach(function (modal) {
+        const close = modal.querySelector('.mdl-close');
+        const cancel = modal.querySelector('.btn-cancel');
+        // fermer avec button 'X'
+        close.addEventListener('click', () => {
+            modal.style.visibility = 'hidden';
+            navbar.style.opacity = 1;
+            cont.style.opacity = 1;
+            buttons.forEach(function (btn) {
+                btn.style.pointerEvents = 'auto';
+            });
+        });
+        // fermer avec button 'Annuler'
+        cancel.addEventListener('click', () => {
+            modal.style.visibility = 'hidden';
+            navbar.style.opacity = 1;
+            cont.style.opacity = 1;
+            buttons.forEach(function (btn) {
+                btn.style.pointerEvents = 'auto';
+            });
+        });
+        // fermer avec button 'Escape'
+        window.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                modal.style.visibility = 'hidden';
+                navbar.style.opacity = 1;
+                cont.style.opacity = 1;
+                buttons.forEach(function (btn) {
+                    btn.style.pointerEvents = 'auto';
+                });
+            }
+        });
     });
 
 </script>

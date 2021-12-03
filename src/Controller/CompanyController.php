@@ -173,11 +173,11 @@ class CompanyController extends AbstractController
                         $price = $request->get($type . '-price');
                         $promotion = $request->get($type . '-promotion');
                         $contract = new Contract;
-                        $contract->setPrice($price)
+                        $contract->setPrice(floatval($price))
                             ->setType($typeContract)
                             ->setWebsite($website);
                         if ($promotion && $promotion != $price) {
-                            $contract->setPromotion($promotion);
+                            $contract->setPromotion(floatval($promotion));
                         }
                         $website->addContract($contract);
                         $this->em->persist($contract);
@@ -237,7 +237,7 @@ class CompanyController extends AbstractController
 
         if ($updateContractForm->isSubmitted() && $updateContractForm->isValid()) {
             $this->em->flush();
-            return $this->redirect($_SERVER['HTTP_REFERER']);
+            return $this->redirectToRoute('admin_companies');
         }
 
         return $this->render('company/edit.html.twig', [

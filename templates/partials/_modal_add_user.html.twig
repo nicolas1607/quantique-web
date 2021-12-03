@@ -1,0 +1,39 @@
+<div id="modal-user{{company.id}}" class="mdl-add-user">
+    <div class="cont-flex-space mdl-header-form">
+        <div class="cont-flex">
+            <i class="fas fa-user-plus fa-2x"></i>
+            <h2>Nouveau client</h2>
+        </div>
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    <form action="{{path('add_user_modal')}}">
+        <div class="form-section">
+            <label for="company">Entreprise</label>
+            <input class="form-control" type="text" name="company" value="{{company.name}}" readonly>
+        </div>
+        <div class="cont-grid form-section">
+            <div>
+                <label for="firstname">Prénom</label>
+                <input class="form-control" name="firstname">
+            </div>
+            <div>
+                <label for="lastname">Nom de famille</label>
+                <input class="form-control" name="lastname">
+            </div>
+        </div>
+        <div class="cont-grid form-section">
+            <div>
+                <label for="email">Email</label>
+                <input class="form-control" name="email">
+            </div>
+            <div>
+                <label for="phone">Téléphone</label>
+                <input class="form-control" name="phone">
+            </div>
+        </div>
+        <div class="cont-flex-space mdl-btn">
+            <button class="btn-type btn-form btn-alert" type="submit">Créer</button>
+            <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+        </div>
+    </form>
+</div>

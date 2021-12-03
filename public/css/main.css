@@ -92,10 +92,6 @@ a {
   text-decoration: none;
   color: var(--white);
 	margin: 0px;
-	transition: all 0.4s;
-	-webkit-transition: all 0.4s;
-  -o-transition: all 0.4s;
-  -moz-transition: all 0.4s;
   cursor: pointer;
 }
 
@@ -124,6 +120,18 @@ tr, td {
 a:hover {
 	text-decoration: none;
   color: var(--orange);
+}
+
+.btn-alert {
+  background-color: var(--orange) !important;
+}
+
+.btn-danger {
+  background-color: red !important;
+}
+
+.btn-cancel {
+  background-color: var(--color2) !important;
 }
 
 .btn-type {
@@ -573,6 +581,82 @@ h3 .action-link {
 
 .add-abo-btn {
   margin-top: 2rem;
+}
+
+/* Modal Delete */
+
+.mdl-delete {
+  visibility: hidden;
+  width: 40%;
+  position: fixed;
+  top: 30%;
+  left: 30%;
+  background-color: white;
+  z-index: 1000;
+  border: solid 1px rgba(0,0,0,.1);
+  box-shadow: 8px 8px 8px 10px rgba(0,0,0,.1);
+}
+
+.mdl-header {
+  padding: 1.5rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mdl-content {
+  padding: 1rem 4rem 3rem 4rem;
+}
+
+/* Modal Add */
+
+.mdl-add-user,
+.mdl-add-contract,
+.mdl-add-invoice,
+.mdl-add-website {
+  visibility: hidden;
+  width: 60%;
+  position: fixed;
+  top: 12%;
+  left: 20%;
+  background-color: white;
+  z-index: 1000;
+  border: solid 1px rgba(0,0,0,.1);
+  box-shadow: 8px 8px 8px 10px rgba(0,0,0,.1);
+  overflow: scroll;
+  max-height: 36.5rem;
+}
+
+.mdl-add-user form,
+.mdl-add-contract form,
+.mdl-add-invoice form,
+.mdl-add-website form {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+}
+
+.mdl-header-form {
+  padding: 4rem 6rem 0 6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mdl-header-form h2 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.mdl-btn {
+  width: 60%;
+  margin: auto;
+}
+
+.mdl-btn-contract {
+  margin-bottom: 4rem;
+}
+
+.mdl-form-contract {
+  width: 100%;
 }
 
 /* Modal Notepad */
