@@ -214,13 +214,7 @@ class UserController extends AbstractController
         $this->em->persist($user);
         $this->em->flush();
 
-        // var_dump($_SERVER['HTTP_REFERER']);
-        return $this->render($_SERVER['HTTP_REFERER']);
-        // if ($this->getUser()->getRoles()[0] == 'ROLE_ADMIN') {
-        //     return $this->redirectToRoute('admin_users');
-        // } else {
-        //     return $this->redirectToRoute('show_contracts', ['company' => $this->getUser()->getCompanies()[0]->getId()]);
-        // }
+        return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 
     /**

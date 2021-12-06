@@ -27,7 +27,7 @@ class NoteController extends AbstractController
     public function add(Request $request, Contract $contract): Response
     {
         $note = new Note();
-        $note->setMessage($request->get('message'))
+        $note->setMessage(str_replace("\r\n", "\n", $request->get('message'))) // with twig nl2br
             ->setReleasedAt(new DateTime())
             ->setContract($contract)
             ->setUser($this->getUser());

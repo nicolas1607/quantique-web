@@ -11,29 +11,27 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NoteType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
-            ->add('message', TextareaType::class, [
-                'label' => 'Message',
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Créer',
-                'attr' => [
-                    'class' => 'btn-type btn-form'
-                ]
-            ])
-            // ->add('contract')
-        ;
-    }
+    // public function buildForm(FormBuilderInterface $builder, array $options): void
+    // {
+    //     $builder
+    //         ->add('message', TextareaType::class, [
+    //             'label' => 'Message',
+    //             'attr' => [
+    //                 'class' => 'form-control'
+    //             ]
+    //         ])
+    //         ->add('submit', SubmitType::class, [
+    //             'label' => 'Créer',
+    //             'attr' => [
+    //                 'class' => 'btn-type btn-form'
+    //             ]
+    //         ]);
+    // }
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Note::class,
-        ]);
-    }
+    // public function configureOptions(OptionsResolver $resolver): void
+    // {
+    //     $resolver->setDefaults([
+    //         'data_class' => Note::class,
+    //     ]);
+    // }
 }

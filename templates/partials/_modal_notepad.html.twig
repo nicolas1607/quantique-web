@@ -11,14 +11,14 @@
             {% for note in contract.notes|reverse %}
             <div class="notepad-item">
                 <p class="note-date">{{note.releasedAt|date("d/m/Y")}}</p>
-                <p class="note-msg">{{note.message}}</p>
+                <p class="note-msg">{{note.message|nl2br}}</p>
                 <a class="nav-link" href="{{path('delete_note', {'note': note.id})}}" title="Supprimer la note">
                     <i class="fas fa-times"></i>
                 </a>
             </div>
             {% endfor %}
         </div>
-        <form class="cont-note" action="{{path('add_note', {'contract': contract.id})}}">
+        <form class="cont-note" method="POST" action="{{path('add_note', {'contract': contract.id})}}">
             <div>
                 <label for="message">Message</label>
                 <textarea class="form-control" name="message" rows="1" required></textarea>
