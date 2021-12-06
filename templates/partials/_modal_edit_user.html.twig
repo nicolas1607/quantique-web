@@ -1,0 +1,43 @@
+<div id="modal-edit-user{{user.id}}" class="mdl-edit-user">
+    <div class="cont-flex-space mdl-header-form">
+        <div class="cont-flex">
+            <i class="fas fa-user-plus fa-2x"></i>
+            <h2>Modifier client</h2>
+        </div>
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    <form action="{{path('edit_user_modal', {'user': user.id})}}">
+        <div class="form-section">
+            <label for="company">Entreprise</label>
+            {% set value = "" %}
+            {% for company in user.companies %}
+            {% set value = value ~ company.name ~ " / " %}
+            {% endfor %}
+            <input class="form-control" type="text" name="company" value="{{value|slice(0, (value|length - 2))}}" readonly>
+        </div>
+        <div class="cont-grid form-section">
+            <div>
+                <label for="firstname">Prénom</label>
+                <input class="form-control" name="firstname" value="{{user.firstname}}">
+            </div>
+            <div>
+                <label for="lastname">Nom de famille</label>
+                <input class="form-control" name="lastname" value="{{user.lastname}}">
+            </div>
+        </div>
+        <div class="cont-grid form-section">
+            <div>
+                <label for="email">Email</label>
+                <input class="form-control" name="email" value="{{user.email}}">
+            </div>
+            <div>
+                <label for="phone">Téléphone</label>
+                <input class="form-control" name="phone" value="{{user.phone}}">
+            </div>
+        </div>
+        <div class="cont-flex-space mdl-btn">
+            <button class="btn-type btn-form btn-alert" type="submit">Modifier</button>
+            <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+        </div>
+    </form>
+</div>

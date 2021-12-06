@@ -7,10 +7,8 @@ use App\Entity\Note;
 use App\Entity\User;
 use App\Entity\Company;
 use App\Entity\Invoice;
-use App\Entity\Contract;
 use App\Form\InvoiceType;
 use App\Form\UserAddType;
-use App\Form\UserEditType;
 use App\Entity\TypeInvoice;
 use App\Entity\TypeContract;
 use App\Entity\GoogleAccount;
@@ -25,7 +23,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
@@ -44,7 +44,7 @@ class UserController extends AbstractController
     /**
      * @Route("/admin/companies", name="admin_companies")
      */
-    public function companies(Request $request): Response
+    public function companies(Request $request, MailerInterface $mailer, SluggerInterface $slugger): Response
     {
         $search = $request->get('search');
         if ($search != null) {
@@ -53,14 +53,73 @@ class UserController extends AbstractController
             $companies = $this->em->getRepository(Company::class)->findAll();
         }
 
-        $invoice = new Invoice();
-        $addInvoiceForm = $this->createForm(InvoiceType::class, $invoice);
-
+        $users = $this->userRepo->findUsers();
         $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
         $typesInvoice = $this->em->getRepository(TypeInvoice::class)->findAll();
         $currentDate = new DateTime();
 
+        // Formulaire d'ajout de facture
+        $invoice = new Invoice();
+        $addInvoiceForm = $this->createForm(InvoiceType::class, $invoice);
+        $addInvoiceForm->handleRequest($request);
+
+        if ($addInvoiceForm->isSubmitted() && $addInvoiceForm->isValid()) {
+
+            $company = $this->em->getRepository(Company::class)->findOneBy(['name' => $request->get('company')]);
+
+            // Fichier PDF *
+            $paths = $addInvoiceForm->get('files')->getData();
+
+            foreach ($paths as $path) {
+                $invoice = new Invoice();
+                $invoice->setReleasedAt(new DateTime($request->get('date')))
+                    ->setType($this->em->getRepository(TypeInvoice::class)
+                        ->findOneBy(['name' => $request->get('type')]))
+                    ->setCompany($company);
+
+                if ($path) {
+                    $originalFilename = pathinfo($path->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename . '.' . $path->guessExtension();
+                    try {
+                        $path->move(
+                            $this->getParameter('invoices'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        // ... handle exception if something happens during file upload
+                    }
+
+                    $invoice->setFile($newFilename);
+                    $company->addInvoice($invoice);
+                    $this->em->persist($invoice);
+                    $this->em->persist($company);
+                    $this->em->flush();
+                    $invoices[] = $invoice;
+                }
+            }
+
+            // Envoie d'un mail de confirmation
+            foreach ($company->getUsers() as $user) {
+                $email = (new TemplatedEmail())
+                    ->from('noreply@quantique-web.fr')
+                    ->to($user->getEmail())
+                    ->subject('Nouvelle(s) facture(s) pour ' . $company->getName() . ' disponible(s) !')
+                    ->htmlTemplate('emails/invoice_confirmation.html.twig')
+                    ->context([
+                        'user' => $user,
+                        'company' => $company
+                    ]);
+                foreach ($invoices as $invoice) {
+                    $email->attachFromPath($this->getParameter('invoices') . '/' . $invoice->getFile());
+                }
+
+                $mailer->send($email);
+            }
+        }
+
         return $this->render('admin/companies.html.twig', [
+            'users' => $users,
             'companies' => $companies,
             'search' => $search,
             'typesContract' => $typesContract,
@@ -73,7 +132,7 @@ class UserController extends AbstractController
     /**
      * @Route("/admin/users", name="admin_users")
      */
-    public function users(Request $request): Response
+    public function users(Request $request, UserPasswordHasherInterface $encoder): Response
     {
         $search = $request->get('search');
         if ($search != null) {
@@ -81,9 +140,26 @@ class UserController extends AbstractController
         } else {
             $users = $this->em->getRepository(User::class)->findAll();
         }
+        $companies = $this->em->getRepository(Company::class)->findAll();
+
+        // Formulaire de modification de mot de passe
+        $editPasswordForm = $this->createForm(UserPasswordType::class, $this->getUser());
+        $editPasswordForm->handleRequest($request);
+
+        if ($editPasswordForm->isSubmitted() && $editPasswordForm->isValid()) {
+            $password = $editPasswordForm->get('password')->getData();
+            $passwordEncoded = $encoder->hashPassword($this->getUser(), $password);
+            $this->getUser()->setPassword($passwordEncoded);
+
+            $this->em->persist($this->getUser());
+            $this->em->flush();
+        }
+
         return $this->render('admin/users.html.twig', [
             'users' => $users,
-            'search' => $search
+            'search' => $search,
+            'companies' => $companies,
+            'edit_password_form' => $editPasswordForm->createView()
         ]);
     }
 
@@ -104,181 +180,77 @@ class UserController extends AbstractController
         ]);
     }
 
-    // GENERAL //
-
     /**
-     * @Route("/add/user", name="add_user")
-     */
-    public function add(Request $request, UserPasswordHasherInterface $encoder, MailerInterface $mailer): Response
-    {
-        $user = new User();
-        $addUserForm = $this->createForm(UserAddType::class, $user);
-        $addUserForm->handleRequest($request);
-
-        if ($addUserForm->isSubmitted() && $addUserForm->isValid()) {
-            $user = $addUserForm->getData();
-            $company = $this->em->getRepository(Company::class)->findOneBy(['id' => $request->get('company')]);
-            $company->addUser($user);
-            $user->addCompany($company);
-
-            $password = 'Quantique2021-';
-            $passwordEncoded = $encoder->hashPassword($user, $password);
-            $user->setPassword($passwordEncoded);
-
-            $this->em->persist($user);
-            $this->em->persist($company);
-            $this->em->flush();
-
-            // mail de confirmation
-            $email = (new TemplatedEmail())
-                ->from('Quantique Web')
-                ->to($user->getEmail())
-                ->subject('Accédez à votre compte Quantique Web Office !')
-                ->htmlTemplate('emails/user_confirmation.html.twig')
-                ->context([
-                    'user' => $user,
-                    'password' => 'Quantique2021-'
-                ]);
-
-            $mailer->send($email);
-
-            return $this->redirectToRoute('admin_users');
-        }
-
-        $companies = $this->em->getRepository(Company::class)->findAll();
-
-        return $this->render('user/add.html.twig', [
-            'add_user_form' => $addUserForm->createView(),
-            'companies' => $companies
-        ]);
-    }
-
-    /**
-     * @Route("/add/user/{company}", name="add_user_with_company")
-     */
-    public function addForCompany(Request $request, Company $company, MailerInterface $mailer, UserPasswordHasherInterface $encoder): Response
-    {
-        $user = new User();
-        $addUserForm = $this->createForm(RegistrationFormType::class, $user);
-        $addUserForm->handleRequest($request);
-
-        if ($addUserForm->isSubmitted() && $addUserForm->isValid()) {
-            $user = $addUserForm->getData();
-            $user->addCompany($company);
-            $company->addUser($user);
-
-            $password = 'Quantique2021-';
-            $passwordEncoded = $encoder->hashPassword($user, $password);
-            $user->setPassword($passwordEncoded);
-
-            $this->em->persist($user);
-            $this->em->persist($company);
-            $this->em->flush();
-
-            // mail de confirmation
-            $email = (new TemplatedEmail())
-                ->from('Quantique Web')
-                ->to($user->getEmail())
-                ->subject('Accédez à votre compte Quantique Web Office !')
-                ->htmlTemplate('emails/user_confirmation.html.twig')
-                ->context([
-                    'user' => $user,
-                    'password' => 'Quantique2021-'
-                ]);
-
-            $mailer->send($email);
-
-            return $this->redirectToRoute('admin_users');
-
-            // return $this->redirectToRoute('email_user_confirmation', [
-            //     'user' => $user->getId(),
-            //     'password' => $password
-            // ]);
-            // return $this->redirectToRoute('show_contracts', ['company' => $company->getId()]);
-        }
-
-        return $this->render('user/add_with_company.html.twig', [
-            'add_user_form' => $addUserForm->createView(),
-            'company' => $company
-        ]);
-    }
-
-    /**
-     * @Route("/user/edit/{user}", name="edit_user")
+     * @Route("/admin/user/edit/modal/{user}", name="edit_user_modal")
      */
     public function edit(Request $request, User $user): Response
     {
-        $editUserForm = $this->createForm(UserEditType::class, $user, ['method' => 'GET']);
 
-        $editUserForm->handleRequest($request);
+        // On créer les comptes Google & Facebook
+        // $emailGoogle = $request->query->get('emailGoogle');
+        // $mdpGoogle = $request->query->get('mdpGoogle');
+        // if ($emailGoogle && $mdpGoogle) {
+        //     $accountGoogle = new GoogleAccount();
+        //     $accountGoogle->setEmail($emailGoogle)
+        //         ->setPassword($encoder->hashPassword($user, $mdpGoogle));
+        //     $user->setGoogleAccount($accountGoogle);
+        //     $this->em->persist($accountGoogle);
+        // }
+        // $emailFb = $request->query->get('emailFb');
+        // $mdpFb = $request->query->get('mdpFb');
+        // if ($emailFb && $mdpFb) {
+        //     $accountFb = new FacebookAccount();
+        //     $accountFb->setEmail($emailFb)
+        //         ->setPassword($encoder->hashPassword($user, $mdpFb));
+        //     $user->setGoogleFacebook($accountFb);
+        //     $this->em->persist($accountFb);
+        // }
 
-        if ($editUserForm->isSubmitted() && $editUserForm->isValid()) {
-            $user = $editUserForm->getData();
+        $user->setFirstname($request->get('firstname'))
+            ->setLastname($request->get('lastname'))
+            ->setEmail($request->get('email'))
+            ->setPhone($request->get('phone'));
 
-            // On créer les comptes Google & Facebook
-            // $emailGoogle = $request->query->get('emailGoogle');
-            // $mdpGoogle = $request->query->get('mdpGoogle');
-            // if ($emailGoogle && $mdpGoogle) {
-            //     $accountGoogle = new GoogleAccount();
-            //     $accountGoogle->setEmail($emailGoogle)
-            //         ->setPassword($encoder->hashPassword($user, $mdpGoogle));
-            //     $user->setGoogleAccount($accountGoogle);
-            //     $this->em->persist($accountGoogle);
-            // }
-            // $emailFb = $request->query->get('emailFb');
-            // $mdpFb = $request->query->get('mdpFb');
-            // if ($emailFb && $mdpFb) {
-            //     $accountFb = new FacebookAccount();
-            //     $accountFb->setEmail($emailFb)
-            //         ->setPassword($encoder->hashPassword($user, $mdpFb));
-            //     $user->setGoogleFacebook($accountFb);
-            //     $this->em->persist($accountFb);
-            // }
+        $this->em->persist($user);
+        $this->em->flush();
 
-            $this->em->persist($user);
-            $this->em->flush();
-
-            if ($this->getUser()->getRoles()[0] == 'ROLE_ADMIN') {
-                return $this->redirectToRoute('admin_users');
-            } else {
-                return $this->redirectToRoute('show_contracts', ['company' => $this->getUser()->getCompanies()[0]->getId()]);
-            }
-        }
-
-        return $this->render('user/edit.html.twig', [
-            'edit_user_form' => $editUserForm->createView(),
-            'user' => $user
-        ]);
+        // var_dump($_SERVER['HTTP_REFERER']);
+        return $this->render($_SERVER['HTTP_REFERER']);
+        // if ($this->getUser()->getRoles()[0] == 'ROLE_ADMIN') {
+        //     return $this->redirectToRoute('admin_users');
+        // } else {
+        //     return $this->redirectToRoute('show_contracts', ['company' => $this->getUser()->getCompanies()[0]->getId()]);
+        // }
     }
 
     /**
-     * @Route("/add/user/password/{user}", name="add_user_password")
+     * @Route("/admin/add/user/password/{user}", name="add_user_password")
      */
-    public function addPassword(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
-    {
-        $addUserForm = $this->createForm(UserPasswordType::class, $user);
-        $addUserForm->handleRequest($request);
+    // public function addPassword(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
+    // {
+    //     $addUserForm = $this->createForm(UserPasswordType::class, $user);
+    //     $addUserForm->handleRequest($request);
 
-        if ($addUserForm->isSubmitted() && $addUserForm->isValid()) {
-            $user = $addUserForm->getData();
-            $password = $user->getPassword();
-            $passwordEncoded = $encoder->hashPassword($user, $password);
-            $user->setPassword($passwordEncoded);
+    //     if ($addUserForm->isSubmitted() && $addUserForm->isValid()) {
+    //         $user = $addUserForm->getData();
+    //         $password = $user->getPassword();
+    //         $passwordEncoded = $encoder->hashPassword($user, $password);
+    //         $user->setPassword($passwordEncoded);
 
-            $this->em->persist($user);
-            $this->em->flush();
+    //         $this->em->persist($user);
+    //         $this->em->flush();
 
-            return $this->redirectToRoute('app_login');
-        }
+    //         return $this->redirectToRoute('app_login');
+    //     }
 
-        return $this->render('user/add_password.html.twig', [
-            'add_user_form' => $addUserForm->createView(),
-            'user' => $user
-        ]);
-    }
+    //     return $this->render('user/add_password.html.twig', [
+    //         'add_user_form' => $addUserForm->createView(),
+    //         'user' => $user
+    //     ]);
+    // }
 
     /**
-     * @Route("/user/edit/password/{user}", name="edit_user_password")
+     * @Route("/profile/user/edit/password/{user}", name="edit_user_password")
      */
     public function editPassword(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
     {
@@ -296,7 +268,7 @@ class UserController extends AbstractController
             $this->em->persist($user);
             $this->em->flush();
 
-            return $this->redirectToRoute('show_contracts', ['company' => $user->getCompanies()[0]->getId()]);
+            return $this->redirectToRoute('show_contracts', ['company' => $this->getUser()->getCompanies()[0]->getId()]);
         }
 
         return $this->render('user/edit_password.html.twig', [
@@ -306,7 +278,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/delete/{user}", name="delete_user")
+     * @Route("/admin/user/delete/{user}", name="delete_user")
      */
     public function delete(User $user): Response
     {
@@ -320,47 +292,79 @@ class UserController extends AbstractController
     // MODAL EVENT //
 
     /**
-     * @Route("/user/add/modal", name="add_user_modal")
+     * @Route("/admin/user/add/modal", name="add_user_modal")
      */
     public function addFromModal(Request $request, UserPasswordHasherInterface $encoder, MailerInterface $mailer): Response
     {
-        $user = new User();
+        $user = new User;
+        $userexist = new User;
+        $userExist = $request->get('user');
+        if ($userExist) {
+            $userexist = $this->em->getRepository(User::class)->findOneBy([
+                'id' => $userExist
+            ]);
+        }
+        if ($request->get('firstname') && $request->get('lastname') && $request->get('email')) {
+            $user = new User();
+            $firstname = $request->get('firstname');
+            $lastname = $request->get('lastname');
+            $email = $request->get('email');
+            $phone = $request->get('phone');
 
-        $firstname = $request->get('firstname');
-        $lastname = $request->get('lastname');
-        $email = $request->get('email');
-        $phone = $request->get('phone');
+            $user->setFirstname($firstname)
+                ->setLastname($lastname)
+                ->setEmail($email)
+                ->setPhone($phone);
+        }
+
         $company = $this->em->getRepository(Company::class)->findOneBy(['name' => $request->get('company')]);
-
-        $user->setFirstname($firstname)
-            ->setLastname($lastname)
-            ->setEmail($email)
-            ->setPhone($phone)
-            ->addCompany($company);
-
-        $company->addUser($user);
+        if ($userexist->getEmail()) {
+            $userexist->addCompany($company);
+            $company->addUser($userexist);
+            $this->em->persist($userexist);
+        }
+        if ($user->getEmail()) {
+            $user->addCompany($company);
+            $company->addUser($user);
+            $this->em->persist($user);
+        }
 
         $password = 'Quantique2021-';
         $passwordEncoded = $encoder->hashPassword($user, $password);
         $user->setPassword($passwordEncoded);
 
-        $this->em->persist($user);
         $this->em->persist($company);
         $this->em->flush();
 
         // mail de confirmation
-        $email = (new TemplatedEmail())
-            ->from('Quantique Web')
-            ->to($user->getEmail())
-            ->subject('Accédez à votre compte Quantique Web Office !')
-            ->htmlTemplate('emails/user_confirmation.html.twig')
-            ->context([
-                'user' => $user,
-                'password' => 'Quantique2021-'
-            ]);
+        if ($user) {
+            $email = (new TemplatedEmail())
+                ->from('noreply@quantique-web.fr')
+                ->to($user->getEmail())
+                ->subject('Accédez à votre compte Quantique Web Office !')
+                ->htmlTemplate('emails/user_confirmation.html.twig')
+                ->context([
+                    'user' => $user,
+                    'password' => 'Quantique2021-'
+                ]);
 
-        $mailer->send($email);
+            $mailer->send($email);
+        }
+        if ($userexist) {
+            $email = (new TemplatedEmail())
+                ->from('noreply@quantique-web.fr')
+                ->to($user->getEmail())
+                ->subject('Accédez à votre compte Quantique Web Office !')
+                ->htmlTemplate('emails/user_confirmation.html.twig')
+                ->context([
+                    'user' => $user,
+                    'password' => 'Quantique2021-'
+                ]);
 
-        return $this->redirectToRoute('admin_companies');
+            $mailer->send($email);
+        }
+
+
+        return $this->redirectToRoute('show_contracts', ['company' => $company->getId()]);
     }
 }

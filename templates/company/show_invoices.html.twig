@@ -4,10 +4,39 @@
 
 {% block body %}
 
+<!-- MODAL EDIT USER -->
+{% for user in company.users %}
+{% include "partials/_modal_edit_user.html.twig" with {'company': company} %}
+{% endfor %}
 <!-- MODAL DELETE USER -->
 {% include "partials/_modal_delete_user.html.twig" %}
 <!-- MODAL DELETE INVOICE -->
 {% include "partials/_modal_delete_invoice.html.twig" %}
+<!-- MODAL EDIT PASSWORD -->
+<div id="modal-edit-password{{app.user.id}}" class="mdl-edit-password">
+    <div class="cont-flex-space mdl-header-form">
+        <div class="cont-flex">
+            <i class="fas fa-unlock-alt fa-2x"></i>
+            <h2>Mot de passe</h2>
+        </div>
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    {{ form_start(edit_password_form) }}
+    <div class="form-section">
+        <label for="company">Identifiant</label>
+        <input class="form-control" type="text" value="{{app.user.email}}" readonly>
+    </div>
+    <div class="form-section cont-grid">
+        {{ form_row(edit_password_form.password) }}
+    </div>
+    <div class="cont-flex">
+        <div class="cont-flex-space mdl-btn">
+            {{ form_row(edit_password_form.submit) }}
+            <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+        </div>
+    </div>
+    {{ form_end(edit_password_form) }}
+</div>
 
 <body>
 
@@ -86,66 +115,10 @@
     const cont = document.querySelector('.container');
     const navbar = document.querySelector('.navbar');
     const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
-
-    // function delete invoice / user
-    const typeDelete = ['invoice', 'user'];
-    typeDelete.forEach(function (type) {
-        let deletes = document.querySelectorAll('.delete-' + type);
-        for (let i = 0; i < deletes.length; i++) {
-            let id;
-            let del = deletes[i];
-            if (type == 'invoice') id = del.id.substr(14);
-            else if (type == 'user') id = del.id.substr(11);
-            let modal = document.querySelector('#modal-' + type + id);
-            del.addEventListener('click', () => {
-                modal.style.visibility = 'visible';
-                navbar.style.opacity = 0.4;
-                cont.style.opacity = 0.4;
-                buttons.forEach(function (btn) {
-                    btn.style.pointerEvents = 'none';
-                });
-            });
-        }
-    });
-    const closes = document.querySelectorAll('.mdl-close');
-    const modal = document.querySelectorAll('.mdl-delete');
-    closes.forEach(function (close) {
-        close.addEventListener('click', () => {
-            for (let i = 0; i < modal.length; i++) {
-                modal[i].style.visibility = 'hidden';
-                navbar.style.opacity = 1;
-                cont.style.opacity = 1;
-                buttons.forEach(function (btn) {
-                    btn.style.pointerEvents = 'auto';
-                });
-            }
-        });
-    });
-    const cancel = document.querySelectorAll('.btn-cancel');
-    cancel.forEach(function (close) {
-        close.addEventListener('click', () => {
-            for (let i = 0; i < modal.length; i++) {
-                modal[i].style.visibility = 'hidden';
-                navbar.style.opacity = 1;
-                cont.style.opacity = 1;
-                buttons.forEach(function (btn) {
-                    btn.style.pointerEvents = 'auto';
-                });
-            }
-        });
-    });
-    window.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape') {
-            for (let i = 0; i < modal.length; i++) {
-                modal[i].style.visibility = 'hidden';
-                navbar.style.opacity = 1;
-                cont.style.opacity = 1;
-                buttons.forEach(function (btn) {
-                    btn.style.pointerEvents = 'auto';
-                });
-            }
-        }
-    });
 </script>
+
+<script src="{{asset('js/add_entity_modal.js')}}" nb="1" param1="user"></script>
+<script src="{{asset('js/edit_entity_modal.js')}}" nb="1" param1="user"></script>
+<script src="{{asset('js/delete_entity_modal.js')}}" nb="2" param1="invoice" param2="user"></script>
 
 {% endblock %}

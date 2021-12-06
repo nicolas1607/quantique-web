@@ -1,0 +1,55 @@
+<div id="modal-edit-company{{company.id}}" class="mdl-edit-company">
+    <div class="cont-flex-space mdl-header-form">
+        <div class="cont-flex">
+            <i class="fas fa-user-plus fa-2x"></i>
+            <h2>Entreprise</h2>
+        </div>
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    <form action="{{path('edit_company', {'company': company.id})}}">
+        <div class="cont-grid form-section">
+            <div>
+                <label for="name">Nom de l'entreprise *</label>
+                <input class="form-control" type="text" name="name" value="{{company.name}}" required>
+            </div>
+            <div>
+                <label for="email">Email *</label>
+                <input class="form-control" type="text" name="email" value="{{company.email}}" required>
+            </div>
+        </div>
+        <div class="cont-grid form-section">
+            <div>
+                <label for="phone">Téléphone</label>
+                <input class="form-control" type="text" name="phone" value="{{company.phone}}">
+            </div>
+            <div>
+                <label for="address">Adresse</label>
+                <input class="form-control" type="text" name="address" value="{{company.address}}">
+            </div>
+        </div>
+        <div class="cont-grid form-section">
+            <div>
+                <label for="postalCode">Code postal</label>
+                <input class="form-control" type="text" name="postalCode" value="{{company.postalCode}}">
+            </div>
+            <div>
+                <label for="city">Ville</label>
+                <input class="form-control" type="text" name="city" value="{{company.city}}">
+            </div>
+        </div>
+        <div class="cont-grid form-section">
+            <div>
+                <label for="numTVA">Num TVA</label>
+                <input class="form-control" type="text" name="numTVA" value="{{company.numTVA}}">
+            </div>
+            <div>
+                <label for="siret">SIRET ou SIREN</label>
+                <input class="form-control" type="text" name="siret" value="{{company.siret}}">
+            </div>
+        </div>
+        <div class="cont-flex-space mdl-btn">
+            <button class="btn-type btn-form btn-alert" type="submit">Modifier</button>
+            <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+        </div>
+    </form>
+</div>

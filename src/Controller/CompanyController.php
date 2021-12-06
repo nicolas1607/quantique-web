@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use FacebookAds\Api;
 use Facebook\Facebook;
 use App\Entity\Company;
@@ -9,7 +10,8 @@ use App\Entity\Website;
 use App\Entity\Contract;
 use App\Form\CompanyType;
 use App\Entity\TypeContract;
-use FacebookAds\Object\User;
+use App\Form\UserPasswordType;
+use App\Repository\UserRepository;
 use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Google\AdsApi\AdWords\AdWordsServices;
@@ -22,55 +24,89 @@ use Google\AdsApi\AdWords\v201809\cm\Selector;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClient;
-use Google\AdsApi\AdWords\AdWordsSessionBuilder;
 
+use Google\AdsApi\AdWords\AdWordsSessionBuilder;
 use Facebook\Exceptions\FacebookResponseException;
 use Google\AdsApi\AdWords\v201809\cm\CampaignService;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClientBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Google\AdsApi\Examples\AdWords\v201809\BasicOperations\GetCampaigns;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CompanyController extends AbstractController
 {
     private EntityManagerInterface $em;
-    private CompanyRepository $companyRepo;
+    private UserRepository $userRepo;
 
-    public function __construct(EntityManagerInterface $em, CompanyRepository $companyRepo)
+    public function __construct(EntityManagerInterface $em, UserRepository $userRepo)
     {
         $this->em = $em;
-        $this->companyRepo = $companyRepo;
+        $this->userRepo = $userRepo;
     }
 
     /**
      * @Route("/company/show/contracts/{company}", name="show_contracts")
      */
-    public function showContracts(Request $request, Company $company): Response
+    public function showContracts(Request $request, Company $company, UserPasswordHasherInterface $encoder): Response
     {
+        $users = $this->userRepo->findUsers();
+        $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
+
+        // Formulaire de modification de mot de passe
+        $editPasswordForm = $this->createForm(UserPasswordType::class, $this->getUser());
+        $editPasswordForm->handleRequest($request);
+
+        if ($editPasswordForm->isSubmitted() && $editPasswordForm->isValid()) {
+            $password = $editPasswordForm->get('password')->getData();
+            $passwordEncoded = $encoder->hashPassword($this->getUser(), $password);
+            $this->getUser()->setPassword($passwordEncoded);
+
+            $this->em->persist($this->getUser());
+            $this->em->flush();
+        }
+
         return $this->render('company/show_contracts.html.twig', [
-            'company' => $company
+            'users' => $users,
+            'company' => $company,
+            'typesContract' => $typesContract,
+            'edit_password_form' => $editPasswordForm->createView()
         ]);
     }
 
     /**
      * @Route("/company/show/invoices/{company}", name="show_invoices")
      */
-    public function showInvoices(Company $company): Response
+    public function showInvoices(Request $request, Company $company, UserPasswordHasherInterface $encoder): Response
     {
+        // Formulaire de modification de mot de passe
+        $editPasswordForm = $this->createForm(UserPasswordType::class, $this->getUser());
+        $editPasswordForm->handleRequest($request);
+
+        if ($editPasswordForm->isSubmitted() && $editPasswordForm->isValid()) {
+            $password = $editPasswordForm->get('password')->getData();
+            $passwordEncoded = $encoder->hashPassword($this->getUser(), $password);
+            $this->getUser()->setPassword($passwordEncoded);
+
+            $this->em->persist($this->getUser());
+            $this->em->flush();
+        }
+
         return $this->render('company/show_invoices.html.twig', [
-            'company' => $company
+            'company' => $company,
+            'edit_password_form' => $editPasswordForm->createView()
         ]);
     }
 
     /**
      * @Route("/company/show/accounts/{company}", name="show_accounts")
      */
-    public function showAccounts(Company $company): Response
-    {
-        return $this->render('company/show_accounts.html.twig', [
-            'company' => $company
-        ]);
-    }
+    // public function showAccounts(Company $company): Response
+    // {
+    //     return $this->render('company/show_accounts.html.twig', [
+    //         'company' => $company
+    //     ]);
+    // }
 
     /**
      * @Route("/company/show/stats/{company}", name="show_stats")
@@ -140,7 +176,7 @@ class CompanyController extends AbstractController
     }
 
     /**
-     * @Route("/company/add", name="add_company")
+     * @Route("/admin/company/add", name="add_company")
      */
     public function add(Request $request): Response
     {
@@ -201,7 +237,7 @@ class CompanyController extends AbstractController
     }
 
     /**
-     * @Route("/company/add/{user}", name="add_company_user")
+     * @Route("/admin/company/add/{user}", name="add_company_user")
      */
     // public function addForUser(Request $request, User $user): Response
     // {
@@ -228,26 +264,26 @@ class CompanyController extends AbstractController
     // }
 
     /**
-     * @Route("/company/edit/{company}", name="edit_company")
+     * @Route("/admin/company/edit/{company}", name="edit_company")
      */
     public function edit(Request $request, Company $company): Response
     {
-        $updateContractForm = $this->createForm(CompanyType::class, $company);
-        $updateContractForm->handleRequest($request);
+        $company->setName($request->get('name'))
+            ->setEmail($request->get('email'))
+            ->setPhone($request->get('phone'))
+            ->setAddress($request->get('address'))
+            ->setPostalCode($request->get('postalCode'))
+            ->setCity($request->get('city'))
+            ->setNumTVA($request->get('numTVA'))
+            ->setSiret($request->get('siret'));
+        $this->em->persist($company);
+        $this->em->flush();
 
-        if ($updateContractForm->isSubmitted() && $updateContractForm->isValid()) {
-            $this->em->flush();
-            return $this->redirectToRoute('admin_companies');
-        }
-
-        return $this->render('company/edit.html.twig', [
-            'edit_company_form' => $updateContractForm->createView(),
-            'company' => $company,
-        ]);
+        return $this->redirectToRoute('admin_companies');
     }
 
     /**
-     * @Route("/company/delete/{company}", name="delete_company")
+     * @Route("/admin/company/delete/{company}", name="delete_company")
      */
     public function delete(Company $company): Response
     {

@@ -22,7 +22,7 @@ class NoteController extends AbstractController
     }
 
     /**
-     * @Route("/note/add/{contract}", name="add_note")
+     * @Route("/admin/note/add/{contract}", name="add_note")
      */
     public function add(Request $request, Contract $contract): Response
     {
@@ -41,7 +41,7 @@ class NoteController extends AbstractController
     }
 
     /**
-     * @Route("/note/delete/{note}", name="delete_note")
+     * @Route("/admin/note/delete/{note}", name="delete_note")
      */
     public function delete(Note $note): Response
     {

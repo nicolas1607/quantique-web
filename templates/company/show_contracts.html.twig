@@ -6,12 +6,47 @@
 
 <!-- MODAL NOTEPAD -->
 {% include "partials/_modal_notepad.html.twig" %}
+<!-- MODAL ADD USER -->
+{% include "partials/_modal_add_user.html.twig" with {'company': company} %}
+<!-- MODAL ADD WEBSITE -->
+{% include "partials/_modal_add_website.html.twig" with {'company': company, 'typesContract': typesContract} %}
+<!-- MODAL EDIT USER -->
+{% for user in company.users %}
+{% include "partials/_modal_edit_user.html.twig" with {'company': company} %}
+{% endfor %}
+<!-- MODAL EDIT WEBSITE -->
+{% include "partials/_modal_edit_website.html.twig" with {'company': company} %}
 <!-- MODAL DELETE USER -->
 {% include "partials/_modal_delete_user.html.twig" %}
 <!-- MODAL DELETE WEBSITE -->
 {% include "partials/_modal_delete_website.html.twig" %}
 <!-- MODAL DELETE CONTRACT -->
 {% include "partials/_modal_delete_contract.html.twig" %}
+<!-- MODAL EDIT PASSWORD -->
+<div id="modal-edit-password{{app.user.id}}" class="mdl-edit-password">
+    <div class="cont-flex-space mdl-header-form">
+        <div class="cont-flex">
+            <i class="fas fa-unlock-alt fa-2x"></i>
+            <h2>Mot de passe</h2>
+        </div>
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    {{ form_start(edit_password_form) }}
+    <div class="form-section">
+        <label for="company">Identifiant</label>
+        <input class="form-control" type="text" value="{{app.user.email}}" readonly>
+    </div>
+    <div class="form-section cont-grid">
+        {{ form_row(edit_password_form.password) }}
+    </div>
+    <div class="cont-flex">
+        <div class="cont-flex-space mdl-btn">
+            {{ form_row(edit_password_form.submit) }}
+            <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+        </div>
+    </div>
+    {{ form_end(edit_password_form) }}
+</div>
 
 <body>
 
@@ -19,7 +54,7 @@
         {% include "partials/_company_info.html.twig" %}
 
         {% if is_granted('ROLE_ADMIN') %}
-        <a class="btn-type right btn10" href="{{path('add_website_with_company', {'company': company.id})}}">Nouvel
+        <a id="add-website{{company.id}}" class="btn-type right btn10 add-website">Nouvel
             abonnement</a>
         {% endif %}
 
@@ -50,16 +85,12 @@
                         </div>
                         {% if is_granted('ROLE_ADMIN') and website.id %}
                         <div class="cont-flex">
-                            <a class="nav-link" href="{{path('add_contract_website', {'website': website.id})}}"
-                                title="Ajouter un abonnement">
-                                <i class="fas fa-plus-square fa-lg"></i>
-                            </a>
-                            <a class="nav-link" href="{{path('edit_website', {'website': website.id})}}"
-                                title="Modifier le site internet">
+                            <a id="edit-website{{website.id}}" class="nav-link edit-website"
+                                title="Modifier l'abonnement">
                                 <i class="fas fa-edit fa-lg"></i>
                             </a>
                             <a id="delete-website{{website.id}}" class="nav-link delete-website"
-                                title="Supprimer le site internet">
+                                title="Supprimer l'abonnement">
                                 <i class="fas fa-times fa-lg"></i>
                             </a>
                         </div>
@@ -85,9 +116,9 @@
                         </div>
                         {% if is_granted('ROLE_ADMIN') %}
                         <div class="cont-flex contract-action">
-                            <a class="nav-link" href="{{path('edit_contract', {'contract': contract.id})}}"
-                                title="Modifier l'abonnement">
-                                <i class="fas fa-edit fa-lg"></i>
+                            <a id="notepad-link{{contract.id}}" class="nav-link notepad-link"
+                                title="Afficher le bloc-note">
+                                <i class="fas fa-comment fa-lg"></i>
                             </a>
                             <a id="delete-contract{{contract.id}}" class="nav-link delete-contract"
                                 title="Supprimer l'abonnement">
@@ -104,123 +135,20 @@
     </div>
 
     <script>
-
-        // function modal notes pour chaque contrat
         const cont = document.querySelector('.container');
         const navbar = document.querySelector('.navbar');
         const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
-        const noteLinks = document.getElementsByClassName('contract-info');
-
-        if (document.querySelector('.notepad')) {
-            for (let i = 0; i < noteLinks.length; i++) {
-                const noteLink = noteLinks[i];
-                const id = noteLink.id.substr(8);
-                const notepad = document.querySelector('#notepad' + id)
-                const close = document.querySelector('#notepad-close' + id);
-                // afficher la modal
-                noteLink.addEventListener('click', () => {
-                    if (notepad.style.visibility = 'hidden') {
-                        notepad.style.visibility = 'visible';
-                        navbar.style.opacity = 0.4;
-                        cont.style.opacity = 0.4;
-                        buttons.forEach(function (btn) {
-                            btn.style.pointerEvents = 'none';
-                        });
-                    }
-                });
-                // fermer la modal 'X'
-                if (close) {
-                    close.addEventListener('click', () => {
-                        if (notepad.style.visibility = 'visible') {
-                            notepad.style.visibility = 'hidden';
-                            navbar.style.opacity = 1;
-                            cont.style.opacity = 1;
-                            buttons.forEach(function (btn) {
-                                btn.style.pointerEvents = 'auto';
-                            });
-                        }
-                    });
-                }
-
-            };
-        }
-
-        // fermer la modal 'Escape'
-        const notepads = document.getElementsByClassName('notepad');
-        window.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                for (let i = 0; i < notepads.length; i++) {
-                    if (notepads[i].style.visibility = 'visible') {
-                        notepads[i].style.visibility = 'hidden';
-                        navbar.style.opacity = 1;
-                        cont.style.opacity = 1;
-                        buttons.forEach(function (btn) {
-                            btn.style.pointerEvents = 'auto';
-                        });
-                    }
-                }
-            }
-        });
-
-        // function delete un website / contract / user
-        const typeDelete = ['website', 'contract', 'user'];
-        typeDelete.forEach(function (type) {
-            let deletes = document.querySelectorAll('.delete-' + type);
-            for (let i = 0; i < deletes.length; i++) {
-                let id;
-                let del = deletes[i];
-                if (type == 'website') id = del.id.substr(14);
-                else if (type == 'contract') id = del.id.substr(15);
-                else if (type == 'user') id = del.id.substr(11);
-                let modal = document.querySelector('#modal-' + type + id);
-                del.addEventListener('click', () => {
-                    modal.style.visibility = 'visible';
-                    navbar.style.opacity = 0.4;
-                    cont.style.opacity = 0.4;
-                    buttons.forEach(function (btn) {
-                        btn.style.pointerEvents = 'none';
-                    });
-                });
-            }
-        });
-        // function fermer une modale
-        const modalElements = document.querySelectorAll('.mdl-delete');
-        modalElements.forEach(function (modal) {
-            const close = modal.querySelector('.mdl-close');
-            const cancel = modal.querySelector('.btn-cancel');
-            // fermer avec button 'X'
-            close.addEventListener('click', () => {
-                modal.style.visibility = 'hidden';
-                navbar.style.opacity = 1;
-                cont.style.opacity = 1;
-                buttons.forEach(function (btn) {
-                    btn.style.pointerEvents = 'auto';
-                });
-            });
-            // fermer avec button 'Annuler'
-            cancel.addEventListener('click', () => {
-                modal.style.visibility = 'hidden';
-                navbar.style.opacity = 1;
-                cont.style.opacity = 1;
-                buttons.forEach(function (btn) {
-                    btn.style.pointerEvents = 'auto';
-                });
-            });
-            // fermer avec button 'Escape'
-            window.addEventListener('keydown', function (event) {
-                if (event.key === 'Escape') {
-                    modal.style.visibility = 'hidden';
-                    navbar.style.opacity = 1;
-                    cont.style.opacity = 1;
-                    buttons.forEach(function (btn) {
-                        btn.style.pointerEvents = 'auto';
-                    });
-                }
-            });
-        });
-
-
     </script>
+
+    <script src="{{asset('js/notepad_modal.js')}}"></script>
+
+    <script src="{{asset('js/add_multiple_contract.js')}}"></script>
+    <script src="{{asset('js/edit_multiple_contract.js')}}"></script>
+
+    <script src="{{asset('js/add_entity_modal.js')}}" nb="2" param1="website" param2="user"></script>
+    <script src="{{asset('js/edit_entity_modal.js')}}" nb="3" param1="website" param2="user" param3="password"></script>
+    <script src="{{asset('js/delete_entity_modal.js')}}" nb="3" param1="website" param2="contract"
+        param3="user"></script>
 
 </body>
 

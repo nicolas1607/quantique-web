@@ -14,28 +14,28 @@
         <div class="cont-grid form-section">
             <div>
                 <label for="name">Nom du site *</label>
-                <input class="form-control" type="text" name="name">
+                <input class="form-control" type="text" name="name" required>
             </div>
             <div>
                 <label for="url">URL du site *</label>
-                <input class="form-control" type="text" name="url">
+                <input class="form-control" type="text" name="url" required>
             </div>
         </div>
         <div class="form-section">
             <div class="cont-flex-start">
                 <i class="fas fa-file-contract fa-2x"></i>
                 <h2>Contrats</h2>
-                
+
             </div>
             <div>
                 <div class="cont-flex-space mdl-btn-contract">
                     {% for type in typesContract %}
                     <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn" type="button">+
-                                    {{type.lib}}</button>
+                        {{type.lib}}</button>
                     {% endfor %}
                 </div>
                 <div>
-                {% for type in typesContract %}
+                    {% for type in typesContract %}
                     <div id="{{type.lib}}-form" class="form-type form-contract cont-grid-contract mdl-form-contract"
                         style="display: none">
                         <div class="form-contract-title">
@@ -53,8 +53,8 @@
                                 <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
                             </div>
                         </div>
-                    </div>    
-                {% endfor %}
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>

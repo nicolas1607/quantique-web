@@ -34,9 +34,9 @@ class UserPasswordType extends AbstractType
                 'required' => true
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Envoyer',
+                'label' => 'Modifier',
                 'attr' => [
-                    'class' => 'btn-type btn-form'
+                    'class' => 'btn-type btn-form btn-alert'
                 ]
             ]);
     }

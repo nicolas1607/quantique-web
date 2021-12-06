@@ -14,10 +14,96 @@
         {{ form_row(edit_website_form.name) }}
         {{ form_row(edit_website_form.url) }}
     </div>
+    <div class="form-section">
+        <div class="cont-flex-start">
+            <i class="fas fa-file-contract fa-2x"></i>
+            <h2>Contrats</h2>
+            {% for type in typesContract %}
+            <div>
+                <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn btn5" type="button">+
+                    {{type.lib}}</button>
+            </div>
+            {% endfor %}
+        </div>
+        <div>
+            {% for type in typesContract %}
+            <div>
+                <div id="{{type.lib}}-form" class="form-type form-contract cont-grid-contract" style="display: none">
+                    <div class="form-contract-title">
+                        <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox"
+                            name="{{type.lib}}-check" hidden>
+                        <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
+                    </div>
+                    <div class="cont-grid">
+                        <div>
+                            <label for="{{type.lib}}-price">Prix initial *</label>
+                            {% set flag = false %}
+                            {% for contract in website.contracts %}
+                            {% if contract.type.name == type.name %}
+                            <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price"
+                                value="{{contract.price}}">
+                            {% set flag = true %}
+                            {% endif %}
+                            {% endfor %}
+
+                            {% if flag == false %}
+                            <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label for="{{type.lib}}-promotion">Prix réduit</label>
+                            {% set flag = false %}
+                            {% for contract in website.contracts %}
+                            {% if contract.type.name == type.name %}
+                            <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion"
+                                value="{{contract.promotion}}">
+                            {% set flag = true %}
+                            {% endif %}
+                            {% endfor %}
+
+                            {% if flag == false %}
+                            <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
     <div class="cont-flex">
-        {{ form_row(edit_website_form.submit) }}
+        <button class="btn-type btn-form" type="submit">Modifier</button>
     </div>
     {{ form_end(edit_website_form) }}
 </div>
+
+<script>
+
+    const types = ['vitrine', 'commerce', 'google', 'facebook']
+    types.forEach(function (type) {
+        const btn = document.querySelector('#' + type + '-btn');
+        const form = document.querySelector('#' + type + '-form');
+        const check = document.querySelector('#' + type + '-check');
+        const price = document.querySelector('#' + type + '-price');
+        btn.addEventListener('click', () => {
+            if (form.style.display == 'none') {
+                price.setAttribute('required', 'required');
+                form.style.display = 'grid';
+                check.checked = true;
+                btn.setAttribute('style', 'background-color : #333');
+                btn.innerHTML = '- ' + type;
+            } else {
+                price.removeAttribute('required');
+                form.style.display = 'none';
+                check.checked = false;
+                btn.setAttribute('style', 'background-color : #F3AA10');
+                btn.innerHTML = '+ ' + type;
+            }
+        });
+        if (price.value != null && price.value != '') {
+            btn.click();
+        }
+    });
+</script>
 
 {% endblock %}

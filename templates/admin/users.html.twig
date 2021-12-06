@@ -4,23 +4,86 @@
 
 {% block body %}
 
-<!-- MODAL DELETE USER -->
-{% for user in users|reverse %}
-<div id="modal{{user.id}}" class="mdl-delete">
-    <div class="mdl-header">
+{% for company in companies %}
+<!-- MODAL ADD USER -->
+<div id="modal-new-user" class="mdl-add-new-user">
+    <div class="cont-flex-space mdl-header-form">
+        <div class="cont-flex">
+            <i class="fas fa-user-plus fa-2x"></i>
+            <h2>Client</h2>
+        </div>
         <a class="mdl-close action-link">✖</a>
     </div>
-    <div class="mdl-content">
-        <p>Êtes vous sûr de vouloir supprimer l'utilisateur suivant : <strong>{{user.firstname}}
-                {{user.lastname}}</strong> ?</p>
-        <div class="cont-flex-space">
-            <a class="btn-type btn-form btn-alert btn-danger"
-                href="{{path('delete_user', {'user': user.id})}}">Supprimer</a>
+    <form action="{{path('add_user_modal')}}">
+    <div class="form-section">
+        <label for="company">Entreprise</label>
+        <select class="form-select" name="company">
+            {% for company in companies %}
+            <option value="{{company.name}}">{{company.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="cont-grid form-section">
+        <div>
+            <label for="firstname">Prénom *</label>
+            <input class="form-control" name="firstname" required>
+        </div>
+        <div>
+            <label for="lastname">Nom de famille *</label>
+            <input class="form-control" name="lastname" required>
+        </div>
+    </div>
+    <div class="cont-grid form-section">
+        <div>
+            <label for="email">Email *</label>
+            <input class="form-control" name="email" required>
+        </div>
+        <div>
+            <label for="phone">Téléphone</label>
+            <input class="form-control" name="phone">
+        </div>
+    </div>
+    <div class="cont-flex-space mdl-btn">
+        <button class="btn-type btn-form btn-alert" type="submit">Créer</button>
+        <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+    </div>
+    </form>
+</div>
+
+<!-- MODAL DELETE USER -->
+{% include "partials/_modal_delete_user.html.twig" with {'company': company} %}
+{% endfor %}
+
+{% for user in users %}
+<!-- MODAL EDIT USER -->
+{% include "partials/_modal_edit_user.html.twig" with {'user': user} %}
+{% endfor %}
+
+<!-- MODAL EDIT PASSWORD -->
+<div id="modal-edit-password{{app.user.id}}" class="mdl-edit-password">
+    <div class="cont-flex-space mdl-header-form">
+        <div class="cont-flex">
+            <i class="fas fa-unlock-alt fa-2x"></i>
+            <h2>Mot de passe</h2>
+        </div>
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    {{ form_start(edit_password_form) }}
+    <div class="form-section">
+        <label for="company">Identifiant</label>
+        <input class="form-control" type="text" value="{{app.user.email}}" readonly>
+    </div>
+    <div class="form-section cont-grid">
+        {{ form_row(edit_password_form.password) }}
+    </div>
+    <div class="cont-flex">
+        <div class="cont-flex-space mdl-btn">
+            {{ form_row(edit_password_form.submit) }}
             <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
         </div>
     </div>
+    {{ form_end(edit_password_form) }}
 </div>
-{% endfor %}
 
 <div class="container">
     <h1>Espace administration</h1>
@@ -30,7 +93,7 @@
                 aria-label="Rechercher">
             <a id="search-delete"><i class="fas fa-times"></i></a>
         </form>
-        <a class="btn-type right btn10" href="{{ path('add_user') }}">Nouveau client</a>
+        <a id="add-new-user" class="btn-type right btn10 add-new-user">Nouveau client</a>
     </div>
 
     <ul class="nav nav-tabs nav-tabs-admin">
@@ -55,34 +118,23 @@
             </tr>
         </thead>
         <tbody>
-            {% for user in users|reverse %}
+            {% for user in users %}
             <tr id="user{{user.id}}" class="table-light user {{user.firstname}} {{user.lastname}}">
                 <td>{{ user.firstname }} {{ user.lastname }}</td>
                 <td>{{ user.phone }}</td>
                 <td>{{ user.email }}</td>
                 <td>
                     <ul class="action-list">
-                        {# <li class="action-item">
-                            <a href="{{path('add_user_with_company', {'company': company.id})}}" class="action-link"
-                                title="Ajouter un utilisateur">
-                                <i class="fas fa-user-plus fa-lg"></i>
+                        {% if app.user.id == user.id %}
+                        <li class="action-item">
+                            <a id="edit-password{{user.id}}" class="action-link edit-password"
+                                title="Modifier mon mot de passe">
+                                <i class="fas fa-key"></i>
                             </a>
                         </li>
+                        {% endif %}
                         <li class="action-item">
-                            <a href="{{path('add_invoice_with_company', {'company': company.id})}}" class="action-link"
-                                title="Ajouter une facture">
-                                <i class="fas fa-file-upload fa-lg"></i>
-                            </a>
-                        </li>
-                        <li class="action-item">
-                            <a href="{{path('show_contracts', {'company': company.id})}}" class="action-link"
-                                title="Voir l'entreprise">
-                                <i class="fas fa-eye fa-lg"></i>
-                            </a>
-                        </li> #}
-                        <li class="action-item">
-                            <a href="{{path('edit_user', {'user': user.id})}}" class="action-link"
-                                title="Modifier l'entreprise">
+                            <a id="edit-user{{user.id}}" class="action-link edit-user" title="Modifier l'entreprise">
                                 <i class="fas fa-edit fa-lg"></i>
                             </a>
                         </li>
@@ -104,89 +156,17 @@
 
 <script>
 
-    // function search
-    const users = document.getElementsByClassName('user');
-    const input = document.querySelector('#search-input');
-    input.value = window.location.search.substr(8);
-    input.addEventListener('keyup', () => {
-        for (let i = 0; i < users.length; i++) {
-            const user = users[i];
-            const userName = user.className.substr(17);
-            if (input.value != "") {
-                if (userName.toUpperCase().includes(input.value.toUpperCase())) {
-                    user.style.display = null;
-                } else {
-                    user.style.display = 'none';
-                }
-            } else {
-                user.style.display = null;
-            }
-        }
-    });
-
-    // function delete search
-    const cross = document.querySelector('#search-delete');
-    cross.addEventListener('click', () => {
-        for (let i = 0; i < users.length; i++) {
-            input.value = "";
-            users[i].style.display = null;
-        }
-    });
-
-    // function delete user
     const cont = document.querySelector('.container');
     const navbar = document.querySelector('.navbar');
     const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
-    const deletes = document.querySelectorAll('.delete-user');
-    deletes.forEach(function (del) {
-        const id = del.id.substr(11);
-        const modal = document.querySelector('#modal' + id);
-        del.addEventListener('click', () => {
-            modal.style.visibility = 'visible';
-            navbar.style.opacity = 0.4;
-            cont.style.opacity = 0.4;
-            buttons.forEach(function (btn) {
-                btn.style.pointerEvents = 'none';
-            });
-        });
-    });
-
-    // function fermer une modale
-    const modalElements = document.querySelectorAll('.mdl-delete');
-    modalElements.forEach(function (modal) {
-        const close = modal.querySelector('.mdl-close');
-        const cancel = modal.querySelector('.btn-cancel');
-        // fermer avec button 'X'
-        close.addEventListener('click', () => {
-            modal.style.visibility = 'hidden';
-            navbar.style.opacity = 1;
-            cont.style.opacity = 1;
-            buttons.forEach(function (btn) {
-                btn.style.pointerEvents = 'auto';
-            });
-        });
-        // fermer avec button 'Annuler'
-        cancel.addEventListener('click', () => {
-            modal.style.visibility = 'hidden';
-            navbar.style.opacity = 1;
-            cont.style.opacity = 1;
-            buttons.forEach(function (btn) {
-                btn.style.pointerEvents = 'auto';
-            });
-        });
-        // fermer avec button 'Escape'
-        window.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                modal.style.visibility = 'hidden';
-                navbar.style.opacity = 1;
-                cont.style.opacity = 1;
-                buttons.forEach(function (btn) {
-                    btn.style.pointerEvents = 'auto';
-                });
-            }
-        });
-    });
 
 </script>
+
+<script src="{{asset('js/search_user.js')}}"></script>
+<script src="{{asset('js/close_modal.js')}}"></script>
+
+<script src="{{asset('js/add_entity_modal.js')}}" nb="1" param1="new-user"></script>
+<script src="{{asset('js/edit_entity_modal.js')}}" nb="2" param1="user" param2="password"></script>
+<script src="{{asset('js/delete_entity_modal.js')}}" nb="1" param1="user"></script>
 
 {% endblock %}

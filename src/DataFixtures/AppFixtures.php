@@ -76,25 +76,25 @@ class AppFixtures extends Fixture
         $typesContract = [];
 
         $vitrine = new TypeContract();
-        $vitrine->setName('Site vitrine')
+        $vitrine->setName('Vitrine')
             ->setLib('vitrine');
         $manager->persist($vitrine);
         $typesContract[] = $vitrine;
 
         $ecommerce = new TypeContract();
-        $ecommerce->setName('Site e-commerce')
+        $ecommerce->setName('E-commerce')
             ->setLib('commerce');
         $manager->persist($ecommerce);
         $typesContract[] = $ecommerce;
 
         $google = new TypeContract();
-        $google->setName('Publicité Google & Youtube')
+        $google->setName('Google')
             ->setLib('google');
         $manager->persist($google);
         $typesContract[] = $google;
 
         $facebook = new TypeContract();
-        $facebook->setName('Publicité Facebook & Instagram')
+        $facebook->setName('Facebook')
             ->setLib('facebook');
         $manager->persist($facebook);
         $typesContract[] = $facebook;

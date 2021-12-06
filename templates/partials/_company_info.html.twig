@@ -5,15 +5,15 @@
             <h2>{{company.name}}</h2>
         </div>
         <div class="company-info">
-            <div class="cont-grid-1-2">
-                <p><strong>Numéro TVA : </strong></br>{{company.numTVA}}</p>
-                <p><strong>SIRET ou SIREN : </strong></br>{{company.siret}}</p>
-            </div>
+            <p><strong>Adresse : </strong></br>{{company.address}}, {{company.city}} {{company.postalCode}}</p>
             <div class="cont-grid-1-2">
                 <p><strong>Téléphone : </strong></br>{{company.phone}}</p>
                 <p><strong>Email : </strong></br>{{company.email}}</p>
             </div>
-            <p><strong>Adresse : </strong></br>{{company.address}}, {{company.city}} {{company.postalCode}}</p>
+            <div class="cont-grid-1-2">
+                <p><strong>Numéro TVA : </strong></br>{{company.numTVA}}</p>
+                <p><strong>SIRET ou SIREN : </strong></br>{{company.siret}}</p>
+            </div>
         </div>
     </div>
     <div>
@@ -23,8 +23,7 @@
                 <h2>Clients</h2>
             </div>
             {% if is_granted('ROLE_ADMIN') %}
-            <a class="nav-link" href="{{path('add_user_with_company', {'company': company.id})}}"
-                title="Ajouter un utilisateur">
+            <a id="add-user{{company.id}}" class="action-link add-user" title="Ajouter un utilisateur">
                 <i class="fas fa-plus-square fa-2x"></i>
             </a>
             {% endif %}
@@ -52,7 +51,7 @@
                     <td>
                         <ul class="action-list">
                             <li class="action-item">
-                                <a href="{{path('edit_user', {'user': user.id})}}" class="action-link"
+                                <a id="edit-user{{user.id}}" class="action-link edit-user"
                                     title="Modifier l'utilisateur">
                                     <i class="fas fa-user-edit fa-lg"></i>
                                 </a>
@@ -68,13 +67,12 @@
                     {% elseif app.user.id == user.id %}
                     <td class="cont-flex">
                         <li class="action-item">
-                            <a href="{{path('edit_user', {'user': user.id})}}" class="action-link"
-                                title="Modifier mon profil">
+                            <a id="edit-user{{user.id}}" class="action-link edit-user" title="Modifier mon profil">
                                 <i class="fas fa-user-edit fa-lg"></i>
                             </a>
                         </li>
                         <li class="action-item">
-                            <a href="{{path('edit_user_password', {'user': user.id})}}" class="action-link"
+                            <a id="edit-password{{user.id}}" class="action-link edit-password"
                                 title="Modifier mon mot de passe">
                                 <i class="fas fa-key"></i>
                             </a>
@@ -89,3 +87,5 @@
         </table>
     </div>
 </div>
+
+<script src="{{asset('js/close_modal.js')}}"></script>

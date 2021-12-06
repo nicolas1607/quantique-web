@@ -23,7 +23,13 @@ class InvoiceType extends AbstractType
             'attr' => [
                 'class' => 'form-control'
             ]
-        ]);
+        ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Créer',
+                'attr' => [
+                    'class' => 'btn-type btn-form btn-alert'
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

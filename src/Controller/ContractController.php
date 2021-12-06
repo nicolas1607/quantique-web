@@ -23,7 +23,7 @@ class ContractController extends AbstractController
     }
 
     /**
-     * @Route("/contract/add/{company}", name="add_contract_company")
+     * @Route("/admin/contract/add/{company}", name="add_contract_company")
      */
     public function addFromCompany(Company $company): Response
     {
@@ -36,7 +36,7 @@ class ContractController extends AbstractController
     }
 
     /**
-     * @Route("/contract/add/company/{company}", name="add_contract_with_company")
+     * @Route("/admin/contract/add/company/{company}", name="add_contract_with_company")
      */
     public function addWithCompany(Request $request, Company $company): Response
     {
@@ -70,7 +70,7 @@ class ContractController extends AbstractController
     }
 
     /**
-     * @Route("/contract/add/new/{website}", name="add_contract_website")
+     * @Route("/admin/contract/add/new/{website}", name="add_contract_website")
      */
     public function addFromWebsite(Website $website): Response
     {
@@ -83,7 +83,7 @@ class ContractController extends AbstractController
     }
 
     /**
-     * @Route("/contract/add/website/{website}", name="add_contract_with_website")
+     * @Route("/admin/contract/add/website/{website}", name="add_contract_with_website")
      */
     public function addWithWebsite(Request $request, Website $website): Response
     {
@@ -116,7 +116,7 @@ class ContractController extends AbstractController
     }
 
     /**
-     * @Route("/contract/edit/{contract}", name="edit_contract")
+     * @Route("/admin/contract/edit/{contract}", name="edit_contract")
      */
     public function edit(Request $request, Contract $contract): Response
     {
@@ -135,7 +135,7 @@ class ContractController extends AbstractController
     }
 
     /**
-     * @Route("/contract/delete/{contract}", name="delete_contract")
+     * @Route("/admin/contract/delete/{contract}", name="delete_contract")
      */
     public function delete(Contract $contract): Response
     {
@@ -149,7 +149,7 @@ class ContractController extends AbstractController
     // MODAL EVENT //
 
     /**
-     * @Route("/contract/add/modal/{company}", name="add_contract_modal")
+     * @Route("/admin/contract/add/modal/{company}", name="add_contract_modal")
      */
     public function addFromModal(Request $request, Company $company): Response
     {

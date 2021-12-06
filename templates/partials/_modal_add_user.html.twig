@@ -2,29 +2,53 @@
     <div class="cont-flex-space mdl-header-form">
         <div class="cont-flex">
             <i class="fas fa-user-plus fa-2x"></i>
-            <h2>Nouveau client</h2>
+            <h2>Client</h2>
         </div>
         <a class="mdl-close action-link">✖</a>
     </div>
     <form action="{{path('add_user_modal')}}">
-        <div class="form-section">
-            <label for="company">Entreprise</label>
-            <input class="form-control" type="text" name="company" value="{{company.name}}" readonly>
+        <div class="form-section cont-grid">
+            <div>
+                <label for="company">Entreprise</label>
+                <input class="form-control" type="text" name="company" value="{{company.name}}" readonly>
+            </div>
+            <div>
+                <label for="user">Client existant *</label>
+                <select id="user-exist" class="form-select" name="user">
+                    <option value=""></option>
+                    <!-- On liste uniquement les clients qui ne sont pas déjà ajoutés -->
+                    {% for user in users %}
+                        {% set flag = false %}
+                        {% for userExist in company.users %}
+                            {% if user.id == userExist.id %}
+                                {% set flag = true %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if flag == false %}
+                            <option value="{{user.id}}">{{user.firstname}} {{user.lastname}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="cont-flex">
+            <p>OU</p>
         </div>
         <div class="cont-grid form-section">
             <div>
-                <label for="firstname">Prénom</label>
-                <input class="form-control" name="firstname">
+                <label for="firstname">Prénom *</label>
+                <input id="user-firstname" class="form-control" name="firstname" required>
             </div>
             <div>
-                <label for="lastname">Nom de famille</label>
-                <input class="form-control" name="lastname">
+                <label for="lastname">Nom de famille *</label>
+                <input id="user-lastname" class="form-control" name="lastname" required>
             </div>
         </div>
         <div class="cont-grid form-section">
             <div>
-                <label for="email">Email</label>
-                <input class="form-control" name="email">
+                <label for="email">Email *</label>
+                <input id="user-email" class="form-control" name="email" required>
             </div>
             <div>
                 <label for="phone">Téléphone</label>

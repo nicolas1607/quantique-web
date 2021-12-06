@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Company;
+use App\Entity\Contract;
 use App\Entity\Website;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -28,12 +30,6 @@ class WebsiteType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => 'form-control'
-                ]
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Créer',
-                'attr' => [
-                    'class' => 'btn-type btn-form'
                 ]
             ]);
     }

@@ -5,18 +5,53 @@
 {% block body %}
 
 {% for company in companies|reverse %}
+<!-- MODAL ADD USER -->
+{% include "partials/_modal_add_user.html.twig" with {'company': company} %}
+<!-- MODAL ADD WEBSITE -->
+{% include "partials/_modal_add_website.html.twig" with {'company': company, 'typesContract': typesContract} %}
+<!-- MODAL EDIT COMPANY -->
+{% include "partials/_modal_edit_company.html.twig" with {'company': company} %}
 <!-- MODAL DELETE COMPANY -->
 {% include "partials/_modal_delete_company.html.twig" with {'company': company} %}
-<!-- MODAL ADD_USER_FORM -->
-{% include "partials/_modal_add_user.html.twig" with {'company': company} %}
-<!-- MODAL ADD_CONTRACT_FORM -->
-{% include "partials/_modal_add_contract.html.twig" with {'company': company, 'typesContract': typesContract} %}
-<!-- MODAL ADD_INVOICE_FORM -->
-{#{% include "partials/_modal_add_invoice.html.twig" with {'company': company, 'typesInvoice': typesInvoice,
-form: add_invoice_form} %}#}
-<!-- MODAL ADD_WEBSITE_FORM -->
-{% include "partials/_modal_add_website.html.twig" with {'company': company, 'typesContract': typesContract} %}
 {% endfor %}
+<!-- MODAL ADD INVOICE -->
+<div id="modal-invoice" class="mdl-add-invoice">
+    <div class="cont-flex-start cont-title mdl-header-form">
+        <div class="cont-flex">
+            <i class="fas fa-file-upload fa-2x"></i>
+            <h2>Factures</h2>
+        </div>
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    {{form_start(add_invoice_form)}}
+    <div class="cont-grid form-section">
+        <div>
+            <label for="company">Entreprise *</label>
+            <input id="company" class="form-control" name="company" readonly>
+        </div>
+        <div>
+            <label for="type">Type *</label>
+            <select class="form-select" name="type">
+                {% for type in typesInvoice %}
+                <option value="{{type.name}}">{{type.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="cont-grid form-section">
+        {{form_row(add_invoice_form.files)}}
+        <div>
+            <label for="date">Date de facturation *</label>
+            <input id="date" class="form-control" type="date" name="date" value="{{currentDate|date('Y-m-d')}}">
+        </div>
+    </div>
+    <div class="cont-flex-space mdl-btn">
+        {{form_row(add_invoice_form.submit)}}
+        <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+    </div>
+    {{form_end(add_invoice_form)}}
+</div>
+
 
 <body>
 
@@ -66,32 +101,26 @@ form: add_invoice_form} %}#}
                                     <i class="fas fa-user-plus fa-lg"></i>
                                 </a>
                             </li>
-                            <li class="action-item">
+                            <!-- <li class="action-item">
                                 <a id="add-contract{{company.id}}" class="action-link add-contract"
                                     title="Ajouter un contrat">
                                     <i class="fas fa-file-contract fa-lg"></i>
                                 </a>
-                            </li>
-                            <!-- <li class="action-item">
-                                <a id="add-invoice{{company.id}}" class="action-link add-invoice"
-                                    title="Ajouter une facture">
-                                    <i class="fas fa-file-upload fa-lg"></i>
-                                </a>
                             </li> -->
                             <li class="action-item">
-                                <a id="add-invoice{{company.id}}" class="action-link add-website"
+                                <a id="add-invoice{{company.id}}" class="action-link add-invoice"
+                                    title="Ajouter une facture {{company.name}}">
+                                    <i class="fas fa-file-upload fa-lg"></i>
+                                </a>
+                            </li>
+                            <li class="action-item">
+                                <a id="add-website{{company.id}}" class="action-link add-website"
                                     title="Ajouter un abonnement">
                                     <i class="fas fa-globe-americas fa-lg"></i>
                                 </a>
                             </li>
-                            <!-- <li class="action-item">
-                                <a href="{{path('show_contracts', {'company': company.id})}}" class="action-link"
-                                    title="Voir l'entreprise">
-                                    <i class="fas fa-eye fa-lg"></i>
-                                </a>
-                            </li> -->
                             <li class="action-item">
-                                <a href="{{path('edit_company', {'company': company.id})}}" class="action-link"
+                                <a id="edit-company{{company.id}}" class="action-link edit-company"
                                     title="Modifier l'entreprise">
                                     <i class="fas fa-edit fa-lg"></i>
                                 </a>
@@ -115,6 +144,10 @@ form: add_invoice_form} %}#}
 
 <script>
 
+    const cont = document.querySelector('.container');
+    const navbar = document.querySelector('.navbar');
+    const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
+
     // function click sur les lignes compagnies
     const companies = document.getElementsByClassName('company');
     for (let i = 0; i < companies.length; i++) {
@@ -129,117 +162,14 @@ form: add_invoice_form} %}#}
         }
     }
 
-    // function search
-    const input = document.querySelector('#search-input');
-    input.value = window.location.search.substr(8);
-    input.addEventListener('keyup', () => {
-        for (let i = 0; i < companies.length; i++) {
-            const company = companies[i];
-            const companyName = company.className.substr(20);
-            if (input.value != "") {
-                if (companyName.toUpperCase().includes(input.value.toUpperCase())) {
-                    company.style.display = null;
-                } else {
-                    company.style.display = 'none';
-                }
-            } else {
-                company.style.display = null;
-            }
-        }
-    });
-
-    // function delete search
-    const cross = document.querySelector('#search-delete');
-    cross.addEventListener('click', () => {
-        for (let i = 0; i < companies.length; i++) {
-            input.value = "";
-            companies[i].style.display = null;
-        }
-    });
-
-    // function delete company
-    const cont = document.querySelector('.container');
-    const navbar = document.querySelector('.navbar');
-    const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
-    const deletes = document.querySelectorAll('.delete-company');
-    deletes.forEach(function (del) {
-        const id = del.id.substr(14);
-        const modal = document.querySelector('#modal' + id);
-        del.addEventListener('click', () => {
-            modal.style.visibility = 'visible';
-            navbar.style.opacity = 0.4;
-            cont.style.opacity = 0.4;
-            buttons.forEach(function (btn) {
-                btn.style.pointerEvents = 'none';
-            });
-        });
-    });
-
-    // function add user / contract / invoice / website
-    const typesAdd = ['user', 'contract', 'invoice', 'website'];
-    typesAdd.forEach(function (type) {
-        const add = document.querySelectorAll('.add-' + type);
-        add.forEach(function (add) {
-            let id;
-            if (type == 'user') id = add.id.substr(8);
-            else if (type == 'contract') id = add.id.substr(12);
-            else if (type == 'invoice') id = add.id.substr(11);
-            else if (type == 'website') id = add.id.substr(11);
-            const modal = document.querySelector('#modal-' + type + id);
-            add.addEventListener('click', () => {
-                modal.style.visibility = 'visible';
-                navbar.style.opacity = 0.4;
-                cont.style.opacity = 0.4;
-                buttons.forEach(function (btn) {
-                    btn.style.pointerEvents = 'none';
-                });
-            });
-        });
-    });
-
-    // functions fermer une modale
-    const modalElements = [...Array.from(document.querySelectorAll('.mdl-delete')),
-    ...Array.from(document.querySelectorAll('.mdl-add-user')),
-    ...Array.from(document.querySelectorAll('.mdl-add-contract')),
-    ...Array.from(document.querySelectorAll('.mdl-add-invoice')),
-    ...Array.from(document.querySelectorAll('.mdl-add-website'))];
-
-    modalElements.forEach(function (modal) {
-        const close = modal.querySelector('.mdl-close');
-        const cancel = modal.querySelector('.btn-cancel');
-        // fermer avec button 'X'
-        close.addEventListener('click', () => {
-            modal.style.visibility = 'hidden';
-            navbar.style.opacity = 1;
-            cont.style.opacity = 1;
-            buttons.forEach(function (btn) {
-                btn.style.pointerEvents = 'auto';
-            });
-        });
-        // fermer avec button 'Annuler'
-        cancel.addEventListener('click', () => {
-            modal.style.visibility = 'hidden';
-            navbar.style.opacity = 1;
-            cont.style.opacity = 1;
-            buttons.forEach(function (btn) {
-                btn.style.pointerEvents = 'auto';
-            });
-        });
-        // fermer avec button 'Escape'
-        window.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                modal.style.visibility = 'hidden';
-                navbar.style.opacity = 1;
-                cont.style.opacity = 1;
-                buttons.forEach(function (btn) {
-                    btn.style.pointerEvents = 'auto';
-                });
-            }
-        });
-    });
-
 </script>
 
+<script src="{{asset('js/search_company.js')}}"></script>
 <script src="{{asset('js/add_multiple_contract.js')}}"></script>
+<script src="{{asset('js/close_modal.js')}}"></script>
+<script src="{{asset('js/add_entity_modal.js')}}" nb="4" param1="user" param2="contract" param3="invoice"
+    param4="website"></script>
+<script src="{{asset('js/edit_entity_modal.js')}}" nb="1" param1="company"></script>
+<script src="{{asset('js/delete_entity_modal.js')}}" nb="1" param1="company"></script>
 
 {% endblock %}

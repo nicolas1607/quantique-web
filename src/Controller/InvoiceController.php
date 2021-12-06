@@ -29,7 +29,7 @@ class InvoiceController extends AbstractController
     }
 
     /**
-     * @Route("/invoice/add/{company}", name="add_invoice_with_company")
+     * @Route("/admin/invoice/add/{company}", name="add_invoice_with_company")
      */
     public function addForCompany(MailerInterface $mailer, Request $request, Company $company, SluggerInterface $slugger): Response
     {
@@ -78,7 +78,7 @@ class InvoiceController extends AbstractController
             // Envoie d'un mail de confirmation
             foreach ($company->getUsers() as $user) {
                 $email = (new TemplatedEmail())
-                    ->from('Quantique Web')
+                    ->from('noreply@quantique-web.fr')
                     ->to($user->getEmail())
                     ->subject('Nouvelle(s) facture(s) pour ' . $company->getName() . ' disponible(s) !')
                     ->htmlTemplate('emails/invoice_confirmation.html.twig')
@@ -103,7 +103,7 @@ class InvoiceController extends AbstractController
     }
 
     /**
-     * @Route("/invoice/download/{id}", name="download_invoice")
+     * @Route("/admin/invoice/download/{id}", name="download_invoice")
      */
     public function download(Invoice $id): Response
     {
@@ -112,7 +112,7 @@ class InvoiceController extends AbstractController
     }
 
     /**
-     * @Route("/invoice/delete/{invoice}", name="delete_invoice")
+     * @Route("/admin/invoice/delete/{invoice}", name="delete_invoice")
      */
     public function delete(Invoice $invoice): Response
     {
@@ -121,81 +121,5 @@ class InvoiceController extends AbstractController
         $this->em->flush();
 
         return $this->redirect($_SERVER['HTTP_REFERER']);
-    }
-
-    // MODAL EVENT //
-
-    /**
-     * @Route("/invoice/add/modal/{company}", name="add_invoice_modal")
-     */
-    public function addFromModal(MailerInterface $mailer, Request $request, Company $company, SluggerInterface $slugger): Response
-    {
-        $invoices = [];
-
-        $invoice = new Invoice();
-        $addInvoiceForm = $this->createForm(InvoiceType::class, $invoice);
-
-        $company = $this->em->getRepository(Company::class)->findOneBy(['id' => $request->get('company')]);
-
-        // Fichier PDF *
-        $paths = $addInvoiceForm->get('files')->getData();
-
-        foreach ($paths as $path) {
-            var_dump($path);
-            // $path = new UploadedFile($str, str_replace('.pdf', '', $str));
-            $invoice = new Invoice();
-            $invoice->setReleasedAt(new DateTime($request->get('date')))
-                ->setType($this->em->getRepository(TypeInvoice::class)
-                    ->findOneBy(['name' => $request->get('type')]))
-                ->setCompany($company);
-
-            if ($path) {
-                $originalFilename = pathinfo($path->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '.' . $path->guessExtension();
-
-                // $originalFilename = str_replace('.pdf', '', $path);
-                // $safeFilename = $slugger->slug($originalFilename);
-                // $newFilename = $safeFilename . '.pdf';
-
-                try {
-                    $path->move(
-                        $this->getParameter('invoices'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-
-                $invoice->setFile($newFilename);
-                $company->addInvoice($invoice);
-
-                $this->em->persist($invoice);
-                $this->em->persist($company);
-
-                $this->em->flush();
-                $invoices[] = $invoice;
-            }
-        }
-
-        // Envoie d'un mail de confirmation
-        foreach ($company->getUsers() as $user) {
-            $email = (new TemplatedEmail())
-                ->from('Quantique Web')
-                ->to($user->getEmail())
-                ->subject('Nouvelle(s) facture(s) pour ' . $company->getName() . ' disponible(s) !')
-                ->htmlTemplate('emails/invoice_confirmation.html.twig')
-                ->context([
-                    'user' => $user,
-                    'company' => $company
-                ]);
-            foreach ($invoices as $invoice) {
-                $email->attachFromPath($this->getParameter('invoices') . '/' . $invoice->getFile());
-            }
-
-            $mailer->send($email);
-        }
-
-        return $this->redirectToRoute('show_invoices', ['company' => $company->getId()]);
     }
 }

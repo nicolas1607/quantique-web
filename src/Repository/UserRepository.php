@@ -46,4 +46,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             WHERE u.name LIKE '%" . $search . "%'"
         )->getResult();
     }
+
+    // /**
+    //  * @return Company[] Retourne les utilisateurs (sans les admins)
+    //  */
+    public function findUsers()
+    {
+        return $this->getEntityManager()->createQuery(
+            "SELECT u FROM App:user u
+            WHERE u.roles NOT LIKE '%ROLE_ADMIN%'"
+        )->getResult();
+    }
 }

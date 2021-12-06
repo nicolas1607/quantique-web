@@ -1,5 +1,5 @@
-const types = ['vitrine', 'commerce', 'google', 'facebook']
-types.forEach(function (type) {
+const typesAddContract = ['vitrine', 'commerce', 'google', 'facebook']
+typesAddContract.forEach(function (type) {
     for (let i = 0; i < document.querySelectorAll('#' + type + '-btn').length; i++) {
         const btn = document.querySelectorAll('#' + type + '-btn')[i];
         btn.addEventListener('click', () => {
