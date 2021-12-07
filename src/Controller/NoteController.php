@@ -37,7 +37,7 @@ class NoteController extends AbstractController
         $this->em->persist($contract);
         $this->em->flush();
 
-        return $this->redirectToRoute('show_contracts', ['company' => $contract->getWebsite()->getCompany()->getId()]);
+        return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 
     /**

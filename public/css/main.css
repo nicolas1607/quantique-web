@@ -594,7 +594,8 @@ h3 .action-link {
 
 /* Modal Delete */
 
-.mdl-delete {
+.mdl-delete,
+.mdl-remove {
   visibility: hidden;
   width: 40%;
   position: fixed;
@@ -670,11 +671,13 @@ h3 .action-link {
 }
 
 .mdl-add-user form,
-.mdl-add-contract form,
 .mdl-add-invoice form,
 .mdl-add-website form,
 .mdl-edit-website form,
-.mdl-edit-user form {
+.mdl-edit-user form,
+.mdl-edit-company form,
+.mdl-add-new-user form,
+.mdl-edit-password form {
   margin-top: 2rem;
   margin-bottom: 4rem;
 }

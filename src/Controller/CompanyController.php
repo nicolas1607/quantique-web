@@ -12,7 +12,6 @@ use App\Form\CompanyType;
 use App\Entity\TypeContract;
 use App\Form\UserPasswordType;
 use App\Repository\UserRepository;
-use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Google\AdsApi\AdWords\AdWordsServices;
 use Google\AdsApi\AdWords\v201809\cm\Paging;
@@ -23,8 +22,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Google\AdsApi\AdWords\v201809\cm\Selector;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClient;
 
+use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClient;
 use Google\AdsApi\AdWords\AdWordsSessionBuilder;
 use Facebook\Exceptions\FacebookResponseException;
 use Google\AdsApi\AdWords\v201809\cm\CampaignService;
@@ -97,16 +96,6 @@ class CompanyController extends AbstractController
             'edit_password_form' => $editPasswordForm->createView()
         ]);
     }
-
-    /**
-     * @Route("/company/show/accounts/{company}", name="show_accounts")
-     */
-    // public function showAccounts(Company $company): Response
-    // {
-    //     return $this->render('company/show_accounts.html.twig', [
-    //         'company' => $company
-    //     ]);
-    // }
 
     /**
      * @Route("/company/show/stats/{company}", name="show_stats")
@@ -237,33 +226,6 @@ class CompanyController extends AbstractController
     }
 
     /**
-     * @Route("/admin/company/add/{user}", name="add_company_user")
-     */
-    // public function addForUser(Request $request, User $user): Response
-    // {
-    //     $company = new Company();
-    //     $addCompanyForm = $this->createForm(CompanyType::class, $company);
-    //     $addCompanyForm->handleRequest($request);
-
-    //     if ($addCompanyForm->isSubmitted() && $addCompanyForm->isValid()) {
-    //         $company = $addCompanyForm->getData();
-    //         $company->addUser($user);
-    //         $user->addCompany($company);
-
-    //         $this->em->persist($company);
-    //         $this->em->persist($user);
-    //         $this->em->flush();
-
-    //         return $this->redirectToRoute('admin_users');
-    //     }
-
-    //     return $this->render('company/add_user.html.twig', [
-    //         'add_company_form' => $addCompanyForm->createView(),
-    //         'user' => $user
-    //     ]);
-    // }
-
-    /**
      * @Route("/admin/company/edit/{company}", name="edit_company")
      */
     public function edit(Request $request, Company $company): Response
@@ -279,7 +241,19 @@ class CompanyController extends AbstractController
         $this->em->persist($company);
         $this->em->flush();
 
-        return $this->redirectToRoute('admin_companies');
+        return $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    /**
+     * @Route("/admin/user/remove/{company}/{user}", name="remove_user")
+     */
+    public function remove(Company $company, User $user): Response
+    {
+        $company->removeUser($user);
+        $this->em->persist($company);
+        $this->em->flush();
+
+        return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 
     /**

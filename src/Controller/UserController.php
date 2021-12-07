@@ -8,13 +8,11 @@ use App\Entity\User;
 use App\Entity\Company;
 use App\Entity\Invoice;
 use App\Form\InvoiceType;
-use App\Form\UserAddType;
 use App\Entity\TypeInvoice;
 use App\Entity\TypeContract;
 use App\Entity\GoogleAccount;
-use App\Form\UserPasswordType;
 use App\Entity\FacebookAccount;
-use App\Form\RegistrationFormType;
+use App\Form\UserPasswordType;
 use App\Repository\UserRepository;
 use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -181,111 +179,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/admin/user/edit/modal/{user}", name="edit_user_modal")
-     */
-    public function edit(Request $request, User $user): Response
-    {
-
-        // On créer les comptes Google & Facebook
-        // $emailGoogle = $request->query->get('emailGoogle');
-        // $mdpGoogle = $request->query->get('mdpGoogle');
-        // if ($emailGoogle && $mdpGoogle) {
-        //     $accountGoogle = new GoogleAccount();
-        //     $accountGoogle->setEmail($emailGoogle)
-        //         ->setPassword($encoder->hashPassword($user, $mdpGoogle));
-        //     $user->setGoogleAccount($accountGoogle);
-        //     $this->em->persist($accountGoogle);
-        // }
-        // $emailFb = $request->query->get('emailFb');
-        // $mdpFb = $request->query->get('mdpFb');
-        // if ($emailFb && $mdpFb) {
-        //     $accountFb = new FacebookAccount();
-        //     $accountFb->setEmail($emailFb)
-        //         ->setPassword($encoder->hashPassword($user, $mdpFb));
-        //     $user->setGoogleFacebook($accountFb);
-        //     $this->em->persist($accountFb);
-        // }
-
-        $user->setFirstname($request->get('firstname'))
-            ->setLastname($request->get('lastname'))
-            ->setEmail($request->get('email'))
-            ->setPhone($request->get('phone'));
-
-        $this->em->persist($user);
-        $this->em->flush();
-
-        return $this->redirect($_SERVER['HTTP_REFERER']);
-    }
-
-    /**
-     * @Route("/admin/add/user/password/{user}", name="add_user_password")
-     */
-    // public function addPassword(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
-    // {
-    //     $addUserForm = $this->createForm(UserPasswordType::class, $user);
-    //     $addUserForm->handleRequest($request);
-
-    //     if ($addUserForm->isSubmitted() && $addUserForm->isValid()) {
-    //         $user = $addUserForm->getData();
-    //         $password = $user->getPassword();
-    //         $passwordEncoded = $encoder->hashPassword($user, $password);
-    //         $user->setPassword($passwordEncoded);
-
-    //         $this->em->persist($user);
-    //         $this->em->flush();
-
-    //         return $this->redirectToRoute('app_login');
-    //     }
-
-    //     return $this->render('user/add_password.html.twig', [
-    //         'add_user_form' => $addUserForm->createView(),
-    //         'user' => $user
-    //     ]);
-    // }
-
-    /**
-     * @Route("/profile/user/edit/password/{user}", name="edit_user_password")
-     */
-    public function editPassword(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
-    {
-        $editUserForm = $this->createForm(UserPasswordType::class, $user);
-
-        $editUserForm->handleRequest($request);
-
-        if ($editUserForm->isSubmitted() && $editUserForm->isValid()) {
-            $user = $editUserForm->getData();
-
-            $password = $user->getPassword();
-            $passwordEncoded = $encoder->hashPassword($user, $password);
-            $user->setPassword($passwordEncoded);
-
-            $this->em->persist($user);
-            $this->em->flush();
-
-            return $this->redirectToRoute('show_contracts', ['company' => $this->getUser()->getCompanies()[0]->getId()]);
-        }
-
-        return $this->render('user/edit_password.html.twig', [
-            'edit_user_form' => $editUserForm->createView(),
-            'user' => $user
-        ]);
-    }
-
-    /**
-     * @Route("/admin/user/delete/{user}", name="delete_user")
-     */
-    public function delete(User $user): Response
-    {
-        $this->em->remove($user);
-        $this->em->flush();
-
-        return $this->redirect($_SERVER['HTTP_REFERER']);
-    }
-
-
-    // MODAL EVENT //
-
-    /**
      * @Route("/admin/user/add/modal", name="add_user_modal")
      */
     public function addFromModal(Request $request, UserPasswordHasherInterface $encoder, MailerInterface $mailer): Response
@@ -299,16 +192,10 @@ class UserController extends AbstractController
             ]);
         }
         if ($request->get('firstname') && $request->get('lastname') && $request->get('email')) {
-            $user = new User();
-            $firstname = $request->get('firstname');
-            $lastname = $request->get('lastname');
-            $email = $request->get('email');
-            $phone = $request->get('phone');
-
-            $user->setFirstname($firstname)
-                ->setLastname($lastname)
-                ->setEmail($email)
-                ->setPhone($phone);
+            $user->setFirstname($request->get('firstname'))
+                ->setLastname($request->get('lastname'))
+                ->setEmail($request->get('email'))
+                ->setPhone($request->get('phone'));
         }
 
         $company = $this->em->getRepository(Company::class)->findOneBy(['name' => $request->get('company')]);
@@ -347,7 +234,7 @@ class UserController extends AbstractController
         if ($userexist) {
             $email = (new TemplatedEmail())
                 ->from('noreply@quantique-web.fr')
-                ->to($user->getEmail())
+                ->to($userexist->getEmail())
                 ->subject('Accédez à votre compte Quantique Web Office !')
                 ->htmlTemplate('emails/user_confirmation.html.twig')
                 ->context([
@@ -358,7 +245,78 @@ class UserController extends AbstractController
             $mailer->send($email);
         }
 
+        return $this->redirect($_SERVER['HTTP_REFERER']);
+    }
 
-        return $this->redirectToRoute('show_contracts', ['company' => $company->getId()]);
+    /**
+     * @Route("/admin/user/edit/modal/{user}", name="edit_user_modal")
+     */
+    public function edit(Request $request, User $user): Response
+    {
+        // On créer les comptes Google & Facebook
+        // $emailGoogle = $request->query->get('emailGoogle');
+        // $mdpGoogle = $request->query->get('mdpGoogle');
+        // if ($emailGoogle && $mdpGoogle) {
+        //     $accountGoogle = new GoogleAccount();
+        //     $accountGoogle->setEmail($emailGoogle)
+        //         ->setPassword($encoder->hashPassword($user, $mdpGoogle));
+        //     $user->setGoogleAccount($accountGoogle);
+        //     $this->em->persist($accountGoogle);
+        // }
+        // $emailFb = $request->query->get('emailFb');
+        // $mdpFb = $request->query->get('mdpFb');
+        // if ($emailFb && $mdpFb) {
+        //     $accountFb = new FacebookAccount();
+        //     $accountFb->setEmail($emailFb)
+        //         ->setPassword($encoder->hashPassword($user, $mdpFb));
+        //     $user->setGoogleFacebook($accountFb);
+        //     $this->em->persist($accountFb);
+        // }
+
+        $user->setFirstname($request->get('firstname'))
+            ->setLastname($request->get('lastname'))
+            ->setEmail($request->get('email'))
+            ->setPhone($request->get('phone'));
+
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    /**
+     * @Route("/profile/user/edit/password/{user}", name="edit_user_password")
+     */
+    public function editPassword(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
+    {
+        $editUserForm = $this->createForm(UserPasswordType::class, $user);
+
+        $editUserForm->handleRequest($request);
+
+        if ($editUserForm->isSubmitted() && $editUserForm->isValid()) {
+            $user = $editUserForm->getData();
+
+            $password = $user->getPassword();
+            $passwordEncoded = $encoder->hashPassword($user, $password);
+            $user->setPassword($passwordEncoded);
+
+            $this->em->persist($user);
+            $this->em->flush();
+
+            return $this->redirectToRoute('show_contracts', ['company' => $this->getUser()->getCompanies()[0]->getId()]);
+        }
+
+        return $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    /**
+     * @Route("/admin/user/delete/{user}", name="delete_user")
+     */
+    public function delete(User $user): Response
+    {
+        $this->em->remove($user);
+        $this->em->flush();
+
+        return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 }

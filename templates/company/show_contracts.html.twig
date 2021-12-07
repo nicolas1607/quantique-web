@@ -17,9 +17,7 @@
 <!-- MODAL EDIT WEBSITE -->
 {% include "partials/_modal_edit_website.html.twig" with {'company': company} %}
 <!-- MODAL DELETE USER -->
-{% include "partials/_modal_delete_user.html.twig" %}
-<!-- MODAL DELETE WEBSITE -->
-{% include "partials/_modal_delete_website.html.twig" %}
+{% include "partials/_modal_remove_user.html.twig" %}
 <!-- MODAL DELETE CONTRACT -->
 {% include "partials/_modal_delete_contract.html.twig" %}
 <!-- MODAL EDIT PASSWORD -->
@@ -147,8 +145,8 @@
 
     <script src="{{asset('js/add_entity_modal.js')}}" nb="2" param1="website" param2="user"></script>
     <script src="{{asset('js/edit_entity_modal.js')}}" nb="3" param1="website" param2="user" param3="password"></script>
-    <script src="{{asset('js/delete_entity_modal.js')}}" nb="3" param1="website" param2="contract"
-        param3="user"></script>
+    <script src="{{asset('js/remove_entity_modal.js')}}" nb="1" param1="user"></script>
+    <script src="{{asset('js/delete_entity_modal.js')}}" nb="2" param1="website" param2="contract"></script>
 
 </body>
 
