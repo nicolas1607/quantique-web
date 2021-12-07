@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use PDO;
+use DateTime;
+use PDOException;
 use App\Entity\Note;
 use App\Form\NoteType;
 use App\Entity\Contract;
-use DateTime;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,16 +29,43 @@ class NoteController extends AbstractController
      */
     public function add(Request $request, Contract $contract): Response
     {
-        $note = new Note();
-        $note->setMessage(str_replace("\r\n", "\n", $request->get('message'))) // with twig nl2br
-            ->setReleasedAt(new DateTime())
-            ->setContract($contract)
-            ->setUser($this->getUser());
-        $contract->addNote($note);
+        // $note = new Note();
+        $msg = str_replace("\r\n", "\n", $request->get('message'));
+        $datetime = new DateTime();
+        $date = $datetime->format('Y-m-d H:i:s');
+        $user = $this->getUser()->getId();
+        $contract = $contract->getId();
+        // $note->setMessage($msg) // with twig nl2br
+        //     ->setReleasedAt(new DateTime())
+        //     ->setContract($contract)
+        //     ->setUser($this->getUser());
+        // $contract->addNote($note);
 
-        $this->em->persist($note);
-        $this->em->persist($contract);
-        $this->em->flush();
+        // Connexion PDO
+        $username = 'root';
+        $password = 'root';
+
+        try {
+            $conn = new PDO('mysql:host=127.0.0.1:8889;dbname=quantique-web', $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+            $stmt = $conn->prepare(
+                "INSERT INTO note (user_id, contract_id, message, released_at) 
+                VALUES (:user, :contract, :msg, :date)"
+            );
+            $stmt->bindParam(':user', $user);
+            $stmt->bindParam(':contract', $contract);
+            $stmt->bindParam(':msg', $msg);
+            $stmt->bindParam(':date', $date);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Erreur : " . $e->getMessage();
+        }
+
+        // $this->em->persist($note);
+        // $this->em->persist($contract);
+        // $this->em->flush();
 
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
@@ -51,5 +81,35 @@ class NoteController extends AbstractController
         $this->em->flush();
 
         return $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    /**
+     * @Route("/admin/script/note/add/{user}/{contract}", name="script_add_note")
+     */
+    function addNote(Request $request, User $user, Contract $contract)
+    {
+        $user = $user->getId();
+        $contract = $contract->getId();
+        $msg = str_replace("\r\n", "\n", $request->get('message'));
+        $datetime = new DateTime();
+        $date = $datetime->format('Y-m-d H:i:s');
+
+        try {
+            $conn = new PDO('mysql:host=127.0.0.1:8889;dbname=quantique-web', 'root', 'root');
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            echo "Erreur : " . $e->getMessage();
+        }
+
+
+        $stmt = $conn->prepare(
+            "INSERT INTO note (user_id, contract_id, message, released_at) 
+                    VALUES (:user, :contract, :msg, :date)"
+        );
+        $stmt->bindParam(':user', $user);
+        $stmt->bindParam(':contract', $contract);
+        $stmt->bindParam(':msg', $msg);
+        $stmt->bindParam(':date', $date);
+        $stmt->execute();
     }
 }

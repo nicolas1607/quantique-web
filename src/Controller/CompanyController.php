@@ -2,34 +2,45 @@
 
 namespace App\Controller;
 
+use PDO;
+use DateTime;
+use PDOException;
+use App\Entity\Note;
 use App\Entity\User;
 use FacebookAds\Api;
 use Facebook\Facebook;
 use App\Entity\Company;
+use App\Entity\Invoice;
 use App\Entity\Website;
 use App\Entity\Contract;
 use App\Form\CompanyType;
+use App\Form\InvoiceType;
+use App\Entity\TypeInvoice;
 use App\Entity\TypeContract;
 use App\Form\UserPasswordType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Google\AdsApi\AdWords\AdWordsServices;
 use Google\AdsApi\AdWords\v201809\cm\Paging;
+
 use Google\AdsApi\Common\OAuth2TokenBuilder;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Facebook\Exceptions\FacebookSDKException;
 use Google\AdsApi\AdWords\v201809\cm\OrderBy;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Google\AdsApi\AdWords\v201809\cm\Selector;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClient;
 use Google\AdsApi\AdWords\AdWordsSessionBuilder;
 use Facebook\Exceptions\FacebookResponseException;
 use Google\AdsApi\AdWords\v201809\cm\CampaignService;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClientBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Google\AdsApi\Examples\AdWords\v201809\BasicOperations\GetCampaigns;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -65,6 +76,16 @@ class CompanyController extends AbstractController
             $this->em->flush();
         }
 
+        // ADD NOTE
+        $msg = $request->get('message');
+        if ($msg != null) {
+            $user = $this->getUser();
+            $contract = $this->em->getRepository(Contract::class)
+                ->findOneBy(['id' => $request->get('contract')]);
+            $this->add_note($user, $contract, $msg);
+        }
+
+
         return $this->render('company/show_contracts.html.twig', [
             'users' => $users,
             'company' => $company,
@@ -76,7 +97,7 @@ class CompanyController extends AbstractController
     /**
      * @Route("/company/show/invoices/{company}", name="show_invoices")
      */
-    public function showInvoices(Request $request, Company $company, UserPasswordHasherInterface $encoder): Response
+    public function showInvoices(Request $request, Company $company, UserPasswordHasherInterface $encoder, MailerInterface $mailer, SluggerInterface $slugger): Response
     {
         // Formulaire de modification de mot de passe
         $editPasswordForm = $this->createForm(UserPasswordType::class, $this->getUser());
@@ -91,9 +112,77 @@ class CompanyController extends AbstractController
             $this->em->flush();
         }
 
+        // Formulaire d'ajout de facture
+        $invoice = new Invoice();
+        $addInvoiceForm = $this->createForm(InvoiceType::class, $invoice);
+        $addInvoiceForm->handleRequest($request);
+
+        if ($addInvoiceForm->isSubmitted() && $addInvoiceForm->isValid()) {
+            // $company = $this->em->getRepository(Company::class)->findOneBy(['name' => $request->get('company')]);
+
+            $company = $request->get('company');
+
+            // Fichier PDF *
+            $paths = $addInvoiceForm->get('files')->getData();
+
+            foreach ($paths as $path) {
+                $invoice = new Invoice();
+                $invoice->setReleasedAt(new DateTime($request->get('date')))
+                    ->setType($this->em->getRepository(TypeInvoice::class)
+                        ->findOneBy(['name' => $request->get('type')]))
+                    ->setCompany($company);
+
+                if ($path) {
+                    $originalFilename = pathinfo($path->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename . '.' . $path->guessExtension();
+                    try {
+                        $path->move(
+                            $this->getParameter('invoices'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        // ... handle exception if something happens during file upload
+                    }
+
+                    $invoice->setFile($newFilename);
+                    $company->addInvoice($invoice);
+                    $this->em->persist($invoice);
+                    $this->em->persist($company);
+                    $this->em->flush();
+                    $invoices[] = $invoice;
+                }
+            }
+
+            // Envoie d'un mail de confirmation
+            foreach ($company->getUsers() as $user) {
+                $email = (new TemplatedEmail())
+                    ->from('noreply@quantique-web.fr')
+                    ->to($user->getEmail())
+                    ->subject('Nouvelle(s) facture(s) pour ' . $company->getName() . ' disponible(s) !')
+                    ->htmlTemplate('emails/invoice_confirmation.html.twig')
+                    ->context([
+                        'user' => $user,
+                        'company' => $company
+                    ]);
+                foreach ($invoices as $invoice) {
+                    $email->attachFromPath($this->getParameter('invoices') . '/' . $invoice->getFile());
+                }
+
+                $mailer->send($email);
+            }
+        }
+
+        $currentDate = new DateTime();
+        $typesInvoice = $this->em->getRepository(TypeInvoice::class)->findAll();
+
+
         return $this->render('company/show_invoices.html.twig', [
             'company' => $company,
-            'edit_password_form' => $editPasswordForm->createView()
+            'typesInvoice' => $typesInvoice,
+            'currentDate' => $currentDate,
+            'edit_password_form' => $editPasswordForm->createView(),
+            'add_invoice_form' => $addInvoiceForm->createView()
         ]);
     }
 
@@ -265,5 +354,33 @@ class CompanyController extends AbstractController
         $this->em->flush();
 
         return $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    // FUNCTIONS //
+
+    function add_note(User $user, Contract $contract, String $note)
+    {
+        try {
+            $conn = new PDO('mysql:host=127.0.0.1:8889;dbname=quantique-web', 'root', 'root');
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            echo "Erreur : " . $e->getMessage();
+        }
+
+        $msg = str_replace("\r\n", "\n", $note);
+        $datetime = new DateTime();
+        $date = $datetime->format('Y-m-d H:i:s');
+        $user = $user->getId();
+        $contract = $contract->getId();
+
+        $stmt = $conn->prepare(
+            "INSERT INTO note (user_id, contract_id, message, released_at) 
+                VALUES (:user, :contract, :msg, :date)"
+        );
+        $stmt->bindParam(':user', $user);
+        $stmt->bindParam(':contract', $contract);
+        $stmt->bindParam(':msg', $msg);
+        $stmt->bindParam(':date', $date);
+        $stmt->execute();
     }
 }

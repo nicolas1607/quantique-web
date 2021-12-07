@@ -37,6 +37,43 @@
     </div>
     {{ form_end(edit_password_form) }}
 </div>
+<!-- MODAL ADD INVOICE -->
+<div id="modal-invoice" class="mdl-add-invoice">
+    <div class="cont-flex-start cont-title mdl-header-form">
+        <div class="cont-flex">
+            <i class="fas fa-file-upload fa-2x"></i>
+            <h2>Factures</h2>
+        </div>
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    {{form_start(add_invoice_form)}}
+    <div class="cont-grid form-section">
+        <div>
+            <label for="cmp">Entreprise *</label>
+            <input id="cmp" class="form-control" name="cmp" value="{{company.name}}" readonly>
+        </div>
+        <div>
+            <label for="type">Type *</label>
+            <select class="form-select" name="type">
+                {% for type in typesInvoice %}
+                <option value="{{type.name}}">{{type.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="cont-grid form-section">
+        {{form_row(add_invoice_form.files)}}
+        <div>
+            <label for="date">Date de facturation *</label>
+            <input id="date" class="form-control" type="date" name="date" value="{{currentDate|date('Y-m-d')}}">
+        </div>
+    </div>
+    <div class="cont-flex-space mdl-btn">
+        {{form_row(add_invoice_form.submit)}}
+        <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+    </div>
+    {{form_end(add_invoice_form)}}
+</div>
 
 <body>
 
@@ -44,7 +81,7 @@
         {% include "partials/_company_info.html.twig" %}
 
         {% if is_granted('ROLE_ADMIN') %}
-        <a class="btn-type right btn10" href="{{path('add_invoice_with_company', {'company': company.id})}}">Nouvelle
+        <a id="add-invoice{{company.id}}" class="btn-type right btn10 add-invoice">Nouvelle
             facture</a>
         {% endif %}
 
@@ -117,7 +154,7 @@
     const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
 </script>
 
-<script src="{{asset('js/add_entity_modal.js')}}" nb="1" param1="user"></script>
+<script src="{{asset('js/add_entity_modal.js')}}" nb="2" param1="user" param2="invoice"></script>
 <script src="{{asset('js/edit_entity_modal.js')}}" nb="1" param1="user"></script>
 <script src="{{asset('js/delete_entity_modal.js')}}" nb="2" param1="invoice" param2="user"></script>
 

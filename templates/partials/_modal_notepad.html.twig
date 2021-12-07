@@ -18,15 +18,79 @@
             </div>
             {% endfor %}
         </div>
-        <form class="cont-note" method="POST" action="{{path('add_note', {'contract': contract.id})}}">
-            <div>
-                <label for="message">Message</label>
-                <textarea class="form-control" name="message" rows="1" required></textarea>
+        <form method="POST" id="form-add-note{{contract.id}}" class="cont-note form-add-note">
+            <div hidden>
+                <label for="contract">Contrat</label>
+                <input class="form-control" name="contract" value="{{contract.id}}"></input>
             </div>
-            <button class="btn-type btn-form notepad-btn" type="submit">Envoyer</button>
+            <div>
+                <label id="{{app.user.id}}" class="user" for="message">Message</label>
+                <textarea id="msg" class="form-control" name="message" rows="1" required></textarea>
+            </div>
+            <a id="notepad-submit{{contract.id}}" class="btn-type btn-form notepad-btn" onclick="submit({{contract.id}})">Envoyer</a>
         </form>
+        <!-- <form id="form-add-note{{contract.id}}" class="cont-note form-add-note" data-path="{{asset('js/script/add-note.php')}}" method="POST">
+            <div hidden>
+                <label for="contract">Contrat</label>
+                <input class="form-control" name="contract" value="{{contract.id}}"></input>
+            </div>
+            <div>
+                <label id="{{app.user.id}}" class="user" for="message">Message</label>
+                <textarea id="msg" class="form-control" name="message" rows="1" required></textarea>
+            </div>
+            <button id="notepad-submit{{contract.id}}" class="btn-type btn-form notepad-btn">Envoyer</button>
+        </form> -->
     </div>
 </div>
 {% endfor %}
 {% endfor %}
 {% endif %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
+
+    function submit(id) {
+        const form = document.querySelector('#form-add-note'+id)
+        const user = form.querySelector('.user').id;
+        const contract = form.id.substr(13);
+        const msg = form.querySelector('#msg').value;
+        $.ajax({
+            type: 'post',
+            url: './script/add-note.php',
+            data: {
+                user : user,
+                contract : contract,
+                msg : msg,
+            }
+        });
+    }
+
+    //const forms = document.querySelectorAll('.form-add-note');
+    //forms.forEach(function(form){
+    //    const user = form.querySelector('.user').id;
+    //    const contract = form.id.substr(13);
+    //    const msg = form.querySelector('#msg').value;
+
+    //    $("#form-add-note"+contract).submit(function(event) {
+    //        $.ajax({
+    //            type: 'post',
+    //            url: './script/add-note.php',
+    //            data: {
+    //                user : user,
+    //                contract : contract,
+    //                msg : msg,
+    //            }
+    //        });
+    //    });
+    
+    //    $("#notepad-submit"+contract).click(function(e) {
+            
+    //    });
+    //});
+    
+
+</script>
+
+
+
