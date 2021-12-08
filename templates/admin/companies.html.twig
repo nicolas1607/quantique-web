@@ -81,18 +81,18 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th scope="col">Nom de l'entreprise</th>
-                    <th scope="col">Téléphone</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">Entreprise</th>
+                    <th id="head-tel" scope="col">Téléphone</th>
+                    <th id="head-email" scope="col">Email</th>
+                    <th id="head-action" scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for company in companies|reverse %}
                 <tr id="company{{company.id}}" class="table-light company {{company.name}}">
                     <td class="company{{company.id}}">{{ company.name }}</td>
-                    <td class="company{{company.id}}">{{ company.phone }}</td>
-                    <td class="company{{company.id}}">{{ company.email }}</td>
+                    <td id="body-tel" class="company{{company.id}}">{{ company.phone }}</td>
+                    <td id="body-email" class="company{{company.id}}">{{ company.email }}</td>
                     <td>
                         <ul class="action-list">
                             <li class="action-item">
@@ -142,6 +142,8 @@
 
 </body>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <script>
 
     const cont = document.querySelector('.container');
@@ -161,6 +163,47 @@
             });
         }
     }
+
+    // responsive min-height : 768px
+    window.addEventListener('load', function(){
+        if (screen.width < 768) {
+            console.log('yes');
+            document.querySelector('#head-tel').style.display = 'none';
+            document.querySelector('#head-email').style.display = 'none';
+            document.querySelector('#body-tel').style.display = 'none';
+            document.querySelector('#body-email').style.display = 'none';
+        } else {
+            document.querySelector('#head-tel').style.display = null;
+            document.querySelector('#head-email').style.display = null;
+            document.querySelector('#body-tel').style.display = null;
+            document.querySelector('#body-email').style.display = null;
+        }
+        if (screen.width < 460) {
+            document.querySelector('#head-action').style.display = 'none';
+        } else {
+            document.querySelector('#head-action').style.display = 'block';
+        }
+    })
+    window.addEventListener('resize', function(){
+        if (screen.width < 768) {
+            console.log('yes');
+            document.querySelector('#head-tel').style.display = 'none';
+            document.querySelector('#head-email').style.display = 'none';
+            document.querySelector('#body-tel').style.display = 'none';
+            document.querySelector('#body-email').style.display = 'none';
+        } else {
+            document.querySelector('#head-tel').style.display = null;
+            document.querySelector('#head-email').style.display = null;
+            document.querySelector('#body-tel').style.display = null;
+            document.querySelector('#body-email').style.display = null;
+        }
+        if (screen.width < 460) {
+            document.querySelector('#head-action').style.display = 'none';
+        } else {
+            document.querySelector('#head-action').style.display = 'block';
+        }
+    });
+    
 
 </script>
 

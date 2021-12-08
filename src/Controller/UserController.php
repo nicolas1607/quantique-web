@@ -116,6 +116,8 @@ class UserController extends AbstractController
             }
         }
 
+
+
         return $this->render('admin/companies.html.twig', [
             'users' => $users,
             'companies' => $companies,

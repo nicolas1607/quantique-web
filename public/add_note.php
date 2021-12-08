@@ -3,10 +3,9 @@
 $user = $_POST['user'];
 $contract = $_POST['contract'];
 $msg = $_POST['msg'];
+$msg = str_replace("\r\n", "\n", $_POST['msg']);
 $datetime = new DateTime();
 $date = $datetime->format('Y-m-d H:i:s');
-
-header('Content-Type: application/json');
 
 try {
     $conn = new PDO('mysql:host=127.0.0.1:8889;dbname=quantique-web', 'root', 'root');

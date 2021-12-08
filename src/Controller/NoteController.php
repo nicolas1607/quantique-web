@@ -82,34 +82,4 @@ class NoteController extends AbstractController
 
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
-
-    /**
-     * @Route("/admin/script/note/add/{user}/{contract}", name="script_add_note")
-     */
-    function addNote(Request $request, User $user, Contract $contract)
-    {
-        $user = $user->getId();
-        $contract = $contract->getId();
-        $msg = str_replace("\r\n", "\n", $request->get('message'));
-        $datetime = new DateTime();
-        $date = $datetime->format('Y-m-d H:i:s');
-
-        try {
-            $conn = new PDO('mysql:host=127.0.0.1:8889;dbname=quantique-web', 'root', 'root');
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            echo "Erreur : " . $e->getMessage();
-        }
-
-
-        $stmt = $conn->prepare(
-            "INSERT INTO note (user_id, contract_id, message, released_at) 
-                    VALUES (:user, :contract, :msg, :date)"
-        );
-        $stmt->bindParam(':user', $user);
-        $stmt->bindParam(':contract', $contract);
-        $stmt->bindParam(':msg', $msg);
-        $stmt->bindParam(':date', $date);
-        $stmt->execute();
-    }
 }

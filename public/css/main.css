@@ -50,6 +50,16 @@ h3 {
   font-size: 1.2rem;
 }
 
+@media screen and (min-width : 576px) {
+
+}
+@media screen and (min-width : 1200px) {
+
+}
+@media screen and (min-width : 1200px) {
+
+}
+
 /* Générique */
 
 :root {
@@ -61,7 +71,18 @@ h3 {
 
 body {
   position: relative;
-  margin-top: 8rem;
+  margin-top: 14rem;
+}
+
+@media screen and (min-width : 576px) {
+  body {
+    margin-top: 10rem;
+  }
+}
+@media screen and (min-width : 992px) {
+  body {
+    margin-top: 8rem;
+  }
 }
 
 mark {
@@ -235,9 +256,28 @@ input[type='checkbox'] {
 }
 
 .container {
-  padding-left: 7rem;
-  padding-right: 7rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
   margin-bottom: 8rem;
+}
+
+@media screen and (min-width : 576px) {
+  .container {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+@media screen and (min-width : 992px) {
+  .container {
+    padding-left: 6rem;
+    padding-right: 6rem;
+  }
+}
+@media screen and (min-width : 1200px) {
+  .container {
+    padding-left: 8rem;
+    padding-right: 8rem;
+  }
 }
 
 .cont-title {
@@ -370,8 +410,25 @@ input[type='checkbox'] {
 }
 
 .navbar-logo {
-  width: 10rem;
+  width: 22rem;
+  padding: 2rem;
 }
+@media screen and (min-width : 576px) {
+  .navbar-logo {
+    width: 18rem;
+  }
+}
+@media screen and (min-width : 992px) {
+  .navbar-logo {
+    width: 14rem;
+  }
+}
+@media screen and (min-width : 1200px) {
+  .navbar-logo {
+    width: 10rem;
+  }
+}
+
 
 .navbar-content {
   margin-left: 2rem;
@@ -511,6 +568,17 @@ h3 .action-link {
 
 #typeContract {
   margin-bottom: 0;
+}
+
+.company {
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (min-width : 460px) {
+  .company {
+    display: table-row;
+  }
 }
 
 /* Company vue */

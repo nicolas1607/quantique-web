@@ -1,3 +1,4 @@
+{% set newId = 0 %}
 {% if is_granted('ROLE_ADMIN') %}
 {% for website in company.websites %}
 {% for contract in website.contracts %}
@@ -9,7 +10,10 @@
     <div class="notepad-content">
         <div class="notepad-notes">
             {% for note in contract.notes|reverse %}
-            <div class="notepad-item">
+            {% if note.id > newId %}
+                {% set newId = note.id %}
+            {% endif %}
+            <div id="notepad-item{{note.id}}" class="notepad-item">
                 <p class="note-date">{{note.releasedAt|date("d/m/Y")}}</p>
                 <p class="note-msg">{{note.message|nl2br}}</p>
                 <a class="nav-link" href="{{path('delete_note', {'note': note.id})}}" title="Supprimer la note">
@@ -18,7 +22,7 @@
             </div>
             {% endfor %}
         </div>
-        <form method="POST" id="form-add-note{{contract.id}}" class="cont-note form-add-note">
+        <form id="form-add-note{{contract.id}}" class="cont-note form-add-note" data-path="{{asset('js/script/add-note.php')}}" action="add_note.php" method="POST" onsubmit="return validateForm({{contract.id}})">
             <div hidden>
                 <label for="contract">Contrat</label>
                 <input class="form-control" name="contract" value="{{contract.id}}"></input>
@@ -27,19 +31,8 @@
                 <label id="{{app.user.id}}" class="user" for="message">Message</label>
                 <textarea id="msg" class="form-control" name="message" rows="1" required></textarea>
             </div>
-            <a id="notepad-submit{{contract.id}}" class="btn-type btn-form notepad-btn" onclick="submit({{contract.id}})">Envoyer</a>
+            <a id="notepad-submit{{contract.id}}" class="btn-type btn-form notepad-btn" onclick="validateForm({{contract.id}})">Envoyer</a>
         </form>
-        <!-- <form id="form-add-note{{contract.id}}" class="cont-note form-add-note" data-path="{{asset('js/script/add-note.php')}}" method="POST">
-            <div hidden>
-                <label for="contract">Contrat</label>
-                <input class="form-control" name="contract" value="{{contract.id}}"></input>
-            </div>
-            <div>
-                <label id="{{app.user.id}}" class="user" for="message">Message</label>
-                <textarea id="msg" class="form-control" name="message" rows="1" required></textarea>
-            </div>
-            <button id="notepad-submit{{contract.id}}" class="btn-type btn-form notepad-btn">Envoyer</button>
-        </form> -->
     </div>
 </div>
 {% endfor %}
@@ -50,47 +43,75 @@
 
 <script>
 
-    function submit(id) {
+    function validateForm(id) {
         const form = document.querySelector('#form-add-note'+id)
         const user = form.querySelector('.user').id;
         const contract = form.id.substr(13);
         const msg = form.querySelector('#msg').value;
         $.ajax({
-            type: 'post',
-            url: './script/add-note.php',
+            type: 'POST',
+            url: '/add_note.php',
             data: {
                 user : user,
                 contract : contract,
                 msg : msg,
             }
         });
+        // création du DOM
+        const notepad = document.querySelector('#notepad'+contract)
+                                .querySelector('.notepad-notes');
+
+        const notepadItem = document.createElement('div');
+        {% set noteId = noteId + 1 %}
+        notepadItem.id = "notepad-item" + {{noteId}};
+        notepadItem.className = "notepad-item";
+
+        const noteDate = document.createElement('p');
+        noteDate.className = "note-date";
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+        today = dd + '/' + mm + '/' + yyyy;
+        noteDate.innerHTML = today;
+
+        const noteMsg = document.createElement('p');
+        noteMsg.className = "note-msg";
+        noteMsg.innerHTML = document.querySelector('#notepad'+contract)
+                                    .querySelector('#msg').value
+                                    .replaceAll('\n', '<br/>');
+
+        const navLink = document.createElement('a');
+        navLink.className = "nav-link";
+
+        navLink.href = "{{path('delete_note', {'note': noteId+1})}}";
+        navLink.href = decodeURI(navLink.href);
+        navLink.title = "Supprimer la note";
+
+        const navFont = document.createElement('i');
+        navFont.className = "fas fa-times";
+
+        notepadItem.appendChild(noteDate);
+        notepadItem.appendChild(noteMsg);
+        notepadItem.appendChild(navLink);
+        navLink.appendChild(navFont);
+
+        // récupère l'id max du #notepad+id
+        let noteId = 0;
+        const items = document.querySelector('#notepad'+contract).querySelectorAll('.notepad-item');
+        items.forEach(function(item) {
+            let newId = item.id.substr(12);
+            if (newId > noteId) noteId = newId;
+        })
+        if (document.querySelector('#notepad-item'+noteId)) {
+            notepad.insertBefore(notepadItem, document.querySelector('#notepad-item'+noteId));
+        } else {
+            document.querySelector('#notepad'+contract).querySelector('.notepad-notes')
+                    .appendChild(notepadItem);
+        }
+
+        // on reset le textarea
+        document.querySelector('#msg').value = "";
     }
 
-    //const forms = document.querySelectorAll('.form-add-note');
-    //forms.forEach(function(form){
-    //    const user = form.querySelector('.user').id;
-    //    const contract = form.id.substr(13);
-    //    const msg = form.querySelector('#msg').value;
-
-    //    $("#form-add-note"+contract).submit(function(event) {
-    //        $.ajax({
-    //            type: 'post',
-    //            url: './script/add-note.php',
-    //            data: {
-    //                user : user,
-    //                contract : contract,
-    //                msg : msg,
-    //            }
-    //        });
-    //    });
-    
-    //    $("#notepad-submit"+contract).click(function(e) {
-            
-    //    });
-    //});
-    
-
 </script>
-
-
-

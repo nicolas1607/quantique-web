@@ -85,11 +85,20 @@ class CompanyController extends AbstractController
             $this->add_note($user, $contract, $msg);
         }
 
+        // GET MAX ID NOTE
+        $id = 0;
+        $notes = $this->em->getRepository(Note::class)->findAll();
+        foreach ($notes as $note) {
+            if ($note->getId() > $id) {
+                $id = $note->getId();
+            }
+        }
 
         return $this->render('company/show_contracts.html.twig', [
             'users' => $users,
             'company' => $company,
             'typesContract' => $typesContract,
+            'noteId' => $id,
             'edit_password_form' => $editPasswordForm->createView()
         ]);
     }
