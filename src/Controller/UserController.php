@@ -220,7 +220,7 @@ class UserController extends AbstractController
         $this->em->flush();
 
         // mail de confirmation
-        if ($user) {
+        if ($user->getId()) {
             $email = (new TemplatedEmail())
                 ->from('noreply@quantique-web.fr')
                 ->to($user->getEmail())
@@ -233,7 +233,7 @@ class UserController extends AbstractController
 
             $mailer->send($email);
         }
-        if ($userexist) {
+        if ($userexist->getId()) {
             $email = (new TemplatedEmail())
                 ->from('noreply@quantique-web.fr')
                 ->to($userexist->getEmail())
@@ -251,7 +251,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/admin/user/edit/modal/{user}", name="edit_user_modal")
+     * @Route("/profile/user/edit/modal/{user}", name="edit_user_modal")
      */
     public function edit(Request $request, User $user): Response
     {

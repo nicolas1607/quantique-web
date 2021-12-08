@@ -29,7 +29,7 @@
             </div>
             <div>
                 <label id="{{app.user.id}}" class="user" for="message">Message</label>
-                <textarea id="msg" class="form-control" name="message" rows="1" required></textarea>
+                <textarea class="form-control msg" name="message" rows="1" required></textarea>
             </div>
             <a id="notepad-submit{{contract.id}}" class="btn-type btn-form notepad-btn" onclick="validateForm({{contract.id}})">Envoyer</a>
         </form>
@@ -42,6 +42,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script>
+
+    let nb = {{noteId}};
 
     function deleteForm(id) {
         $.ajax({
@@ -56,7 +58,7 @@
         const form = document.querySelector('#form-add-note'+id)
         const user = form.querySelector('.user').id;
         const contract = form.id.substr(13);
-        const msg = form.querySelector('#msg').value;
+        const msg = form.querySelector('.msg').value;
         $.ajax({
             type: 'POST',
             url: '/add_note.php',
@@ -71,8 +73,8 @@
                                 .querySelector('.notepad-notes');
 
         const notepadItem = document.createElement('div');
-        {% set noteId = noteId + 1 %}
-        notepadItem.id = "notepad-item" + {{noteId}};
+        nb++;
+        notepadItem.id = "notepad-item" + nb;
         notepadItem.className = "notepad-item";
 
         const noteDate = document.createElement('p');
@@ -87,13 +89,13 @@
         const noteMsg = document.createElement('p');
         noteMsg.className = "note-msg";
         noteMsg.innerHTML = document.querySelector('#notepad'+contract)
-                                    .querySelector('#msg').value
+                                    .querySelector('.msg').value
                                     .replaceAll('\n', '<br/>');
 
         const navLink = document.createElement('a');
         navLink.className = "nav-link";
 
-        navLink.setAttribute('onclick', "deleteForm({{noteId}})");
+        navLink.setAttribute('onclick', "deleteForm("+nb+")");
         navLink.title = "Supprimer la note";
 
         const navFont = document.createElement('i');
@@ -119,7 +121,7 @@
         }
 
         // on reset le textarea
-        document.querySelector('#notepad'+contract).querySelector('#msg').value = "";
+        document.querySelector('#notepad'+contract).querySelector('.msg').value = "";
     }
 
 </script>

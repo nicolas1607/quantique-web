@@ -9,7 +9,6 @@ typeRemove.forEach(function (type) {
         let id;
         let del = deletes[i];
         if (type == 'user') id = del.id.substr(11);
-        console.log(id);
         let modal = document.querySelector('#modal-remove-' + type + id);
         del.addEventListener('click', () => {
             modal.style.visibility = 'visible';

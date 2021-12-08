@@ -27,16 +27,16 @@
         <div>
             <div class="cont-flex-space mdl-btn-contract">
                 {% for type in typesContract %}
-                <button id="edit-{{type.lib}}-btn" class="btn-contract btn-type form-btn btn5" type="button">+
+                <button class="btn-contract btn-type form-btn btn5 edit-{{type.lib}}-btn" type="button">+
                     {{type.lib}}</button>
                 {% endfor %}
             </div>
             <div>
                 {% for type in typesContract %}
-                <div id="edit-{{type.lib}}-form" class="form-type form-contract cont-grid-contract mdl-form-contract"
+                <div class="form-type form-contract cont-grid-contract mdl-form-contract edit-{{type.lib}}-form"
                     style="display: none">
                     <div class="form-contract-title">
-                        <input id="edit-{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox"
+                        <input class="edit-{{type.lib}}-check" type="checkbox"
                             name="{{type.lib}}-check" hidden>
                         <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
                     </div>
@@ -46,14 +46,14 @@
                             {% set flag = false %}
                             {% for contract in website.contracts %}
                             {% if contract.type.name == type.name %}
-                            <input id="edit-{{type.lib}}-price" class="form-control" name="{{type.lib}}-price"
+                            <input class="form-control edit-{{type.lib}}-price" name="{{type.lib}}-price"
                                 value="{{contract.price}}">
                             {% set flag = true %}
                             {% endif %}
                             {% endfor %}
 
                             {% if flag == false %}
-                            <input id="edit-{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                            <input class="form-control edit-{{type.lib}}-price" name="{{type.lib}}-price">
                             {% endif %}
                         </div>
                         <div>
@@ -62,9 +62,9 @@
                             {% for contract in website.contracts %}
                             {% if contract.type.name == type.name %}
                             {% if contract.promotion == 0 %}
-                            <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                            <input class="form-control edit-{{type.lib}}-promotion" name="{{type.lib}}-promotion">
                             {% else %}
-                            <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion"
+                            <input class="form-control edit-{{type.lib}}-promotion" name="{{type.lib}}-promotion"
                                 value="{{contract.promotion}}">
                             {% endif %}
                             {% set flag = true %}
@@ -72,7 +72,7 @@
                             {% endfor %}
 
                             {% if flag == false %}
-                            <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                            <input class="form-control edit-{{type.lib}}-promotion" name="{{type.lib}}-promotion">
                             {% endif %}
                         </div>
                     </div>

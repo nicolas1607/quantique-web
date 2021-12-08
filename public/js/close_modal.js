@@ -43,13 +43,21 @@ modalElements.forEach(function (modal) {
             });
         }
     });
-    // fermer en cliquant en dehors
-    // document.getElementsByTagName('body')[0].addEventListener('click', () => {
-    //     modal.style.visibility = 'hidden';
-    //     navbar.style.opacity = 1;
-    //     cont.style.opacity = 1;
-    //     buttons.forEach(function (btn) {
-    //         btn.style.pointerEvents = 'auto';
-    //     });
-    // });
 });
+
+// document.addEventListener('click', closeModal);
+
+// function closeModal() {
+//     modalElements.forEach(function (modal) {
+//         if (modal.style.visibility == 'visible') {
+//             document.addEventListener('click', () => {
+//                 modal.style.visibility = 'hidden';
+//                 navbar.style.opacity = 1;
+//                 cont.style.opacity = 1;
+//                 buttons.forEach(function (btn) {
+//                     btn.style.pointerEvents = 'auto';
+//                 });
+//             })
+//         }
+//     });
+// }
