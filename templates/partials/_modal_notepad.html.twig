@@ -16,9 +16,9 @@
             <div id="notepad-item{{note.id}}" class="notepad-item">
                 <p class="note-date">{{note.releasedAt|date("d/m/Y")}}</p>
                 <p class="note-msg">{{note.message|nl2br}}</p>
-                <a class="nav-link" href="{{path('delete_note', {'note': note.id})}}" title="Supprimer la note">
+                <button class="nav-link" title="Supprimer la note" onclick="deleteForm({{note.id}})">
                     <i class="fas fa-times"></i>
-                </a>
+                </button>
             </div>
             {% endfor %}
         </div>
@@ -42,6 +42,15 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script>
+
+    function deleteForm(id) {
+        $.ajax({
+            type: 'POST',
+            url: '/delete_note.php',
+            data: {id : id}
+        });
+        document.querySelector('#notepad-item'+id).remove();
+    }
 
     function validateForm(id) {
         const form = document.querySelector('#form-add-note'+id)
@@ -84,8 +93,7 @@
         const navLink = document.createElement('a');
         navLink.className = "nav-link";
 
-        navLink.href = "{{path('delete_note', {'note': noteId+1})}}";
-        navLink.href = decodeURI(navLink.href);
+        navLink.setAttribute('onclick', "deleteForm({{noteId}})");
         navLink.title = "Supprimer la note";
 
         const navFont = document.createElement('i');
@@ -111,7 +119,7 @@
         }
 
         // on reset le textarea
-        document.querySelector('#msg').value = "";
+        document.querySelector('#notepad'+contract).querySelector('#msg').value = "";
     }
 
 </script>
