@@ -23,8 +23,8 @@ class CompanyType extends AbstractType
                 ]
             ])
             ->add('email', EmailType::class, [
-                'label' => 'Email',
-                'required' => false,
+                'label' => 'Email *',
+                'required' => true,
                 'attr' => [
                     'class' => 'form-control'
                 ]

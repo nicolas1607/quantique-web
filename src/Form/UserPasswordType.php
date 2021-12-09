@@ -18,7 +18,6 @@ class UserPasswordType extends AbstractType
         $builder
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'Les mdps doivent correspondre !',
                 'constraints' => [
                     new NotBlank(),
                 ],

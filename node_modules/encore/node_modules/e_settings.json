@@ -1,0 +1,4 @@
+{
+    "templates": "handlebars",
+    "views_home": "/app/views/"
+}

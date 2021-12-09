@@ -150,6 +150,7 @@ class UserController extends AbstractController
         $editPasswordForm->handleRequest($request);
 
         if ($editPasswordForm->isSubmitted() && $editPasswordForm->isValid()) {
+
             $password = $editPasswordForm->get('password')->getData();
             $passwordEncoded = $encoder->hashPassword($user, $password);
             $user->setPassword($passwordEncoded)
@@ -159,6 +160,8 @@ class UserController extends AbstractController
             $this->em->flush();
 
             $this->addFlash('success', 'Mot de passe modifié avec succès !');
+        } else if ($editPasswordForm->isSubmitted() && !$editPasswordForm->isValid()) {
+            $this->addFlash('alert', 'Les mots de passe doivent correspondre !');
         }
 
         return $this->render('admin/users.html.twig', [
@@ -359,9 +362,7 @@ class UserController extends AbstractController
     public function resetPasswordWithToken(Request $request, String $token, UserPasswordHasherInterface $encoder): Response
     {
         $user = $this->em->getRepository(User::class)->findOneBy(['token' => $token]);
-
         $editUserForm = $this->createForm(UserPasswordType::class, $user);
-
         $editUserForm->handleRequest($request);
 
         if ($editUserForm->isSubmitted() && $editUserForm->isValid()) {
@@ -387,7 +388,11 @@ class UserController extends AbstractController
                     'user' => $user->getId()
                 ]);
             }
+        } else if ($editUserForm->isSubmitted() && !$editUserForm->isValid()) {
+            $this->addFlash('alert', 'Les mots de passe doivent correspondre !');
+            return $this->redirect($_SERVER['HTTP_REFERER']);
         }
+
 
         return $this->render('user/edit_password.html.twig', [
             'user' => $user,
@@ -400,8 +405,8 @@ class UserController extends AbstractController
      */
     public function editPassword(Request $request, User $user, UserPasswordHasherInterface $encoder): Response
     {
-        $editUserForm = $this->createForm(UserPasswordType::class, $user);
 
+        $editUserForm = $this->createForm(UserPasswordType::class, $user);
         $editUserForm->handleRequest($request);
 
         if ($editUserForm->isSubmitted() && $editUserForm->isValid()) {
@@ -427,7 +432,12 @@ class UserController extends AbstractController
             }
 
             $this->addFlash('success', 'Mot de passe modifié avec succès !');
+        } else if ($editUserForm->isSubmitted() && !$editUserForm->isValid()) {
+            $this->addFlash('alert', 'Les mots de passe doivent correspondre !');
+            return $this->redirect($_SERVER['HTTP_REFERER']);
         }
+
+
 
         return $this->render('user/edit_password.html.twig', [
             'user' => $user,

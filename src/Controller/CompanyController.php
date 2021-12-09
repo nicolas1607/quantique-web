@@ -325,18 +325,25 @@ class CompanyController extends AbstractController
      */
     public function edit(Request $request, Company $company): Response
     {
-        $company->setName($request->get('name'))
-            ->setEmail($request->get('email'))
-            ->setPhone($request->get('phone'))
-            ->setAddress($request->get('address'))
-            ->setPostalCode($request->get('postalCode'))
-            ->setCity($request->get('city'))
-            ->setNumTVA($request->get('numTVA'))
-            ->setSiret($request->get('siret'));
-        $this->em->persist($company);
-        $this->em->flush();
+        $email = $request->get('email');
+        // verif si email valide
+        if (!preg_match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$^", $email)) {
+            $this->addFlash('alert', 'Veuillez saisir une adresse email valide !');
+            return $this->redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            $company->setName($request->get('name'))
+                ->setEmail($request->get('email'))
+                ->setPhone($request->get('phone'))
+                ->setAddress($request->get('address'))
+                ->setPostalCode($request->get('postalCode'))
+                ->setCity($request->get('city'))
+                ->setNumTVA($request->get('numTVA'))
+                ->setSiret($request->get('siret'));
+            $this->em->persist($company);
+            $this->em->flush();
 
-        $this->addFlash('success', $company->getName() . ' modifiée avec succès !');
+            $this->addFlash('success', $company->getName() . ' modifiée avec succès !');
+        }
 
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
@@ -368,7 +375,7 @@ class CompanyController extends AbstractController
         $this->em->remove($company);
         $this->em->flush();
 
-        $this->addFlash('success', $company->getName() . 'supprimée avec succès !');
+        $this->addFlash('success', $company->getName() . ' supprimée avec succès !');
 
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
