@@ -109,6 +109,8 @@ class InvoiceController extends AbstractController
         $this->em->remove($invoice);
         $this->em->flush();
 
+        $this->addFlash('success', 'Facture supprimée avec succès !');
+
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 }

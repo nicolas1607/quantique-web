@@ -59,23 +59,23 @@ class ContractController extends AbstractController
     /**
      * @Route("/admin/contract/edit/{contract}", name="edit_contract")
      */
-    public function edit(Request $request, Contract $contract): Response
-    {
-        $updateContractForm = $this->createForm(ContractEditType::class, $contract);
-        $updateContractForm->handleRequest($request);
+    // public function edit(Request $request, Contract $contract): Response
+    // {
+    //     $updateContractForm = $this->createForm(ContractEditType::class, $contract);
+    //     $updateContractForm->handleRequest($request);
 
-        if ($updateContractForm->isSubmitted() && $updateContractForm->isValid()) {
-            $this->em->flush();
-            return $this->redirectToRoute('show_contracts', ['company' => $contract->getWebsite()->getCompany()->getId()]);
+    //     if ($updateContractForm->isSubmitted() && $updateContractForm->isValid()) {
+    //         $this->em->flush();
+    //         return $this->redirectToRoute('show_contracts', ['company' => $contract->getWebsite()->getCompany()->getId()]);
 
-            return $this->redirect($_SERVER['HTTP_REFERER']);
-        }
+    //         return $this->redirect($_SERVER['HTTP_REFERER']);
+    //     }
 
-        return $this->render('contract/edit.html.twig', [
-            'edit_contract_form' => $updateContractForm->createView(),
-            'contract' => $contract,
-        ]);
-    }
+    //     return $this->render('contract/edit.html.twig', [
+    //         'edit_contract_form' => $updateContractForm->createView(),
+    //         'contract' => $contract,
+    //     ]);
+    // }
 
     /**
      * @Route("/admin/contract/delete/{contract}", name="delete_contract")
@@ -85,6 +85,11 @@ class ContractController extends AbstractController
         $contract->getWebsite()->removeContract($contract);
         $this->em->remove($contract);
         $this->em->flush();
+
+        $this->addFlash(
+            'success',
+            $contract->getWebsite() . ' : contrat ' . $contract->getType()->getName() . ' supprimé avec succès !'
+        );
 
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }

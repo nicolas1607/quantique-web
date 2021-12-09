@@ -18,7 +18,7 @@ class InvoiceType extends AbstractType
     {
         $builder->add('files', FileType::class, [
             'label' => 'Fichiers PDF *',
-            'required' => false,
+            'required' => true,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-control'

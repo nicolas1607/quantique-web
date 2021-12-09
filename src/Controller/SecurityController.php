@@ -39,12 +39,12 @@ class SecurityController extends AbstractController
                 $this->em->flush();
                 if ($this->getUser()->getNbConnection() == null) {
                     return $this->redirectToRoute('edit_user_password', ['user' => $this->getUser()->getId()]);
-                } else if ($this->getUser()->getCompanies()[0]->getId()) {
+                } else if ($this->getUser()->getCompanies()[0]) {
                     return $this->redirectToRoute('show_contracts', [
                         'company' => $this->getUser()->getCompanies()[0]->getId()
                     ]);
                 } else {
-                    return $this->redirectToRoute('user_profile');
+                    return $this->redirectToRoute('nothing');
                 }
             }
         }

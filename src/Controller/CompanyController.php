@@ -74,15 +74,8 @@ class CompanyController extends AbstractController
 
             $this->em->persist($this->getUser());
             $this->em->flush();
-        }
 
-        // ADD NOTE
-        $msg = $request->get('message');
-        if ($msg != null) {
-            $user = $this->getUser();
-            $contract = $this->em->getRepository(Contract::class)
-                ->findOneBy(['id' => $request->get('contract')]);
-            $this->add_note($user, $contract, $msg);
+            $this->addFlash('success', 'Mot de passe modifié avec succès !');
         }
 
         // GET MAX ID NOTE
@@ -119,6 +112,8 @@ class CompanyController extends AbstractController
 
             $this->em->persist($this->getUser());
             $this->em->flush();
+
+            $this->addFlash('success', 'Mot de passe modifié avec succès !');
         }
 
         // Formulaire d'ajout de facture
@@ -127,8 +122,6 @@ class CompanyController extends AbstractController
         $addInvoiceForm->handleRequest($request);
 
         if ($addInvoiceForm->isSubmitted() && $addInvoiceForm->isValid()) {
-            // $company = $this->em->getRepository(Company::class)->findOneBy(['name' => $request->get('company')]);
-
             $company = $request->get('company');
 
             // Fichier PDF *
@@ -180,6 +173,8 @@ class CompanyController extends AbstractController
 
                 $mailer->send($email);
             }
+
+            $this->addFlash('success', 'Facture(s) ajoutée(s) à ' . $company->getName() . ' !');
         }
 
         $currentDate = new DateTime();
@@ -265,7 +260,7 @@ class CompanyController extends AbstractController
     /**
      * @Route("/admin/company/add", name="add_company")
      */
-    public function add(Request $request): Response
+    public function addAll(Request $request): Response
     {
         $company = new Company();
         $addCompanyForm = $this->createForm(CompanyType::class, $company);
@@ -312,6 +307,8 @@ class CompanyController extends AbstractController
             $this->em->persist($company);
             $this->em->flush();
 
+            $this->addFlash('success', $company->getName() . ' ajoutée avec succès !');
+
             return $this->redirectToRoute('admin_companies');
         }
 
@@ -339,6 +336,8 @@ class CompanyController extends AbstractController
         $this->em->persist($company);
         $this->em->flush();
 
+        $this->addFlash('success', $company->getName() . ' modifiée avec succès !');
+
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 
@@ -353,6 +352,11 @@ class CompanyController extends AbstractController
         $this->em->persist($company);
         $this->em->flush();
 
+        $this->addFlash(
+            'success',
+            $user->getFirstname() . ' ' . $user->getLastname() . ' supprimé(e) avec succès de ' . $company->getName() . ' !'
+        );
+
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 
@@ -364,34 +368,8 @@ class CompanyController extends AbstractController
         $this->em->remove($company);
         $this->em->flush();
 
+        $this->addFlash('success', $company->getName() . 'supprimée avec succès !');
+
         return $this->redirect($_SERVER['HTTP_REFERER']);
-    }
-
-    // FUNCTIONS //
-
-    function add_note(User $user, Contract $contract, String $note)
-    {
-        try {
-            $conn = new PDO('mysql:host=127.0.0.1:8889;dbname=quantique-web', 'root', 'root');
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            echo "Erreur : " . $e->getMessage();
-        }
-
-        $msg = str_replace("\r\n", "\n", $note);
-        $datetime = new DateTime();
-        $date = $datetime->format('Y-m-d H:i:s');
-        $user = $user->getId();
-        $contract = $contract->getId();
-
-        $stmt = $conn->prepare(
-            "INSERT INTO note (user_id, contract_id, message, released_at) 
-                VALUES (:user, :contract, :msg, :date)"
-        );
-        $stmt->bindParam(':user', $user);
-        $stmt->bindParam(':contract', $contract);
-        $stmt->bindParam(':msg', $msg);
-        $stmt->bindParam(':date', $date);
-        $stmt->execute();
     }
 }

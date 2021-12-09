@@ -22,9 +22,28 @@
 <body>
     {% include "partials/_navbar.html.twig" %}
 
+    {% for message in app.flashes('success') %}
+        <div class="alert-success bg-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('alert') %}
+        <div class="alert-success bg-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+
     {% block body %}{% endblock %}
 </body>
 
 </html>
 
 <script src="{{asset('js/jquery-3.6.0.js')}}"></script>
+
+<script>
+    setTimeout(() => {
+        let modal = document.querySelector('.alert-success');
+        if (modal) modal.remove();
+    }, 3000)
+</script>

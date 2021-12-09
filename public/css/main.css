@@ -258,7 +258,7 @@ input[type='checkbox'] {
 .container {
   padding-left: 2rem;
   padding-right: 2rem;
-  margin-bottom: 8rem;
+  margin-bottom: 4rem;
 }
 
 @media screen and (min-width : 576px) {
@@ -425,7 +425,8 @@ input[type='checkbox'] {
 }
 @media screen and (min-width : 1200px) {
   .navbar-logo {
-    width: 10rem;
+    padding: 1rem;
+    width: 12rem;
   }
 }
 
@@ -724,8 +725,8 @@ h3 .action-link {
 }
 
 .mdl-add-invoice {
-  top: 18%;
-  bottom: 18%;
+  top: 15%;
+  bottom: 15%;
 }
 
 .mdl-edit-user {
@@ -877,3 +878,104 @@ h3 .action-link {
   width: 25%;
   margin-right: 4rem;
 } 
+
+/* Alert Success */
+
+@keyframes bounce{
+  from {top: -1.2rem;}
+  50%  {top: -1rem;}
+  to   {top: -1.2rem;}
+}
+
+.alert-success {
+  position: absolute;
+  top: -10rem;
+  right: 2rem;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  animation: bounce 0.8s ease infinite;
+  color: var(--white);
+  opacity: 0.8;
+  font-size: .9rem;
+  text-align: right;
+}
+
+/* Erreur 404 */
+
+#notfound {
+  position: relative;
+  height: 60vh;
+}
+
+#notfound .notfound {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.notfound {
+  max-width: 520px;
+  width: 100%;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.notfound .notfound-404 {
+  position: relative;
+  height: 400px;
+  margin: 0px auto 20px;
+  z-index: -1;
+}
+
+.notfound .notfound-404 h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 236px;
+  font-weight: 200;
+  margin: 0px;
+  color: #211b19;
+  text-transform: uppercase;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.notfound .notfound-404 h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #211b19;
+  background: #fff;
+  padding: 10px 5px;
+  margin: auto;
+  display: inline-block;
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+}
+
+@media only screen and (max-width: 767px) {
+  .notfound .notfound-404 h1 {
+    font-size: 148px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .notfound .notfound-404 {
+    height: 148px;
+    margin: 0px auto 10px;
+  }
+  .notfound .notfound-404 h1 {
+    font-size: 86px;
+  }
+  .notfound .notfound-404 h2 {
+    font-size: 16px;
+  }
+}

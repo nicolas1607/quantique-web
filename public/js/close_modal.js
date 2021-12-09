@@ -44,20 +44,3 @@ modalElements.forEach(function (modal) {
         }
     });
 });
-
-// document.addEventListener('click', closeModal);
-
-// function closeModal() {
-//     modalElements.forEach(function (modal) {
-//         if (modal.style.visibility == 'visible') {
-//             document.addEventListener('click', () => {
-//                 modal.style.visibility = 'hidden';
-//                 navbar.style.opacity = 1;
-//                 cont.style.opacity = 1;
-//                 buttons.forEach(function (btn) {
-//                     btn.style.pointerEvents = 'auto';
-//                 });
-//             })
-//         }
-//     });
-// }

@@ -58,6 +58,8 @@ class WebsiteController extends AbstractController
         $this->em->persist($company);
         $this->em->flush();
 
+        $this->addFlash('success', $website->getName() . ' ajouté avec succès !');
+
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 
@@ -102,6 +104,8 @@ class WebsiteController extends AbstractController
                 $website->addContract($contract);
                 $this->em->persist($contract);
             }
+
+            $this->addFlash('success', $website->getName() . ' modifié avec succès !');
         }
 
         $this->em->persist($website);
@@ -117,6 +121,8 @@ class WebsiteController extends AbstractController
         $website->getCompany()->removeWebsite($website);
         $this->em->remove($website);
         $this->em->flush();
+
+        $this->addFlash('success', $website->getName() . ' supprimé avec succès !');
 
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }

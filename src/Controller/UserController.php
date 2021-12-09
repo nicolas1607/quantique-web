@@ -106,7 +106,8 @@ class UserController extends AbstractController
                     ->htmlTemplate('emails/invoice_confirmation.html.twig')
                     ->context([
                         'user' => $user,
-                        'company' => $company
+                        'company' => $company,
+                        'invoices' => $invoices
                     ]);
                 foreach ($invoices as $invoice) {
                     $email->attachFromPath($this->getParameter('invoices') . '/' . $invoice->getFile());
@@ -114,9 +115,9 @@ class UserController extends AbstractController
 
                 $mailer->send($email);
             }
+
+            $this->addFlash('success', 'Facture(s) ajoutée(s) à ' . $company->getName() . ' !');
         }
-
-
 
         return $this->render('admin/companies.html.twig', [
             'users' => $users,
@@ -151,10 +152,13 @@ class UserController extends AbstractController
         if ($editPasswordForm->isSubmitted() && $editPasswordForm->isValid()) {
             $password = $editPasswordForm->get('password')->getData();
             $passwordEncoded = $encoder->hashPassword($user, $password);
-            $user->setPassword($passwordEncoded);
+            $user->setPassword($passwordEncoded)
+                ->setToken(md5(uniqid()));
 
             $this->em->persist($user);
             $this->em->flush();
+
+            $this->addFlash('success', 'Mot de passe modifié avec succès !');
         }
 
         return $this->render('admin/users.html.twig', [
@@ -187,69 +191,90 @@ class UserController extends AbstractController
      */
     public function addFromModal(Request $request, UserPasswordHasherInterface $encoder, MailerInterface $mailer): Response
     {
-        $user = new User;
-        $userexist = new User;
-        $userExist = $request->get('user');
-        if ($userExist) {
-            $userexist = $this->em->getRepository(User::class)->findOneBy([
-                'id' => $userExist
-            ]);
+        $email = $request->get('email');
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
+        // verif si email valide
+        if (!preg_match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$^", $email)) {
+            $this->addFlash('alert', 'Veuillez saisir une adresse email valide !');
+            return $this->redirect($_SERVER['HTTP_REFERER']);
         }
-        if ($request->get('firstname') && $request->get('lastname') && $request->get('email')) {
-            $user->setFirstname($request->get('firstname'))
-                ->setLastname($request->get('lastname'))
-                ->setEmail($request->get('email'))
-                ->setPhone($request->get('phone'));
+        // verif si email inexistant
+        else if ($user) {
+            $this->addFlash('alert', 'L\'adresse email suivante existe déjà : ' . $email);
+            return $this->redirect($_SERVER['HTTP_REFERER']);
         }
-
-        $company = $this->em->getRepository(Company::class)->findOneBy(['name' => $request->get('company')]);
-        if ($userexist->getEmail()) {
-            $userexist->addCompany($company);
-            $company->addUser($userexist);
-            $this->em->persist($userexist);
-        }
-        if ($user->getEmail()) {
-            $user->addCompany($company);
-            $company->addUser($user);
-            $this->em->persist($user);
-        }
-
-        $password = 'quantique';
-        $passwordEncoded = $encoder->hashPassword($user, $password);
-        $user->setPassword($passwordEncoded);
-
-        $this->em->persist($company);
-        $this->em->flush();
-
-        // mail de confirmation
-        if ($user->getId()) {
-            $email = (new TemplatedEmail())
-                ->from('noreply@quantique-web.fr')
-                ->to($user->getEmail())
-                ->subject('Accédez à votre compte Quantique Web Office !')
-                ->htmlTemplate('emails/user_confirmation.html.twig')
-                ->context([
-                    'user' => $user,
-                    'password' => 'quantique'
+        // verif si newUser ou existUser à ajouter
+        else {
+            $user = new User;
+            $userexist = new User;
+            if ($request->get('user')) {
+                $userexist = $this->em->getRepository(User::class)->findOneBy([
+                    'id' => $request->get('user')
                 ]);
+            }
+            if ($request->get('firstname') && $request->get('lastname') && $request->get('email')) {
+                $user->setFirstname($request->get('firstname'))
+                    ->setLastname($request->get('lastname'))
+                    ->setEmail($request->get('email'))
+                    ->setPhone($request->get('phone'))
+                    ->setToken(md5(uniqid()));
+            }
 
-            $mailer->send($email);
+            $company = $this->em->getRepository(Company::class)->findOneBy(['name' => $request->get('company')]);
+            if ($userexist->getEmail()) {
+                $userexist->addCompany($company);
+                $company->addUser($userexist);
+                $this->em->persist($userexist);
+            }
+            if ($user->getEmail()) {
+                $user->addCompany($company);
+                $company->addUser($user);
+                $this->em->persist($user);
+            }
+
+            $password = 'quantique';
+            $passwordEncoded = $encoder->hashPassword($user, $password);
+            $user->setPassword($passwordEncoded);
+
+            $this->em->persist($company);
+            $this->em->flush();
+
+            // mail de confirmation
+            if ($user->getId()) {
+                $email = (new TemplatedEmail())
+                    ->from('noreply@quantique-web.fr')
+                    ->to($user->getEmail())
+                    ->subject('Accédez à votre compte Quantique Web Office !')
+                    ->htmlTemplate('emails/user_confirmation.html.twig')
+                    ->context([
+                        'user' => $user,
+                        'password' => 'quantique'
+                    ]);
+
+                $mailer->send($email);
+            }
+            if ($userexist->getId()) {
+                $email = (new TemplatedEmail())
+                    ->from('noreply@quantique-web.fr')
+                    ->to($userexist->getEmail())
+                    ->subject('Accédez à votre compte Quantique Web Office !')
+                    ->htmlTemplate('emails/user_confirmation.html.twig')
+                    ->context([
+                        'user' => $user,
+                        'password' => 'quantique'
+                    ]);
+
+                $mailer->send($email);
+            }
+
+            if ($user->getId() && $userexist->getId()) {
+                $this->addFlash('success', 'Clients ajoutés à ' . $company->getName() . ' !');
+            } else {
+                $this->addFlash('success', 'Client ajouté à ' . $company->getName() . ' !');
+            }
+
+            return $this->redirect($_SERVER['HTTP_REFERER']);
         }
-        if ($userexist->getId()) {
-            $email = (new TemplatedEmail())
-                ->from('noreply@quantique-web.fr')
-                ->to($userexist->getEmail())
-                ->subject('Accédez à votre compte Quantique Web Office !')
-                ->htmlTemplate('emails/user_confirmation.html.twig')
-                ->context([
-                    'user' => $user,
-                    'password' => 'quantique'
-                ]);
-
-            $mailer->send($email);
-        }
-
-        return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 
     /**
@@ -277,15 +302,97 @@ class UserController extends AbstractController
         //     $this->em->persist($accountFb);
         // }
 
-        $user->setFirstname($request->get('firstname'))
-            ->setLastname($request->get('lastname'))
-            ->setEmail($request->get('email'))
-            ->setPhone($request->get('phone'));
+        $email = $request->get('email');
+        if (!preg_match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$^", $email)) {
+            $this->addFlash('alert', 'Veuillez saisir une adresse email valide !');
+            return $this->redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            $user->setFirstname($request->get('firstname'))
+                ->setLastname($request->get('lastname'))
+                ->setEmail($request->get('email'))
+                ->setPhone($request->get('phone'));
 
-        $this->em->persist($user);
-        $this->em->flush();
+            $this->em->persist($user);
+            $this->em->flush();
 
+            $this->addFlash('success', 'Modification prise en compte !');
+        }
         return $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    /**
+     * @Route("/reset/password", name="reset_user_password")
+     */
+    public function resetPassword(): Response
+    {
+        return $this->render('security/reset_password.html.twig');
+    }
+
+    /**
+     * @Route("/reset/password/mail", name="send_reset_mail")
+     */
+    public function sendResetMail(Request $request, MailerInterface $mailer): Response
+    {
+        $user = $this->em->getRepository(User::class)->findOneBy([
+            'email' => $request->get('email')
+        ]);
+
+        $email = (new TemplatedEmail())
+            ->from('noreply@quantique-web.fr')
+            ->to($user->getEmail())
+            ->subject('Réinitialiser mon mot de passe !')
+            ->htmlTemplate('emails/reset_password.html.twig')
+            ->context([
+                'user' => $user
+            ]);
+
+        $mailer->send($email);
+
+        $this->addFlash('success', 'Vérifier votre adresse email pour réinitialiser votre mot de passe !');
+
+        return $this->redirectToRoute('app_login');
+    }
+
+    /**
+     * @Route("/reset/password/{token}", name="reset_user_password_with_token")
+     */
+    public function resetPasswordWithToken(Request $request, String $token, UserPasswordHasherInterface $encoder): Response
+    {
+        $user = $this->em->getRepository(User::class)->findOneBy(['token' => $token]);
+
+        $editUserForm = $this->createForm(UserPasswordType::class, $user);
+
+        $editUserForm->handleRequest($request);
+
+        if ($editUserForm->isSubmitted() && $editUserForm->isValid()) {
+            $user = $editUserForm->getData();
+
+            $password = $user->getPassword();
+            $passwordEncoded = $encoder->hashPassword($user, $password);
+            $user->setPassword($passwordEncoded)
+                ->setNbConnection($user->getNbConnection() + 1)
+                ->setToken(md5(uniqid()));
+
+            $this->em->persist($user);
+            $this->em->flush();
+
+            if (!$this->getUser()) {
+                return $this->redirectToRoute('app_login');
+            } else if ($this->getUser()->getCompanies()[0]) {
+                return $this->redirectToRoute('show_contracts', [
+                    'company' => $this->getUser()->getCompanies()[0]->getId()
+                ]);
+            } else {
+                return $this->redirectToRoute('nothing', [
+                    'user' => $user->getId()
+                ]);
+            }
+        }
+
+        return $this->render('user/edit_password.html.twig', [
+            'user' => $user,
+            'edit_user_form' => $editUserForm->createView()
+        ]);
     }
 
     /**
@@ -302,14 +409,24 @@ class UserController extends AbstractController
 
             $password = $user->getPassword();
             $passwordEncoded = $encoder->hashPassword($user, $password);
-            $user->setPassword($passwordEncoded);
-
-            $user->setNbConnection($user->getNbConnection() + 1);
+            $user->setPassword($passwordEncoded)
+                ->setNbConnection($user->getNbConnection() + 1)
+                ->setToken(md5(uniqid()));
 
             $this->em->persist($user);
             $this->em->flush();
 
-            return $this->redirectToRoute('show_contracts', ['company' => $this->getUser()->getCompanies()[0]->getId()]);
+            if ($this->getUser()->getCompanies()[0]) {
+                return $this->redirectToRoute('show_contracts', [
+                    'company' => $this->getUser()->getCompanies()[0]->getId()
+                ]);
+            } else {
+                return $this->redirectToRoute('nothing', [
+                    'user' => $user->getId()
+                ]);
+            }
+
+            $this->addFlash('success', 'Mot de passe modifié avec succès !');
         }
 
         return $this->render('user/edit_password.html.twig', [
@@ -326,6 +443,19 @@ class UserController extends AbstractController
         $this->em->remove($user);
         $this->em->flush();
 
+        $this->addFlash(
+            'success',
+            $user->getFirstname() . ' ' . $user->getLastname() . ' supprimé(e) avec succès !'
+        );
+
         return $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    /**
+     * @Route("/profile", name="nothing")
+     */
+    public function nothing(): Response
+    {
+        return $this->render('user/nothing.html.twig');
     }
 }

@@ -164,6 +164,25 @@
         }
     }
 
+    // function recap invoices
+    const files = document.querySelector('#invoice_files');
+    files.addEventListener('change', () => {
+        let recap = document.querySelector('#recap-invoice');
+        console.log(recap);
+        if (recap) recap.remove();
+        recap = document.createElement('div');
+        recap.id = "recap-invoice";
+        
+        for (let i=0; i<files.files.length; i++) {
+            const fileName = document.createElement('p');
+            fileName.innerHTML = files.files[i]['name'];
+            recap.appendChild(fileName);
+        }
+        const modal = document.querySelector('#modal-invoice').querySelector('form');
+        const mdlBtn = document.querySelector('#modal-invoice').querySelector('.mdl-btn');
+        modal.insertBefore(recap, mdlBtn);
+    });
+
     // responsive min-height : 768px
     window.addEventListener('load', function(){
         if (screen.width < 768) {

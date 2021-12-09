@@ -4,7 +4,6 @@
 
 {% block body %}
 
-{% for company in companies %}
 <!-- MODAL ADD USER -->
 <div id="modal-new-user" class="mdl-add-new-user">
     <div class="cont-flex-space mdl-header-form">
@@ -51,7 +50,8 @@
 </div>
 
 <!-- MODAL DELETE USER -->
-{% include "partials/_modal_delete_user.html.twig" with {'company': company} %}
+{% for user in users %}
+{% include "partials/_modal_delete_user.html.twig" with {'user': user} %}
 {% endfor %}
 
 {% for user in users %}

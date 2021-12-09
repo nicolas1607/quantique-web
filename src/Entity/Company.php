@@ -65,7 +65,7 @@ class Company
     private $websites;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="companies", cascade={"remove"})
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="companies")
      */
     private $users;
 
