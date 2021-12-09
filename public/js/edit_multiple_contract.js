@@ -6,15 +6,15 @@ typesEditContract.forEach(function (type) {
     const price = document.querySelectorAll('.edit-' + type + '-price');
     for (let i = 0; i < btn.length; i++) {
         btn[i].addEventListener('click', () => {
-            if (form[i].getAttribute('display') == 'none') {
+            if (form[i].style.display == 'none') {
                 price[i].setAttribute('required', 'required');
-                form[i].setAttribute('display', 'grid');
+                form[i].style.display = 'grid';
                 check[i].checked = true;
                 btn[i].setAttribute('style', 'background-color : #333');
                 btn[i].innerHTML = '- ' + type;
-            } else if (form[i].getAttribute('display') == 'grid') {
+            } else if (form[i].style.display == 'grid') {
                 price[i].removeAttribute('required');
-                form[i].setAttribute('display', 'none');
+                form[i].style.display = 'none';
                 check[i].checked = false;
                 btn[i].setAttribute('style', 'background-color : #F3AA10');
                 btn[i].innerHTML = '+ ' + type;

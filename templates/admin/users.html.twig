@@ -60,7 +60,7 @@
 {% endfor %}
 
 <!-- MODAL EDIT PASSWORD -->
-<div id="modal-edit-password{{app.user.id}}" class="mdl-edit-password">
+<div id="modal-edit-password" class="mdl-edit-password">
     <div class="cont-flex-space mdl-header-form">
         <div class="cont-flex">
             <i class="fas fa-unlock-alt fa-2x"></i>
@@ -70,8 +70,8 @@
     </div>
     {{ form_start(edit_password_form) }}
     <div class="form-section">
-        <label for="company">Identifiant</label>
-        <input class="form-control" type="text" value="{{app.user.email}}" readonly>
+        <label for="ident">Identifiant</label>
+        <input id="ident" class="form-control" name="ident" type="text" readonly>
     </div>
     <div class="form-section cont-grid">
         {{ form_row(edit_password_form.password) }}
@@ -84,6 +84,7 @@
     </div>
     {{ form_end(edit_password_form) }}
 </div>
+
 
 <div class="container">
     <h1>Espace administration</h1>
@@ -125,14 +126,12 @@
                 <td>{{ user.email }}</td>
                 <td>
                     <ul class="action-list">
-                        {% if app.user.id == user.id %}
                         <li class="action-item">
                             <a id="edit-password{{user.id}}" class="action-link edit-password"
                                 title="Modifier mon mot de passe">
                                 <i class="fas fa-key"></i>
                             </a>
                         </li>
-                        {% endif %}
                         <li class="action-item">
                             <a id="edit-user{{user.id}}" class="action-link edit-user" title="Modifier l'entreprise">
                                 <i class="fas fa-edit fa-lg"></i>
@@ -159,6 +158,16 @@
     const cont = document.querySelector('.container');
     const navbar = document.querySelector('.navbar');
     const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
+
+    const editPasswords = document.querySelectorAll('.edit-password');
+    let id; let editPass;
+    {% for i in 0..users|length-1 %}
+        editPass = editPasswords[{{i}}];
+        editPass.addEventListener('click', () => {
+            document.querySelector('#ident').value = '{{users[i].email}}';
+        })
+    {% endfor %}  
+        
 
 </script>
 

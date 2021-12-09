@@ -35,15 +35,16 @@ class SecurityController extends AbstractController
             if ($this->getUser()->getRoles()[0] == 'ROLE_ADMIN') {
                 return $this->redirectToRoute('admin_companies');
             } else {
-                $this->getUser()->setNbConnection($this->getUser()->getNbConnection() + 1);
                 $this->em->persist($this->getUser());
                 $this->em->flush();
-                if ($this->getUser()->getNbConnection() == 1) {
+                if ($this->getUser()->getNbConnection() == null) {
                     return $this->redirectToRoute('edit_user_password', ['user' => $this->getUser()->getId()]);
-                } else {
+                } else if ($this->getUser()->getCompanies()[0]->getId()) {
                     return $this->redirectToRoute('show_contracts', [
                         'company' => $this->getUser()->getCompanies()[0]->getId()
                     ]);
+                } else {
+                    return $this->redirectToRoute('user_profile');
                 }
             }
         }

@@ -13,7 +13,9 @@ typeDelete.forEach(function (type) {
         else if (type == 'website') id = del.id.substr(14);
         else if (type == 'contract') id = del.id.substr(15);
         else if (type == 'company') id = del.id.substr(14);
-        let modal = document.querySelector('#modal-' + type + id);
+        let modal;
+        if (type == 'website') modal = document.querySelector('#modal-delete-' + type + id);
+        else modal = document.querySelector('#modal-' + type + id);
         del.addEventListener('click', () => {
             modal.style.visibility = 'visible';
             navbar.style.opacity = 0.4;

@@ -92,7 +92,7 @@ class InvoiceController extends AbstractController
     // }
 
     /**
-     * @Route("/admin/invoice/download/{id}", name="download_invoice")
+     * @Route("/profile/invoice/download/{id}", name="download_invoice")
      */
     public function download(Invoice $id): Response
     {

@@ -347,7 +347,9 @@ class CompanyController extends AbstractController
      */
     public function remove(Company $company, User $user): Response
     {
+        $user->removeCompany($company);
         $company->removeUser($user);
+        $this->em->persist($user);
         $this->em->persist($company);
         $this->em->flush();
 

@@ -143,15 +143,17 @@ class UserController extends AbstractController
         $companies = $this->em->getRepository(Company::class)->findAll();
 
         // Formulaire de modification de mot de passe
-        $editPasswordForm = $this->createForm(UserPasswordType::class, $this->getUser());
+        $user = $this->em->getRepository(User::class)
+            ->findOneBy(['email' => $request->get('ident')]);
+        $editPasswordForm = $this->createForm(UserPasswordType::class, $user);
         $editPasswordForm->handleRequest($request);
 
         if ($editPasswordForm->isSubmitted() && $editPasswordForm->isValid()) {
             $password = $editPasswordForm->get('password')->getData();
-            $passwordEncoded = $encoder->hashPassword($this->getUser(), $password);
-            $this->getUser()->setPassword($passwordEncoded);
+            $passwordEncoded = $encoder->hashPassword($user, $password);
+            $user->setPassword($passwordEncoded);
 
-            $this->em->persist($this->getUser());
+            $this->em->persist($user);
             $this->em->flush();
         }
 
@@ -212,7 +214,7 @@ class UserController extends AbstractController
             $this->em->persist($user);
         }
 
-        $password = 'Quantique2021-';
+        $password = 'quantique';
         $passwordEncoded = $encoder->hashPassword($user, $password);
         $user->setPassword($passwordEncoded);
 
@@ -228,7 +230,7 @@ class UserController extends AbstractController
                 ->htmlTemplate('emails/user_confirmation.html.twig')
                 ->context([
                     'user' => $user,
-                    'password' => 'Quantique2021-'
+                    'password' => 'quantique'
                 ]);
 
             $mailer->send($email);
@@ -241,7 +243,7 @@ class UserController extends AbstractController
                 ->htmlTemplate('emails/user_confirmation.html.twig')
                 ->context([
                     'user' => $user,
-                    'password' => 'Quantique2021-'
+                    'password' => 'quantique'
                 ]);
 
             $mailer->send($email);
@@ -302,13 +304,18 @@ class UserController extends AbstractController
             $passwordEncoded = $encoder->hashPassword($user, $password);
             $user->setPassword($passwordEncoded);
 
+            $user->setNbConnection($user->getNbConnection() + 1);
+
             $this->em->persist($user);
             $this->em->flush();
 
             return $this->redirectToRoute('show_contracts', ['company' => $this->getUser()->getCompanies()[0]->getId()]);
         }
 
-        return $this->redirect($_SERVER['HTTP_REFERER']);
+        return $this->render('user/edit_password.html.twig', [
+            'user' => $user,
+            'edit_user_form' => $editUserForm->createView()
+        ]);
     }
 
     /**

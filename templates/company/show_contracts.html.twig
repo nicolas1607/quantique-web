@@ -16,12 +16,14 @@
 {% endfor %}
 <!-- MODAL EDIT WEBSITE -->
 {% include "partials/_modal_edit_website.html.twig" with {'company': company} %}
+<!-- MODAL DELETE WEBSITE -->
+{% include "partials/_modal_delete_website.html.twig" with {'company': company} %}
 <!-- MODAL DELETE USER -->
 {% include "partials/_modal_remove_user.html.twig" %}
 <!-- MODAL DELETE CONTRACT -->
 {% include "partials/_modal_delete_contract.html.twig" %}
 <!-- MODAL EDIT PASSWORD -->
-<div id="modal-edit-password{{app.user.id}}" class="mdl-edit-password">
+<div id="modal-edit-password" class="mdl-edit-password">
     <div class="cont-flex-space mdl-header-form">
         <div class="cont-flex">
             <i class="fas fa-unlock-alt fa-2x"></i>

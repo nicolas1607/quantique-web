@@ -11,7 +11,9 @@ typeEditModal.forEach(function (type) {
         else if (type == 'user') id = edit.id.substr(9);
         else if (type == 'company') id = edit.id.substr(12);
         else if (type == 'password') id = edit.id.substr(13);
-        const modal = document.querySelector('#modal-edit-' + type + id);
+        let modal;
+        if (type == 'password') modal = document.querySelector('#modal-edit-' + type);
+        else modal = document.querySelector('#modal-edit-' + type + id);
         edit.addEventListener('click', () => {
             modal.style.visibility = 'visible';
             navbar.style.opacity = 0.4;

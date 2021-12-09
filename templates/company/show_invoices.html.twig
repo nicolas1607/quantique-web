@@ -13,7 +13,7 @@
 <!-- MODAL DELETE INVOICE -->
 {% include "partials/_modal_delete_invoice.html.twig" %}
 <!-- MODAL EDIT PASSWORD -->
-<div id="modal-edit-password{{app.user.id}}" class="mdl-edit-password">
+<div id="modal-edit-password" class="mdl-edit-password">
     <div class="cont-flex-space mdl-header-form">
         <div class="cont-flex">
             <i class="fas fa-unlock-alt fa-2x"></i>
@@ -94,17 +94,10 @@
                 <a class="nav-link active" data-bs-toggle="tab"
                     href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
             </li>
-            {# {% if is_granted('ROLE_ADMIN') %}
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab"
-                    href="{{path('show_accounts', {'company': company.id})}}">Comptes</a>
-            </li>
-            {% elseif app.user %} #}
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab"
                     href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
             </li>
-            {# {% endif %} #}
         </ul>
 
         <div>
@@ -131,12 +124,14 @@
                                         <i class="fas fa-lg fa-file-download"></i>
                                     </a>
                                 </li>
+                                {% if is_granted('ROLE_ADMIN') %}
                                 <li class="action-item">
                                     <a id="delete-invoice{{invoice.id}}" class="action-link delete-invoice"
                                         title="Supprimer la facture">
                                         <i class="fas fa-times fa-lg"></i>
                                     </a>
                                 </li>
+                                {% endif %}
                             </ul>
                         </td>
                     </tr>
@@ -155,7 +150,7 @@
 </script>
 
 <script src="{{asset('js/add_entity_modal.js')}}" nb="2" param1="user" param2="invoice"></script>
-<script src="{{asset('js/edit_entity_modal.js')}}" nb="1" param1="user"></script>
+<script src="{{asset('js/edit_entity_modal.js')}}" nb="2" param1="user" param2="password"></script>
 <script src="{{asset('js/delete_entity_modal.js')}}" nb="2" param1="invoice" param2="user"></script>
 
 {% endblock %}
