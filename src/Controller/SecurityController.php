@@ -3,10 +3,14 @@
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Google\AdsApi\AdWords\AdWordsServices;
+use Google\AdsApi\Common\OAuth2TokenBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Google\AdsApi\AdWords\AdWordsSessionBuilder;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Google\AdsApi\Examples\AdWords\v201809\BasicOperations\GetCampaigns;
 
 class SecurityController extends AbstractController
 {
@@ -22,10 +26,6 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
-
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user

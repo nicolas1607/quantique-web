@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use PDO;
 use DateTime;
-use PDOException;
 use App\Entity\Note;
 use App\Entity\User;
 use FacebookAds\Api;
@@ -18,30 +16,25 @@ use App\Form\InvoiceType;
 use App\Entity\TypeInvoice;
 use App\Entity\TypeContract;
 use App\Form\UserPasswordType;
+use FacebookAds\Object\AdAccount;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Google\AdsApi\AdWords\AdWordsServices;
-use Google\AdsApi\AdWords\v201809\cm\Paging;
-
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Facebook\Exceptions\FacebookSDKException;
-use Google\AdsApi\AdWords\v201809\cm\OrderBy;
+use FacebookAds\Object\Fields\CampaignFields;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
-use Google\AdsApi\AdWords\v201809\cm\Selector;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClient;
 use Google\AdsApi\AdWords\AdWordsSessionBuilder;
 use Facebook\Exceptions\FacebookResponseException;
-use Google\AdsApi\AdWords\v201809\cm\CampaignService;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Google\AdsApi\AdWords\Query\v201809\ReportQuery;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Google\Ads\GoogleAds\Lib\V9\GoogleAdsClientBuilder;
+use Google\AdsApi\AdWords\Reporting\v201809\ReportDownloader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Google\AdsApi\AdWords\Reporting\v201809\RequestOptionsFactory;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Google\AdsApi\Examples\AdWords\v201809\BasicOperations\GetCampaigns;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CompanyController extends AbstractController
@@ -164,6 +157,7 @@ class CompanyController extends AbstractController
                     ->subject('Nouvelle(s) facture(s) pour ' . $company->getName() . ' disponible(s) !')
                     ->htmlTemplate('emails/invoice_confirmation.html.twig')
                     ->context([
+                        'invoices' => $invoices,
                         'user' => $user,
                         'company' => $company
                     ]);
@@ -204,30 +198,21 @@ class CompanyController extends AbstractController
         //     ->withOAuth2Credential($oAuth2Credential)
         //     ->build();
 
-        // $adWordsServices = new AdWordsServices();
+        // $options = [
+        //     'stream_context' => [
+        //         'http' => ['timeout' => 120]
+        //     ]
+        // ];
+        // $requestOptionsFactory = new RequestOptionsFactory($session, $options);
+        // $reportDownloader = new ReportDownloader($session, $requestOptionsFactory);
 
-        // $campaignService = $adWordsServices->get($session, CampaignService::class);
-
-        // // Create selector.
-        // $selector = new Selector();
-        // $selector->setFields(array('Id', 'Name'));
-        // $selector->setOrdering(array(new OrderBy('Name', 'ASCENDING')));
-
-        // // Create paging controls.
-        // $selector->setPaging(new Paging(0, 100));
-
-        // // Make the get request.
-        // $page = $campaignService->get($selector);
-
-
-
-
-
-        // $campaigns = new GetCampaigns();
-        // $campaigns->runExample($adWordsServices, $session);
-
-
-
+        // var_dump($reportDownloader->downloadReportWithAwql(
+        //     "SELECT CampaignId, AdGroupId, Impressions, Clicks, Cost
+        //     FROM ADGROUP_PERFORMANCE_REPORT
+        //     WHERE AdGroupStatus IN [ENABLED, PAUSED]
+        //     DURING LAST_7_DAYS",
+        //     "CSV"
+        // ));
 
 
 
@@ -235,22 +220,28 @@ class CompanyController extends AbstractController
         // FACEBOOK & INSTAGRAM //
 
         // $fb = new Facebook([
-        //     'app_id' => '603614854173588',
-        //     'app_secret' => 'f47a275c069c8759904cfca950d8a8ee',
+        //     'app_id' => '662888525073742',
+        //     'app_secret' => 'e5e6e86cbe6211adc4b619ba0630e529',
         // ]);
 
-        // try {
-        //     // Returns a `Facebook\FacebookResponse` object
-        //     $response = $fb->get('/4932955780050365', 'EAAIkZCAj205QBAJzADpssZBZCnFjiGvDgZAojV22iK2jNbjp5CXpyIo8wN8VDpMyWQei4NUlhD1G3aZCBAKyTbDnaWFeFovXNdxLmrFKiaqcYcuoVJmQQab0RhIj2cuOcWRuKQKAS07ZARvV2ZCF0kkfCkTFZBYJyB1ZBxwFBTAgLBGPi8JUe0A5UNLT2L1slUNtYUAGUW1UcgMZCLAlFq500s');
-        // } catch (FacebookResponseException $e) {
-        //     echo 'Graph returned an error: ' . $e->getMessage();
-        //     exit;
-        // } catch (FacebookSDKException $e) {
-        //     echo 'Facebook SDK returned an error: ' . $e->getMessage();
-        //     exit;
+        $app_id = "662888525073742";
+        $app_secret = "e5e6e86cbe6211adc4b619ba0630e529";
+        $access_token = "d46ee756cba654293fc67b0c7a3084d0";
+        $account_id = "934306636983189"; // nico 228753810	
+
+        // Api::init($app_id, $app_secret, $access_token);
+
+        // $account = new AdAccount($account_id);
+        // $cursor = $account->getCampaigns();
+
+        // Loop over objects
+        // foreach ($cursor as $campaign) {
+        //     echo $campaign->{CampaignFields::NAME} . PHP_EOL;
         // }
-        // $graphNode = $response->getGraphNode();
-        // var_dump($graphNode);
+
+
+
+
 
         return $this->render('company/show_stats.html.twig', [
             'company' => $company

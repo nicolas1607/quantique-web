@@ -36,4 +36,19 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    const events = ['load', 'resize'];
+    events.forEach(function(event) {
+        window.addEventListener(event, function(){
+            if (screen.width < 768) {
+                document.querySelector('.login-img').style.display = 'none';
+            } else {
+                document.querySelector('.login-img').style.display = null;
+            }
+        })
+    });
+</script>
+
 {% endblock %}

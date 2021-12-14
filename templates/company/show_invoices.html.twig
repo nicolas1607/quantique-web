@@ -4,12 +4,13 @@
 
 {% block body %}
 
-<!-- MODAL EDIT USER -->
 {% for user in company.users %}
+<!-- MODAL EDIT USER -->
 {% include "partials/_modal_edit_user.html.twig" with {'company': company} %}
-{% endfor %}
 <!-- MODAL DELETE USER -->
-{% include "partials/_modal_delete_user.html.twig" %}
+{% include "partials/_modal_remove_user.html.twig" %}
+{% endfor %}
+
 <!-- MODAL DELETE INVOICE -->
 {% include "partials/_modal_delete_invoice.html.twig" %}
 <!-- MODAL EDIT PASSWORD -->
@@ -31,7 +32,7 @@
     </div>
     <div class="cont-flex">
         <div class="cont-flex-space mdl-btn">
-            {{ form_row(edit_password_form.submit) }}
+            <button class="form-control btn-type btn-form btn-alert" type="submit">Modifier</button>
             <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
         </div>
     </div>
@@ -101,13 +102,13 @@
         </ul>
 
         <div>
-            <table class="table table-hover">
+            <table class="table table-hover table-invoices">
                 <thead>
                     <tr>
                         <th scope="col">Date</th>
                         <th scope="col">Type</th>
-                        <th scope="col">Nom</th>
-                        <th scope="col">Action</th>
+                        <th id="head-name" scope="col">Nom</th>
+                        <th id="head-action" scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -115,7 +116,7 @@
                     <tr class="table-light">
                         <td>{{ invoice.releasedAt|date("d/m/Y") }}</td>
                         <td>{{ invoice.type.name }}</td>
-                        <td>{{ invoice.file }}</td>
+                        <td class="body-name">{{ invoice.file }}</td>
                         <td>
                             <ul class="action-list">
                                 <li class="action-item cont-flex-space">
@@ -147,6 +148,47 @@
     const cont = document.querySelector('.container');
     const navbar = document.querySelector('.navbar');
     const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
+
+    // function recap invoices
+    const files = document.querySelector('#invoice_files');
+    files.addEventListener('change', () => {
+        let recap = document.querySelector('#recap-invoice');
+        if (recap) recap.remove();
+        recap = document.createElement('div');
+        recap.id = "recap-invoice";
+        
+        for (let i=0; i<files.files.length; i++) {
+            const fileName = document.createElement('p');
+            fileName.innerHTML = files.files[i]['name'];
+            recap.appendChild(fileName);
+        }
+        const modal = document.querySelector('#modal-invoice').querySelector('form');
+        const mdlBtn = document.querySelector('#modal-invoice').querySelector('.mdl-btn');
+        modal.insertBefore(recap, mdlBtn);
+    });
+
+    // responsive min-height : 768px
+    const headName = document.querySelector('#head-name');
+    const names = document.querySelectorAll('.body-name');
+    const evts = ['load', 'resize'];
+    evts.forEach(function(event) {
+        window.addEventListener(event, function(){
+            if (screen.width < 768) {
+                headName.style.display = 'none';
+                names.forEach(function(name) {
+                    name.style.display = 'none';
+                })
+            } else {
+                headName.style.display = null;
+            }
+            if (screen.width < 768) {
+                console.log(document.querySelector('#head-action'))
+                document.querySelector('#head-action').style.display = 'none';
+            } else {
+                document.querySelector('#head-action').style.display = 'block';
+            }
+        })
+    });
 </script>
 
 <script src="{{asset('js/add_entity_modal.js')}}" nb="2" param1="user" param2="invoice"></script>

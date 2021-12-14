@@ -49,17 +49,21 @@
     </div>
 
     <div class="form-section">
-        <div class="cont-flex-start">
-            <i class="fas fa-file-contract fa-2x"></i>
-            <h2>Contrats</h2>
-            {% for type in types %}
-            <div>
-                <div class="">
-                    <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn btn5" type="button">+
-                        {{type.lib}}</button>
-                </div>
+        <div class="cont-flex-start-contract">
+            <div class="cont-flex-start cont-title">
+                <i class="fas fa-file-contract fa-2x"></i>
+                <h2>Contrats</h2>
             </div>
-            {% endfor %}
+            <div class="cont-contract">
+                {% for type in types %}
+                <div>
+                    <div class="">
+                        <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn btn5" type="button">+
+                            {{type.lib}}</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
         <div>
             {% for type in types %}

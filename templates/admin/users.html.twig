@@ -78,7 +78,7 @@
     </div>
     <div class="cont-flex">
         <div class="cont-flex-space mdl-btn">
-            {{ form_row(edit_password_form.submit) }}
+            <button class="form-control btn-type btn-form btn-alert" type="submit">Modifier</button>
             <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
         </div>
     </div>
@@ -109,21 +109,29 @@
         </li>
     </ul>
 
-    <table class="table table-hover">
+    <table class="table table-hover table-users">
         <thead>
             <tr>
                 <th scope="col">Contact</th>
-                <th scope="col">Téléphone</th>
-                <th scope="col">Email</th>
-                <th scope="col">Action</th>
+                <th id="head-tel" scope="col">Téléphone</th>
+                <th id="head-email" scope="col">Email</th>
+                <th id="head-action" scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
             {% for user in users %}
             <tr id="user{{user.id}}" class="table-light user {{user.firstname}} {{user.lastname}}">
                 <td>{{ user.firstname }} {{ user.lastname }}</td>
-                <td>{{ user.phone }}</td>
-                <td>{{ user.email }}</td>
+                {% if user.phone %}
+                <td class="body-tel">{{ user.phone }}</td>
+                {% else %}
+                <td class="body-tel">Aucun téléphone</td>
+                {% endif %}
+                {% if user.email %}
+                <td class="body-email">{{ user.email }}</td>
+                {% else %}
+                <td class="body-email">Aucun email</td>
+                {% endif %}
                 <td>
                     <ul class="action-list">
                         <li class="action-item">
@@ -158,6 +166,29 @@
     const cont = document.querySelector('.container');
     const navbar = document.querySelector('.navbar');
     const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
+
+    // responsive min-height : 768px
+    const headTel = document.querySelector('#head-tel');
+    const headEmail = document.querySelector('#head-email');
+    const tels = document.querySelectorAll('.body-tel');
+    const emails = document.querySelectorAll('.body-email');
+    const events = ['load', 'resize'];
+    events.forEach(function(event) {
+        window.addEventListener(event, function(){
+            if (screen.width < 768) {
+                headTel.style.display = 'none';
+                headEmail.style.display = 'none';
+            } else {
+                headTel.style.display = null;
+                headEmail.style.display = null;
+            }
+            if (screen.width < 768) {
+                document.querySelector('#head-action').style.display = 'none';
+            } else {
+                document.querySelector('#head-action').style.display = 'block';
+            }
+        })
+    });
 
     const editPasswords = document.querySelectorAll('.edit-password');
     let id; let editPass;

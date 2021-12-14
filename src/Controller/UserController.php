@@ -197,7 +197,7 @@ class UserController extends AbstractController
         $email = $request->get('email');
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
         // verif si email valide
-        if (!preg_match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$^", $email)) {
+        if ($email && !preg_match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$^", $email)) {
             $this->addFlash('alert', 'Veuillez saisir une adresse email valide !');
             return $this->redirect($_SERVER['HTTP_REFERER']);
         }

@@ -32,21 +32,21 @@
             <thead>
                 <tr>
                     <th scope="col">Contact</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Téléphone</th>
-                    <th scope="col">Action</th>
+                    <th id="head-tel" scope="col">Téléphone</th>
+                    <th id="head-email" scope="col">Email</th>
+                    <th id="head-action" scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in company.users %}
-                <div style="display: none;">
-                    <h2>Email : <span>{{user.email}}</span></h2>
+                <!-- <div style="display: none;">
                     <h2>Téléphone : <span>{{user.phone}}</span></h2>
-                </div>
+                    <h2>Email : <span>{{user.email}}</span></h2>
+                </div> -->
                 <tr class="table-light">
                     <td>{{ user.firstname }} {{ user.lastname }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.phone }}</td>
+                    <td class="body-tel">{{ user.phone }}</td>
+                    <td class="body-email">{{ user.email }}</td>
                     {% if is_granted('ROLE_ADMIN') %}
                     <td>
                         <ul class="action-list">
@@ -89,3 +89,28 @@
 </div>
 
 <script src="{{asset('js/close_modal.js')}}"></script>
+
+<script>
+    // responsive min-height : 768px
+    const headTel = document.querySelector('#head-tel');
+    const headEmail = document.querySelector('#head-email');
+    const tels = document.querySelectorAll('.body-tel');
+    const emails = document.querySelectorAll('.body-email');
+    const events = ['load', 'resize'];
+    events.forEach(function(event) {
+        window.addEventListener(event, function(){
+            if (screen.width < 768) {
+                headTel.style.display = 'none';
+                headEmail.style.display = 'none';
+            } else {
+                headTel.style.display = null;
+                headEmail.style.display = null;
+            }
+            if (screen.width < 768) {
+                document.querySelector('#head-action').style.display = 'none';
+            } else {
+                document.querySelector('#head-action').style.display = 'block';
+            }
+        })
+    });
+</script>
