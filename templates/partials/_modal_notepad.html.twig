@@ -16,22 +16,25 @@
             <div id="notepad-item{{note.id}}" class="notepad-item">
                 <p class="note-date">{{note.releasedAt|date("d/m/Y")}}</p>
                 <p class="note-msg">{{note.message|nl2br}}</p>
-                <button class="nav-link" title="Supprimer la note" onclick="deleteForm({{note.id}})">
+                <button class="nav-link nav-link-note" title="Supprimer la note" onclick="deleteForm({{note.id}})">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             {% endfor %}
         </div>
-        <form id="form-add-note{{contract.id}}" class="cont-note form-add-note" data-path="{{asset('js/script/add-note.php')}}" action="add_note.php" method="POST" onsubmit="return validateForm({{contract.id}})">
+        <form id="form-add-note{{contract.id}}" class="form-add-note" data-path="{{asset('js/script/add-note.php')}}" action="add_note.php" method="POST" onsubmit="return validateForm({{contract.id}})">
             <div hidden>
                 <label for="contract">Contrat</label>
                 <input class="form-control" name="contract" value="{{contract.id}}"></input>
             </div>
-            <div>
-                <label id="{{app.user.id}}" class="user" for="message">Message</label>
-                <textarea class="form-control msg" name="message" rows="1" required></textarea>
+            <div class="cont-note">
+                <div>
+                    <label id="{{app.user.id}}" class="user" for="message">Message</label>
+                    <textarea class="form-control msg" name="message" rows="1" required></textarea>
+                </div>
+                <a id="notepad-submit{{contract.id}}" class="btn-type notepad-btn" onclick="validateForm({{contract.id}})">Envoyer</a>
             </div>
-            <a id="notepad-submit{{contract.id}}" class="btn-type btn-form notepad-btn" onclick="validateForm({{contract.id}})">Envoyer</a>
+            
         </form>
     </div>
 </div>
@@ -93,7 +96,7 @@
                                     .replaceAll('\n', '<br/>');
 
         const navLink = document.createElement('a');
-        navLink.className = "nav-link";
+        navLink.className = "nav-link nav-link-note";
 
         navLink.setAttribute('onclick', "deleteForm("+nb+")");
         navLink.title = "Supprimer la note";

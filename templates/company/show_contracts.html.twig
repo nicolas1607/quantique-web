@@ -6,22 +6,19 @@
 
 <!-- MODAL NOTEPAD -->
 {% include "partials/_modal_notepad.html.twig" %}
-<!-- MODAL ADD USER -->
+
+<!-- MODAL ADD / EDIT / DELETE USER -->
 {% include "partials/_modal_add_user.html.twig" with {'company': company} %}
-<!-- MODAL ADD WEBSITE -->
-{% include "partials/_modal_add_website.html.twig" with {'company': company, 'typesContract': typesContract} %}
-<!-- MODAL EDIT USER -->
 {% for user in company.users %}
 {% include "partials/_modal_edit_user.html.twig" with {'company': company} %}
 {% endfor %}
-<!-- MODAL EDIT WEBSITE -->
-{% include "partials/_modal_edit_website.html.twig" with {'company': company} %}
-<!-- MODAL DELETE WEBSITE -->
-{% include "partials/_modal_delete_website.html.twig" with {'company': company} %}
-<!-- MODAL DELETE USER -->
 {% include "partials/_modal_remove_user.html.twig" %}
-<!-- MODAL DELETE CONTRACT -->
-{% include "partials/_modal_delete_contract.html.twig" %}
+
+<!-- MODAL ADD / EDIT / DELETE WEBSITE -->
+{% include "partials/_modal_add_website.html.twig" with {'company': company, 'typesContract': typesContract} %}
+{% include "partials/_modal_edit_website.html.twig" with {'company': company} %}
+{% include "partials/_modal_delete_website.html.twig" with {'company': company} %}
+
 <!-- MODAL EDIT PASSWORD -->
 <div id="modal-edit-password" class="mdl-edit-password">
     <div class="cont-flex-space mdl-header-form">
@@ -47,6 +44,9 @@
     </div>
     {{ form_end(edit_password_form) }}
 </div>
+
+<!-- MODAL DELETE CONTRACT -->
+{% include "partials/_modal_delete_contract.html.twig" %}
 
 <body>
 
@@ -99,11 +99,11 @@
                 </div>
                 <div class="contract-notes">
                     {% for contract in website.contracts %}
-                    <div class="cont-flex-space contract-item contract-content">
+                    <div class="cont-flex-space contract-item">
                         <div id="contract{{contract.id}}" class="cont-flex-start contract-info">
                             <h3 class="cont-flex-start contract-title">{{contract.type.name}}</h3>
                             <div class="cont-flex-space">
-                                <p>
+                                <p class="contract-content">
                                     <i class="fas fa-chevron-right"></i>
                                     {% if contract.promotion %}
                                     <strike>{{contract.price}}€ / mois</strike> =>

@@ -6,7 +6,7 @@
     <div class="mdl-content">
         <p>Êtes vous sûr de vouloir supprimer le client suivant de {{company.name}} : <strong>{{user.firstname}} {{user.lastname}}</strong>
             ?</p>
-        <div class="cont-flex-space">
+        <div class="cont-flex-space mdl-btn">
             <a class="btn-type btn-form btn-alert btn-danger"
                 href="{{path('remove_user', {'company': company.id, 'user': user.id})}}">Supprimer</a>
             <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>

@@ -4,15 +4,13 @@
 
 {% block body %}
 
+<!-- MODAL ADD / EDIT / DELETE USER -->
+{% include "partials/_modal_add_user.html.twig" with {'company': company} %}
 {% for user in company.users %}
-<!-- MODAL EDIT USER -->
 {% include "partials/_modal_edit_user.html.twig" with {'company': company} %}
-<!-- MODAL DELETE USER -->
-{% include "partials/_modal_remove_user.html.twig" %}
 {% endfor %}
+{% include "partials/_modal_remove_user.html.twig" %}
 
-<!-- MODAL DELETE INVOICE -->
-{% include "partials/_modal_delete_invoice.html.twig" %}
 <!-- MODAL EDIT PASSWORD -->
 <div id="modal-edit-password" class="mdl-edit-password">
     <div class="cont-flex-space mdl-header-form">
@@ -38,7 +36,9 @@
     </div>
     {{ form_end(edit_password_form) }}
 </div>
-<!-- MODAL ADD INVOICE -->
+
+<!-- MODAL ADD / DELETE INVOICE -->
+{% include "partials/_modal_delete_invoice.html.twig" %}
 <div id="modal-invoice" class="mdl-add-invoice">
     <div class="cont-flex-start cont-title mdl-header-form">
         <div class="cont-flex">
@@ -70,7 +70,7 @@
         </div>
     </div>
     <div class="cont-flex-space mdl-btn">
-        {{form_row(add_invoice_form.submit)}}
+        <button class="btn-type btn-form" type="submit">Créer</button>
         <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
     </div>
     {{form_end(add_invoice_form)}}
@@ -193,6 +193,7 @@
 
 <script src="{{asset('js/add_entity_modal.js')}}" nb="2" param1="user" param2="invoice"></script>
 <script src="{{asset('js/edit_entity_modal.js')}}" nb="2" param1="user" param2="password"></script>
+<script src="{{asset('js/remove_entity_modal.js')}}" nb="1" param1="user"></script>
 <script src="{{asset('js/delete_entity_modal.js')}}" nb="2" param1="invoice" param2="user"></script>
 
 {% endblock %}

@@ -4,6 +4,13 @@
 
 {% block body %}
 
+<!-- MODAL ADD / EDIT / DELETE USER -->
+{% include "partials/_modal_add_user.html.twig" with {'company': company} %}
+{% for user in company.users %}
+{% include "partials/_modal_edit_user.html.twig" with {'company': company} %}
+{% endfor %}
+{% include "partials/_modal_remove_user.html.twig" %}
+
 <div class="container">
     {% include "partials/_company_info.html.twig" %}
 
@@ -108,8 +115,8 @@
   <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
   
 
-<script>
-    
-</script>
+  <script src="{{asset('js/add_entity_modal.js')}}" nb="1" param1="user"></script>
+  <script src="{{asset('js/edit_entity_modal.js')}}" nb="1" param1="user"></script>
+  <script src="{{asset('js/remove_entity_modal.js')}}" nb="1" param1="user"></script>
 
 {% endblock %}

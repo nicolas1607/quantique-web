@@ -3,14 +3,10 @@
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Google\AdsApi\AdWords\AdWordsServices;
-use Google\AdsApi\Common\OAuth2TokenBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Google\AdsApi\AdWords\AdWordsSessionBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Google\AdsApi\Examples\AdWords\v201809\BasicOperations\GetCampaigns;
 
 class SecurityController extends AbstractController
 {

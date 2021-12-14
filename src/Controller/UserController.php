@@ -10,8 +10,6 @@ use App\Entity\Invoice;
 use App\Form\InvoiceType;
 use App\Entity\TypeInvoice;
 use App\Entity\TypeContract;
-use App\Entity\GoogleAccount;
-use App\Entity\FacebookAccount;
 use App\Form\UserPasswordType;
 use App\Repository\UserRepository;
 use App\Repository\CompanyRepository;

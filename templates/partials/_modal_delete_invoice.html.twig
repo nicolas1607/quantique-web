@@ -7,7 +7,7 @@
         <p>Êtes vous sûr de vouloir supprimer la facture suivante :
             <strong>{{invoice.releasedAt|date("d/m/Y")}} : {{company.name}} - {{invoice.type.name}}</strong> ?
         </p>
-        <div class="cont-flex-space">
+        <div class="cont-flex-space mdl-btn-del">
             <a class="btn-type btn-form btn-alert btn-danger"
                 href="{{path('delete_invoice', {'invoice': invoice.id})}}">Supprimer</a>
             <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>

@@ -1,13 +1,14 @@
 {% for website in company.websites %}
 <div id="modal-edit-website{{website.id}}" class="mdl-edit-website">
-    <form action="{{path('edit_website', {'website': website.id})}}">
-        <div class="cont-flex-space">
-            <div class="cont-flex">
-                <i class="fas fa-globe-americas fa-2x"></i>
-                <h2>Modifier un abonnement</h2>
-            </div>
-            <a class="mdl-close action-link">✖</a>
+    <div class="cont-flex-start mdl-header-form">
+        <div class="cont-flex">
+            <i class="fas fa-globe-americas fa-2x"></i>
+            <h2>Abonnement</h2>
         </div>
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    <form action="{{path('edit_website', {'website': website.id})}}">
+        
         <div class="cont-grid form-section">
             <div>
                 <label for="name">Nom du site *</label>
@@ -20,8 +21,10 @@
         </div>
         <div class="form-section">
             <div class="cont-flex-start">
-                <i class="fas fa-file-contract fa-2x"></i>
-                <h2>Contrats</h2>
+                <div class="cont-flex">
+                    <i class="fas fa-file-contract fa-2x"></i>
+                    <h2>Contrats</h2>
+                </div>
             </div>
         </div>
         <div>

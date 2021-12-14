@@ -62,8 +62,8 @@ h3 {
 @media screen and (min-width : 576px) {
   h1, h2, h3 {
     text-align: left;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
   h1 {
     font-size: 2rem;
@@ -73,11 +73,6 @@ h3 {
     margin-right: 1rem;
   }
 }
-@media screen and (min-width : 1200px) {
-
-}
-
-
 
 
 /* Générique */
@@ -196,7 +191,7 @@ a:hover {
 }
 
 .btn5 {
-  width: 8rem;
+  width: auto;
   font-size: .7rem;
   margin-bottom: 1rem;
 }
@@ -220,13 +215,16 @@ form {
   margin-top: 1rem;
 }
 
+form h2 {
+  font-size: 1.2rem;
+}
+
 @media screen and (min-width: 576px) {
   .btn-type {
     padding: .8rem 1.5rem;
     font-size: .8rem;
   }
   .btn5 {
-    margin-left: 1rem;
     margin-bottom: 0;
   }
   .btn10 {
@@ -240,9 +238,20 @@ form {
     width: 12rem;
   }
   form {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-top: 1rem;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  form {
     padding-left: 6rem;
     padding-right: 6rem;
     margin-top: 1rem;
+  }
+  form h2 {
+    font-size: 1.6rem;
   }
 }
 
@@ -259,11 +268,6 @@ form {
 .form-check label {
   margin-left: 1rem;
   margin-top: -.3rem;
-}
-
-.form-submit button {
-  margin-left: 1rem;
-  margin-right: 1rem;
 }
 
 label {
@@ -308,12 +312,6 @@ input[type='checkbox'] {
   margin-bottom: 2rem;
 }
 
-@media screen and (min-width : 992px) {
-  .container {
-    padding-left: 6rem;
-    padding-right: 6rem;
-  }
-}
 @media screen and (min-width : 1200px) {
   .container {
     padding-left: 8rem;
@@ -323,7 +321,6 @@ input[type='checkbox'] {
 }
 
 .cont-title {
-  margin-top: 2rem;
   margin-bottom: 2rem;
 }
 
@@ -354,7 +351,7 @@ input[type='checkbox'] {
 }
 
 .cont-flex-start p {
-  margin-top: .3rem;
+  margin-top: .5rem;
 }
 
 .cont-flex-end {
@@ -378,6 +375,10 @@ input[type='checkbox'] {
   gap: 1rem;
 }
 
+.cont-search-note {
+  margin-top: 1.4rem;
+}
+
 @media screen and (min-width: 576px) {
   
   .cont-flex-end {
@@ -394,6 +395,9 @@ input[type='checkbox'] {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+  }
+  .cont-flex-start p {
+    margin-top: 1rem;
   }
 }
 
@@ -433,42 +437,51 @@ input[type='checkbox'] {
 }
 
 .cont-note {
-  display: grid;
-  grid-template-columns: 9fr 2fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4rem;
   position: relative;
-}
-
-.cont-note button {
-  padding: .5rem 1rem;
-  width: 8rem;
 }
 
 @media screen and (min-width: 576px) {
   .cont-grid-contract{
     display: grid;
-    grid-template-columns: 12rem 30rem;
+    grid-template-columns: 1fr 2fr;
     width: 74%;
     margin: auto;
   }
   .cont-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem 4rem;
+    gap: 1rem 2rem;
   }
   .cont-grid-1-2 {
     display: grid;
     grid-template-columns: 2fr 3fr;
     gap: 1rem 2rem;
   }
+  
 }
 
 @media screen and (min-width: 768px) {
+  .cont-note {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+}
+
+@media screen and (min-width: 992px) {
   .cont-grid-2-3 {
     display: grid;
     grid-template-columns: 2fr 3fr;
     gap: 1rem 2rem;
+  }
+  .cont-note {
+    grid-template-columns: 80% 20%;
+    gap: 2rem;
+    margin-bottom: 2rem;
   }
 }
 
@@ -757,6 +770,10 @@ h3 .action-link {
 
 /* Company vue */
 
+.list-client {
+  margin-top: 2rem;
+}
+
 .contracts {
   border: solid 1px #cacdcf;
   border-bottom: none;
@@ -772,6 +789,14 @@ h3 .action-link {
   background-color: #eeeff0;
   border-bottom: solid 1px #cacdcf;
   padding: 0;
+}
+
+.contract-header .nav-link {
+  padding: 0 1.5rem 0 0;
+}
+
+.contract-header .svg-inline--fa.fa-w-18 {
+  width: 1.6em;
 }
 
 .contract-item {
@@ -797,46 +822,70 @@ h3 .action-link {
   opacity: 0.6;
 }
 
-.contract-title {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  margin-left: 1rem;
-}
-
 .contract-info {
-  margin-left: 1rem;
   text-align: left;
   width: 100%;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
 }
 
-.contract-info p {
+.contract-title {
+  margin-bottom: 1rem;
+  font-size: .8rem;
+  margin-left: 1rem;
+  margin-right: .2rem;
+}
+
+.contract-content mark,
+.contract-content strike {
   margin-bottom: 0;
+  font-size: .6rem;
 }
 
 @media screen and (min-width: 768px) {
+  .list-client {
+    margin-top: 0;
+  }
   .contract-header {
     padding: .2rem 2rem .2rem 1rem;
   }
+  .contract-header .nav-link {
+    padding: .8rem 1rem;
+  }
   .contract-info {
     margin-left: 4rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  .contract-title {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    font-size: 1.2rem;
+  }
+  .contract-content mark,
+  .contract-content strike {
+    margin-bottom: 0;
+    font-size: 1.2rem;
   }
 }
 
 .form-contract-title {
   margin-bottom: 2rem;
   margin-top: 1.5rem;
-  margin-right: 2rem;
 }
 
 .form-contract-title label {
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .add-abo-btn {
   margin-top: 2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .form-contract-title label {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
 }
 
 /* Modal Delete */
@@ -846,7 +895,8 @@ h3 .action-link {
   visibility: hidden;
   width: 80%;
   position: fixed;
-  top: 25%;
+  top: 20%;
+  bottom: 20%;
   left: 10%;
   background-color: white;
   z-index: 1000;
@@ -864,13 +914,33 @@ h3 .action-link {
   padding: 1rem 2rem 3rem 2rem;
 }
 
-@media screen and (min-with: 768px) {
+@media screen and (min-width: 768px) {
+  .mdl-delete,
+  .mdl-remove {
+    width: 60%;
+    top: 25%;
+    bottom: 25%;
+    left: 20%;
+  }
+  .mdl-content {
+    padding: 1rem 4rem 3rem 4rem;
+  }
+}
+
+@media screen and (min-width: 992px) {
   .mdl-delete,
   .mdl-remove {
     width: 40%;
     top: 30%;
+    bottom: 30%;
     left: 30%;
   }
+  .mdl-content {
+    padding: 1rem 4rem 3rem 4rem;
+  }
+}
+
+@media screen and (min-with: 992px) {
   .mdl-content {
     padding: 1rem 4rem 3rem 4rem;
   }
@@ -889,7 +959,8 @@ h3 .action-link {
   visibility: hidden;
   width: 80%;
   position: fixed;
-  top: 5%;
+  top: 15%;
+  bottom: 15%;
   left: 10%;
   background-color: white;
   z-index: 1000;
@@ -898,50 +969,6 @@ h3 .action-link {
   overflow: scroll;
   max-height: 43rem;
   padding: 0 2rem;
-}
-
-.mdl-add-new-user {
-  top: 15%;
-  bottom: 15%;
-}
-
-.mdl-add-user {
-  top: 10%;
-  bottom: 10%;
-}
-
-.mdl-edit-company {
-  top: 8%;
-  bottom: 8%;
-}
-
-.mdl-add-invoice {
-  top: 15%;
-  bottom: 15%;
-}
-
-.mdl-edit-user {
-  top: 10%;
-  bottom: 10%;
-}
-
-.mdl-edit-password {
-  top: 20%;
-  bottom: 20%;
-}
-
-@media screen and (min-width: 768px) {
-  .mdl-add-user,
-  .mdl-add-invoice,
-  .mdl-add-website,
-  .mdl-edit-user,
-  .mdl-edit-company,
-  .mdl-edit-website,
-  .mdl-add-new-user,
-  .mdl-edit-password {
-    width: 60%;
-    left: 20%;
-  }
 }
 
 .mdl-add-user form,
@@ -953,7 +980,69 @@ h3 .action-link {
 .mdl-add-new-user form,
 .mdl-edit-password form {
   margin-top: 2rem;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .mdl-add-new-user {
+    top: 15%;
+    bottom: 15%;
+  }
+  
+  .mdl-add-user {
+    top: 10%;
+    bottom: 10%;
+  }
+  
+  .mdl-edit-company {
+    top: 8%;
+    bottom: 8%;
+  }
+
+  .mdl-add-website {
+    top: 8%;
+    bottom: 8%;
+  }
+  
+  .mdl-add-invoice {
+    top: 15%;
+    bottom: 15%;
+  }
+  
+  .mdl-edit-user {
+    top: 10%;
+    bottom: 10%;
+  }
+  
+  .mdl-edit-password {
+    top: 20%;
+    bottom: 20%;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .mdl-add-user,
+  .mdl-add-invoice,
+  .mdl-add-website,
+  .mdl-edit-user,
+  .mdl-edit-company,
+  .mdl-edit-website,
+  .mdl-add-new-user,
+  .mdl-edit-password {
+    width: 60%;
+    left: 20%;
+  }
+  .mdl-add-user form,
+  .mdl-add-invoice form,
+  .mdl-add-website form,
+  .mdl-edit-website form,
+  .mdl-edit-user form,
+  .mdl-edit-company form,
+  .mdl-add-new-user form,
+  .mdl-edit-password form {
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+  }
 }
 
 .mdl-header-form {
@@ -969,26 +1058,53 @@ h3 .action-link {
   font-size: 1.2rem;
 }
 
-.mdl-btn {
-  width: 90%;
+.mdl-btn,
+.mdl-btn-del {
+  width: 100%;
   margin: auto;
   flex-direction: column;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-around;
 }
 
 .mdl-btn-contract {
-  margin-bottom: 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  /* margin-bottom: 4rem; */
+}
+
+.btn-contract {
+  width: 100%;
 }
 
 .mdl-form-contract {
   width: 100%;
 }
 
+@media screen and (min-width: 576px) {
+  .mdl-btn,
+  .mdl-btn-del {
+    flex-direction: row;
+  }
+  .mdl-btn {
+    margin-top: -1rem;
+  }
+}
+
 @media screen and (min-width: 768px) {
   .mdl-header-form {
-    padding: 4rem 6rem 0 6rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 2rem 0 0 0;
+    width: 78%;
+    margin: auto;
+    margin-top: 2rem;
   }
   .mdl-header-form h2 {
     margin-top: .4rem;
@@ -996,9 +1112,16 @@ h3 .action-link {
     margin-bottom: 0;
     font-size: 1.6rem;
   }
-  .mdl-btn {
-    width: 60%;
-    flex-direction: row;
+  .mdl-btn-contract {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    /* margin-bottom: 4rem; */
+  }
+  .mdl-btn-del {
+    margin-top: 2rem;
   }
 }
 
@@ -1057,18 +1180,25 @@ h3 .action-link {
 }
 
 .notepad-notes {
-  padding-left: 6rem;
-  padding-right: 6rem;
-  max-height: 25rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  max-height: 20rem;
   overflow-y: scroll;
   scrollbar-color: rebeccapurple green;
   scrollbar-width: thin;
 }
 
 .notepad-item {
-  display: grid;
-  grid-template-columns: 15% 75% 10%;
+  display: flex;
+  flex-direction: column;
   border: solid 1px rgba(0,0,0,.1);
+  position: relative;
+}
+
+.nav-link-note {
+  position: absolute;
+  right: .5rem;
+  top: .1rem;
 }
 
 .notepad-item .nav-link {
@@ -1076,16 +1206,50 @@ h3 .action-link {
 }
 
 .notepad-btn {
-  position: absolute;
-  cursor: pointer;
-  bottom: 0;
-  right: 6rem;
+  width: 100%;
+  margin-top: 2rem;
 }
 
 .logo-company {
   width: 25%;
   margin-right: 4rem;
 } 
+
+.form-add-note {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media screen and (min-width: 576px) {
+  .notepad-notes {
+    padding-left: 6rem;
+    padding-right: 6rem;
+    max-height: 20rem;
+  }
+  .notepad-btn {
+    position: absolute;
+    cursor: pointer;
+    bottom: -4rem;
+    right: 0;
+  }
+  .form-add-note {
+    padding-left: 6rem;
+    padding-right: 6rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .notepad-item {
+    display: grid;
+    grid-template-columns: 20% 70% 10%;
+    border: solid 1px rgba(0,0,0,.1);
+  }
+  .notepad-btn {
+    bottom: 0;
+    right: 0;
+    width: 8rem;
+  }
+}
 
 /* Alert Success */
 
@@ -1169,7 +1333,7 @@ h3 .action-link {
   right: 0;
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 768px) {
   .notfound .notfound-404 h1 {
     font-size: 148px;
   }

@@ -4,7 +4,7 @@
     </div>
     <div class="mdl-content">
         <p>Êtes vous sûr de vouloir supprimer l'entreprise suivante : <strong>{{company.name}}</strong> ?</p>
-        <div class="cont-flex-space">
+        <div class="cont-flex-space mdl-btn-del">
             <a class="btn-type btn-form btn-alert btn-danger"
                 href="{{path('delete_company', {'company': company.id})}}">Supprimer</a>
             <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>

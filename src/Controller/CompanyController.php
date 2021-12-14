@@ -173,9 +173,10 @@ class CompanyController extends AbstractController
 
         $currentDate = new DateTime();
         $typesInvoice = $this->em->getRepository(TypeInvoice::class)->findAll();
-
+        $users = $this->userRepo->findUsers();
 
         return $this->render('company/show_invoices.html.twig', [
+            'users' => $users,
             'company' => $company,
             'typesInvoice' => $typesInvoice,
             'currentDate' => $currentDate,
@@ -242,9 +243,11 @@ class CompanyController extends AbstractController
 
 
 
+        $users = $this->userRepo->findUsers();
 
         return $this->render('company/show_stats.html.twig', [
-            'company' => $company
+            'company' => $company,
+            'users' => $users
         ]);
     }
 
@@ -342,7 +345,7 @@ class CompanyController extends AbstractController
     /**
      * @Route("/admin/user/remove/{company}/{user}", name="remove_user")
      */
-    public function remove(Company $company, User $user): Response
+    public function removeUser(Company $company, User $user): Response
     {
         $user->removeCompany($company);
         $company->removeUser($user);
