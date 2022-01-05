@@ -220,25 +220,41 @@ class CompanyController extends AbstractController
 
         // FACEBOOK & INSTAGRAM //
 
+        // $app_id = "662888525073742";
+        // $app_secret = "e5e6e86cbe6211adc4b619ba0630e529";
+        // $access_token = "d46ee756cba654293fc67b0c7a3084d0";
+        // $account_id = "934306636983189"; // nico 228753810	
+
         // $fb = new Facebook([
         //     'app_id' => '662888525073742',
         //     'app_secret' => 'e5e6e86cbe6211adc4b619ba0630e529',
         // ]);
 
-        $app_id = "662888525073742";
-        $app_secret = "e5e6e86cbe6211adc4b619ba0630e529";
-        $access_token = "d46ee756cba654293fc67b0c7a3084d0";
-        $account_id = "934306636983189"; // nico 228753810	
-
-        // Api::init($app_id, $app_secret, $access_token);
-
-        // $account = new AdAccount($account_id);
-        // $cursor = $account->getCampaigns();
-
-        // Loop over objects
-        // foreach ($cursor as $campaign) {
-        //     echo $campaign->{CampaignFields::NAME} . PHP_EOL;
+        // try {
+        //     // Returns a `Facebook\FacebookResponse` object
+        //     $response = $fb->get(
+        //         '/934306636983189/insights?fields=cost_per_store_visit_action%2Cstore_visit_actions',
+        //         'd46ee756cba654293fc67b0c7a3084d0'
+        //     );
+        // } catch (FacebookResponseException $e) {
+        //     echo 'Graph returned an error: ' . $e->getMessage();
+        //     exit;
+        // } catch (FacebookSDKException $e) {
+        //     echo 'Facebook SDK returned an error: ' . $e->getMessage();
+        //     exit;
         // }
+        // $graphNode = $response->getGraphNode();
+        // var_dump($graphNode);
+
+        // $res = $this->useCurl(
+        //     'https://graph.facebook.com/v12.0/228753810/insights',
+        //     [
+        //         'fields:        cost_per_store_visit_action,store_visit_actions',
+        //         'access_token:  d46ee756cba654293fc67b0c7a3084d0'
+        //     ]
+        // );
+
+        // var_dump($res);
 
 
 
@@ -249,6 +265,36 @@ class CompanyController extends AbstractController
             'company' => $company,
             'users' => $users
         ]);
+    }
+
+    private function useCurl($url, $headers, $fields = null)
+    {
+        // Open connection
+        $ch = curl_init();
+        if ($url) {
+            // Set the url, number of POST vars, POST data
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            // Disabling SSL Certificate support temporarly
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            if ($fields) {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+            }
+
+            // Execute post
+            $result = curl_exec($ch);
+            if ($result === FALSE) {
+                die('Curl failed: ' . curl_error($ch));
+            }
+
+            // Close connection
+            curl_close($ch);
+
+            return $result;
+        }
     }
 
     /**

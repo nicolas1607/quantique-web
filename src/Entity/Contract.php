@@ -42,11 +42,6 @@ class Contract
     private $website;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $numIdent;
-
-    /**
      * @ORM\OneToMany(targetEntity=Note::class, mappedBy="contract", orphanRemoval=true)
      */
     private $notes;
@@ -106,18 +101,6 @@ class Contract
     public function setWebsite(?Website $website): self
     {
         $this->website = $website;
-
-        return $this;
-    }
-
-    public function getNumIdent(): ?string
-    {
-        return $this->numIdent;
-    }
-
-    public function setNumIdent(?string $numIdent): self
-    {
-        $this->numIdent = $numIdent;
 
         return $this;
     }

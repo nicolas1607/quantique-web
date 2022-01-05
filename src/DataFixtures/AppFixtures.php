@@ -2,18 +2,10 @@
 
 namespace App\DataFixtures;
 
-use DateTime;
 use Faker\Factory;
-use App\Entity\Type;
 use App\Entity\User;
-use App\Entity\Company;
-use App\Entity\Invoice;
-use App\Entity\Contract;
 use App\Entity\TypeInvoice;
 use App\Entity\TypeContract;
-use App\Entity\GoogleAccount;
-use App\Entity\FacebookAccount;
-use App\Entity\Website;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -22,55 +14,6 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
-
-        // // User
-        // $users = [];
-        // for ($i = 0; $i < 10; $i++) {
-        //     $user = new User();
-        //     $user->setFirstname($faker->firstName())
-        //         ->setLastname($faker->lastName())
-        //         ->setRoles(['ROLE_USER'])
-        //         ->setEmail($faker->email())
-        //         ->setPassword($faker->password())
-        //         ->setPhone($faker->phoneNumber());
-
-        //     $manager->persist($user);
-        //     $users[] = $user;
-        // }
-
-        // // Company
-        // $companies = [];
-        // for ($i = 0; $i < 10; $i++) {
-        //     $company = new Company();
-        //     $company->setName($faker->company())
-        //         ->setEmail($faker->email())
-        //         ->setPhone($faker->phoneNumber())
-        //         ->setAddress($faker->address())
-        //         ->setPostalCode($faker->postcode())
-        //         ->setCity($faker->city())
-        //         ->setNumTVA($faker->regexify('[A-Z]{5}[0-4]{3}'))
-        //         ->setSiret($faker->regexify('[A-Z]{5}[0-4]{3}'))
-        //         ->addUser($users[$i]);
-        //     $users[$i]->addCompany($company);
-
-        //     $manager->persist($company);
-        //     $manager->persist($users[$i]);
-        //     $companies[] = $company;
-        // }
-
-        // // Website
-        // $websites = [];
-        // for ($i = 0; $i < 10; $i++) {
-        //     $website = new Website();
-        //     $website->setName($faker->company())
-        //         ->setUrl($faker->url())
-        //         ->setCompany($companies[$i]);
-        //     $companies[$i]->addWebsite($website);
-
-        //     $manager->persist($website);
-        //     $manager->persist($companies[$i]);
-        //     $websites[] = $website;
-        // }
 
         // TypeContract
         $typesContract = [];
@@ -99,41 +42,6 @@ class AppFixtures extends Fixture
         $manager->persist($facebook);
         $typesContract[] = $facebook;
 
-        // // Contract
-        // $contracts = [];
-        // for ($i = 0; $i < 10; $i++) {
-        //     $type = $typesContract[rand(0, 3)];
-        //     $contract = new Contract();
-        //     $contract->setPrice($faker->randomNumber(3, true))
-        //         ->setPromotion($faker->randomFloat(1, 20, 30))
-        //         ->setType($type)
-        //         ->setWebsite($websites[$i]);
-
-        //     $type->addContract($contract);
-        //     $websites[$i]->addContract($contract);
-
-        //     $manager->persist($contract);
-        //     $manager->persist($type);
-        //     $manager->persist($websites[$i]);
-        //     $contracts[] = $contract;
-        // }
-        // for ($i = 0; $i < 10; $i++) {
-        //     $type = $typesContract[rand(0, 3)];
-        //     $contract = new Contract();
-        //     $contract->setPrice($faker->randomNumber(3, true))
-        //         ->setPromotion($faker->randomFloat(1, 20, 30))
-        //         ->setType($type)
-        //         ->setWebsite($websites[$i]);
-
-        //     $type->addContract($contract);
-        //     $websites[$i]->addContract($contract);
-
-        //     $manager->persist($type);
-        //     $manager->persist($websites[$i]);
-        //     $manager->persist($contract);
-        //     $contracts[] = $contract;
-        // }
-
         // TypeInvoice
         $typesInvoice = [];
 
@@ -147,63 +55,11 @@ class AppFixtures extends Fixture
         $manager->persist($perso);
         $typesInvoice[] = $perso;
 
-        // // Invoice
-        // $invoices = [];
-        // for ($i = 0; $i < 10; $i++) {
-        //     $type = $typesInvoice[rand(0, 1)];
-        //     $invoice = new Invoice();
-        //     $invoice->setReleasedAt(new DateTime())
-        //         ->setFile('/facture/test')
-        //         ->setType($type)
-        //         ->addWebsite($websites[$i]);
-
-        //     $type->addInvoice($invoice);
-        //     $websites[$i]->addInvoice($invoice);
-
-        //     $manager->persist($invoice);
-        //     $manager->persist($type);
-        //     $manager->persist($websites[$i]);
-        //     $invoices[] = $invoice;
-        // }
-
-        // // FacebookAccount
-        // $fbAccounts = [];
-        // for ($i = 0; $i < 10; $i++) {
-        //     $fbAccount = new FacebookAccount();
-        //     $fbAccount->setEmail($faker->email())
-        //         ->setPassword($faker->password())
-        //         ->setCompany($companies[$i]);
-        //     $companies[$i]->addFacebookAccount($fbAccount);
-        //     $manager->persist($fbAccount);
-        //     $manager->persist($companies[$i]);
-        //     $fbAccounts[] = $fbAccount;
-        // }
-
-        // // GoogleAccount
-        // $googleAccounts = [];
-        // for ($i = 0; $i < 10; $i++) {
-        //     $googleAccount = new GoogleAccount();
-        //     $googleAccount->setEmail($faker->email())
-        //         ->setPassword($faker->password())
-        //         ->setCompany($companies[$i]);
-        //     $manager->persist($googleAccount);
-        //     $manager->persist($companies[$i]);
-        //     $googleAccounts[] = $googleAccount;
-        // }
-        $googleAccount = new GoogleAccount();
-        $googleAccount->setEmail('quantique.web.office@gmail.com')
-            ->setPassword('$2y$13$jTy0IgABUuBgmCjm5b9KaOvGB042BSRFI2jHdpyeFUqiq5TkmiYMu');
-        $manager->persist($googleAccount);
-
         // Admin
         $admin = $this->createAdmin();
         $manager->persist($admin);
         $quantique = $this->createAdminQuantique();
         $manager->persist($quantique);
-
-        // User
-        // $user = $this->createUser();
-        // $manager->persist($user);
 
         $manager->flush();
     }

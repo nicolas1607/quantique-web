@@ -240,7 +240,7 @@ form h2 {
   form {
     padding-left: 2rem;
     padding-right: 2rem;
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
   }
 }
 
@@ -248,7 +248,7 @@ form h2 {
   form {
     padding-left: 6rem;
     padding-right: 6rem;
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
   }
   form h2 {
     font-size: 1.6rem;
@@ -311,6 +311,7 @@ input[type='checkbox'] {
   padding-right: 2rem;
   margin-bottom: 2rem;
 }
+
 
 @media screen and (min-width : 1200px) {
   .container {
@@ -803,6 +804,7 @@ h3 .action-link {
   border-bottom: solid 1px #cacdcf;
   cursor: pointer;
   min-height: 5.1rem;
+  position: relative;
 }
 
 .contract-item:hover {
@@ -814,12 +816,22 @@ h3 .action-link {
 }
 
 .contract-action {
-  display: none;
-  padding-right: 2rem;
+  display: flex;
+  padding-right: .5rem;
 }
 
 .contract-action a {
   opacity: 0.6;
+}
+
+.notepad-link {
+  display: none;
+}
+
+.delete-contract {
+  position: absolute;
+  top: -.2rem;
+  right: -.2rem
 }
 
 .contract-info {
@@ -864,6 +876,20 @@ h3 .action-link {
   .contract-content strike {
     margin-bottom: 0;
     font-size: 1.2rem;
+  }
+  .notepad-link {
+    display: block;
+  }
+  .contract-action {
+    display: flex;
+    padding-right: 2rem;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .contract-action {
+    display: none;
+    padding-right: 2rem;
   }
 }
 
