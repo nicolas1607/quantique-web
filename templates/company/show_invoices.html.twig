@@ -82,11 +82,20 @@
         {% include "partials/_company_info.html.twig" %}
 
         {% if is_granted('ROLE_ADMIN') %}
-        <a id="add-invoice{{company.id}}" class="btn-type right btn10 add-invoice">Nouvelle
-            facture</a>
+        <div class="cont-flex-end" style="z-index: 0;">
+            <form id="search-form" class="search invoice-search" style="margin-top: 0;">
+                <input id="start-date" class="form-control" type="date" name="search" placeholder="Date de début"
+                    aria-label="Date de début" style="margin-bottom: 0;">
+                <input id="start-end" class="form-control" type="date" name="search" placeholder="Date de fin"
+                    aria-label="Date de fin" style="margin-bottom: 0;">
+            </form>
+            <a id="add-invoice{{company.id}}" class="btn-type right btn10 add-invoice">Nouvelle
+                facture</a>
+        </div>
+        
         {% endif %}
 
-        <ul class="nav nav-tabs nav-tabs-company">
+        <ul class="nav nav-tabs nav-tabs-company" style="margin-top: 1rem;">
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab"
                     href="{{path('show_contracts', {'company': company.id})}}">Abonnements</a>
@@ -113,7 +122,7 @@
                 </thead>
                 <tbody>
                     {% for invoice in company.invoices %}
-                    <tr class="table-light">
+                    <tr class="table-light invoice {{ invoice.releasedAt|date("Y-m-d") }}">
                         <td>{{ invoice.releasedAt|date("d/m/Y") }}</td>
                         <td>{{ invoice.type.name }}</td>
                         <td class="body-name">{{ invoice.file }}</td>
@@ -191,6 +200,7 @@
     });
 </script>
 
+<script src="{{asset('js/search_invoice.js')}}"></script>
 <script src="{{asset('js/add_entity_modal.js')}}" nb="2" param1="user" param2="invoice"></script>
 <script src="{{asset('js/edit_entity_modal.js')}}" nb="2" param1="user" param2="password"></script>
 <script src="{{asset('js/remove_entity_modal.js')}}" nb="1" param1="user"></script>
