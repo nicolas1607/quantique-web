@@ -1,19 +1,24 @@
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid navbar-container">
 
-    <img class="navbar-logo" src="{{asset('images/logo-quantique-web.png')}}" alt="image">
+    <a href="{{path('admin_companies')}}"><img class="navbar-logo" src="{{asset('images/logo-quantique-web.png')}}" alt="image"></a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03"
-      aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <div class="navbar-content">
+      <button id="burger-menu" aria-expanded="false" aria-controls="menu">
+        <i class="fas fa-bars"></i>
+      </button>
 
-    <div class="collapse navbar-collapse navbar-content">
       {% if app.user %}
-      <ul class="navbar-nav me-auto">
+      <ul id="menu" class="navbar-nav me-auto">
         {% if is_granted('ROLE_ADMIN') %}
         <li class="nav-item">
-          <a class="nav-link" href="{{path('admin_companies')}}">Admin</a>
+          <a class="nav-link" href="{{path('admin_companies')}}">Entreprises</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{path('admin_users')}}">Utilisateurs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{path('admin_notes')}}">Historique</a>
         </li>
         {% elseif is_granted('ROLE_USER') %}
         {# <li class="nav-item">
@@ -25,13 +30,32 @@
         </li>
         {% endfor %}
         {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url('app_logout') }}">Déconnexion</a>
+        </li>
       </ul>
-
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url('app_logout') }}">Déconnexion</a>
-      </li>
       {% endif %}
     </div>
 
   </div>
 </nav>
+
+<script>
+  const toggleMenu = document.querySelector('.navbar button');
+  const menu = document.querySelector('#menu');
+
+  toggleMenu.addEventListener('click', function () {
+    const open = JSON.parse(toggleMenu.getAttribute('aria-expanded'));
+    toggleMenu.setAttribute('aria-expanded', !open);
+    console.log(menu.style.display);
+    if (menu.style.display == 'none' || menu.style.display == '') {
+      menu.style.display = 'flex';
+    } else if (menu.style.display == 'flex') {
+      menu.style.display = 'none';
+    }
+
+    if (!menu.hidden) {
+      menu.querySelector('a').focus();
+    }
+  });
+</script>

@@ -1,6 +1,5 @@
 // function search
 const input = document.querySelector('#search-input');
-input.value = window.location.search.substr(8);
 input.addEventListener('keyup', () => {
     for (let i = 0; i < companies.length; i++) {
         const company = companies[i];

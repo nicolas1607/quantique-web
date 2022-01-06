@@ -267,35 +267,35 @@ class CompanyController extends AbstractController
         ]);
     }
 
-    private function useCurl($url, $headers, $fields = null)
-    {
-        // Open connection
-        $ch = curl_init();
-        if ($url) {
-            // Set the url, number of POST vars, POST data
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // private function useCurl($url, $headers, $fields = null)
+    // {
+    //     // Open connection
+    //     $ch = curl_init();
+    //     if ($url) {
+    //         // Set the url, number of POST vars, POST data
+    //         curl_setopt($ch, CURLOPT_URL, $url);
+    //         curl_setopt($ch, CURLOPT_POST, true);
+    //         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    //         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-            // Disabling SSL Certificate support temporarly
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            if ($fields) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-            }
+    //         // Disabling SSL Certificate support temporarly
+    //         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    //         if ($fields) {
+    //             curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+    //         }
 
-            // Execute post
-            $result = curl_exec($ch);
-            if ($result === FALSE) {
-                die('Curl failed: ' . curl_error($ch));
-            }
+    //         // Execute post
+    //         $result = curl_exec($ch);
+    //         if ($result === FALSE) {
+    //             die('Curl failed: ' . curl_error($ch));
+    //         }
 
-            // Close connection
-            curl_close($ch);
+    //         // Close connection
+    //         curl_close($ch);
 
-            return $result;
-        }
-    }
+    //         return $result;
+    //     }
+    // }
 
     /**
      * @Route("/admin/company/add", name="add_company")
@@ -311,7 +311,7 @@ class CompanyController extends AbstractController
 
             // Abonnement
             $website = null;
-            if ($request->get('website') != '' && $request->get('url') != '') {
+            if ($request->get('website') != '') {
                 $website = new Website();
                 $website->setName($request->get('website'))
                     ->setUrl($request->get('url'))

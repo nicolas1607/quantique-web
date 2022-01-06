@@ -42,12 +42,7 @@ class UserController extends AbstractController
      */
     public function companies(Request $request, MailerInterface $mailer, SluggerInterface $slugger): Response
     {
-        $search = $request->get('search');
-        if ($search != null) {
-            $companies = $this->companyRepo->findSearch($search);
-        } else {
-            $companies = $this->em->getRepository(Company::class)->findAll();
-        }
+        $companies = $this->em->getRepository(Company::class)->findAll();
 
         $users = $this->userRepo->findUsers();
         $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
@@ -120,7 +115,6 @@ class UserController extends AbstractController
         return $this->render('admin/companies.html.twig', [
             'users' => $users,
             'companies' => $companies,
-            'search' => $search,
             'typesContract' => $typesContract,
             'typesInvoice' => $typesInvoice,
             'currentDate' => $currentDate,
@@ -283,26 +277,6 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user): Response
     {
-        // On créer les comptes Google & Facebook
-        // $emailGoogle = $request->query->get('emailGoogle');
-        // $mdpGoogle = $request->query->get('mdpGoogle');
-        // if ($emailGoogle && $mdpGoogle) {
-        //     $accountGoogle = new GoogleAccount();
-        //     $accountGoogle->setEmail($emailGoogle)
-        //         ->setPassword($encoder->hashPassword($user, $mdpGoogle));
-        //     $user->setGoogleAccount($accountGoogle);
-        //     $this->em->persist($accountGoogle);
-        // }
-        // $emailFb = $request->query->get('emailFb');
-        // $mdpFb = $request->query->get('mdpFb');
-        // if ($emailFb && $mdpFb) {
-        //     $accountFb = new FacebookAccount();
-        //     $accountFb->setEmail($emailFb)
-        //         ->setPassword($encoder->hashPassword($user, $mdpFb));
-        //     $user->setGoogleFacebook($accountFb);
-        //     $this->em->persist($accountFb);
-        // }
-
         $email = $request->get('email');
         if (!preg_match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$^", $email)) {
             $this->addFlash('alert', 'Veuillez saisir une adresse email valide !');

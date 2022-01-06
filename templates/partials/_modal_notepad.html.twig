@@ -72,6 +72,10 @@
             }
         });
         // création du DOM
+        addNoteDom(contract);
+    }
+
+    function addNoteDom(contract){
         const notepad = document.querySelector('#notepad'+contract)
                                 .querySelector('.notepad-notes');
 

@@ -49,14 +49,11 @@
     </form>
 </div>
 
-<!-- MODAL DELETE USER -->
-{% for user in users %}
-{% include "partials/_modal_delete_user.html.twig" with {'user': user} %}
-{% endfor %}
-
 {% for user in users %}
 <!-- MODAL EDIT USER -->
 {% include "partials/_modal_edit_user.html.twig" with {'user': user} %}
+<!-- MODAL DELETE USER -->
+{% include "partials/_modal_delete_user.html.twig" with {'user': user} %}
 {% endfor %}
 
 <!-- MODAL EDIT PASSWORD -->

@@ -74,6 +74,47 @@ h3 {
   }
 }
 
+/* Menu burger */
+
+#menu {
+  display: none;
+  justify-content: flex-end;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 1rem;
+  text-align: center;
+  z-index: 100000;
+}
+
+#menu .nav-link {
+  font-size: 1.2rem;
+  margin-left: 1rem;
+}
+
+@media screen and (min-width: 576px) {
+  #menu{
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  #menu{
+    display: flex;
+    justify-content: flex-end;
+    font-size: .8rem;
+  }
+  #menu .nav-link {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  #burger-menu{
+    display: none;
+  }
+}
+
 
 /* Générique */
 
@@ -312,7 +353,6 @@ input[type='checkbox'] {
   margin-bottom: 2rem;
 }
 
-
 @media screen and (min-width : 1200px) {
   .container {
     padding-left: 8rem;
@@ -361,6 +401,7 @@ input[type='checkbox'] {
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   align-items: center;
+  z-index: -100;
 }
 
 .cont-flex-column {
@@ -376,12 +417,7 @@ input[type='checkbox'] {
   gap: 1rem;
 }
 
-.cont-search-note {
-  margin-top: 1.4rem;
-}
-
 @media screen and (min-width: 576px) {
-  
   .cont-flex-end {
     display: flex;
     justify-content: flex-end;
@@ -509,7 +545,6 @@ input[type='checkbox'] {
   right: 0;
   top: 0;
   background-color: var(--white);
-  /* box-shadow: 4px 4px 4px .1rem rgba(0,0,0,.4); */
 }
 
 .navbar-container {
@@ -517,29 +552,32 @@ input[type='checkbox'] {
   padding-right: 2rem;
 }
 
+.navbar-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  padding: 2rem;
+  text-align: right;
+  font-size: 2rem;
+}
+
+@media screen and (min-width: 992px) {
+  .navbar-content {
+    width: 60%;
+    text-align: left;
+  }
+}
+
 .navbar-logo {
-  width: 10rem;
+  width: 8rem;
+  padding-top: 1rem;
 }
 @media screen and (min-width : 576px) {
   .navbar-logo {
-    width: 18rem;
+    width: 10rem;
+    padding-top: .5rem;
   }
-}
-@media screen and (min-width : 992px) {
-  .navbar-logo {
-    width: 14rem;
-  }
-}
-@media screen and (min-width : 1200px) {
-  .navbar-logo {
-    padding: 1rem;
-    width: 12rem;
-  }
-}
-
-
-.navbar-content {
-  margin-left: 2rem;
 }
 
 .nav-link {
@@ -647,7 +685,6 @@ h3 .action-link {
 
 #search-input {
   font-size: 1rem;
-  /* width: 9rem; */
 }
 
 #search-delete {
@@ -735,7 +772,8 @@ h3 .action-link {
 .table-companies tr,
 .table-users tr,
 .table-client tr, 
-.table-invoices tr {
+.table-invoices tr,
+.table-notes tr {
   display: flex;
   flex-direction: column;
 }
@@ -766,6 +804,10 @@ h3 .action-link {
   .table-invoices tr {
     display: grid;
     grid-template-columns: 1fr 1fr 4fr 1fr;
+  }
+  .table-notes tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 4fr 1fr;
   }
 }
 

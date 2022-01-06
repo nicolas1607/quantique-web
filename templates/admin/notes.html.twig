@@ -6,7 +6,7 @@
 
 <div class="container">
     <h1>Espace administration</h1>
-    <div class="cont-search-note">
+    <div class="cont-flex-end">
         <form id="search-form" class="search">
             <input id="search-input" class="form-control" type="text" name="search" placeholder="Site internet"
                 aria-label="Rechercher">
@@ -26,14 +26,14 @@
         </li>
     </ul>
 
-    <table class="table table-hover">
+    <table class="table table-hover table-notes">
         <thead>
             <tr>
-                <th scope="col">Date</th>
-                <th scope="col">Site internet</th>
-                <th scope="col">Contrat</th>
+                <th id="head-date" scope="col">Date</th>
+                <th id="head-website" scope="col">Site internet</th>
+                <th id="head-contract" scope="col">Contrat</th>
                 <th scope="col">Notes</th>
-                <th scope="col">Admin</th>
+                <th id="head-admin" scope="col">Admin</th>
             </tr>
         </thead>
         <tbody>
@@ -44,40 +44,6 @@
                 <td>{{ note.contract.type.name }}</td>
                 <td>{{ note.message }}</td>
                 <td>{{ note.user.firstname }} {{ note.user.lastname }}</td>
-                <td>
-                    <ul class="action-list">
-                        {# <li class="action-item">
-                            <a href="{{path('add_user_with_company', {'company': company.id})}}" class="action-link"
-                                title="Ajouter un utilisateur">
-                                <i class="fas fa-user-plus fa-lg"></i>
-                            </a>
-                        </li>
-                        <li class="action-item">
-                            <a href="{{path('add_invoice_with_company', {'company': company.id})}}" class="action-link"
-                                title="Ajouter une facture">
-                                <i class="fas fa-file-upload fa-lg"></i>
-                            </a>
-                        </li>
-                        <li class="action-item">
-                            <a href="{{path('show_contracts', {'company': company.id})}}" class="action-link"
-                                title="Voir l'entreprise">
-                                <i class="fas fa-eye fa-lg"></i>
-                            </a>
-                        </li> #}
-                        {# <li class="action-item">
-                            <a href="{{path('edit_user', {'user': user.id})}}" class="action-link"
-                                title="Modifier l'entreprise">
-                                <i class="fas fa-edit fa-lg"></i>
-                            </a>
-                        </li>
-                        <li class="action-item">
-                            <a href="{{path('delete_user', {'user': user.id})}}" class="action-link"
-                                title="Supprimer l'entreprise">
-                                <i class="fas fa-times fa-lg"></i>
-                            </a>
-                        </li> #}
-                    </ul>
-                </td>
             </tr>
             </a>
             {% endfor %}
@@ -87,5 +53,29 @@
 </div>
 
 <script src="{{asset('js/search_note.js')}}"></script>
+
+<script>
+    // responsive min-height : 576px
+    const headDate = document.querySelector('#head-date');
+    const headWebsite = document.querySelector('#head-website');
+    const headContract = document.querySelector('#head-contract');
+    const headAdmin = document.querySelector('#head-admin');
+    const events = ['load', 'resize'];
+    events.forEach(function(event) {
+        window.addEventListener(event, function(){
+            if (screen.width < 768) {
+                headDate.style.display = 'none';
+                headWebsite.style.display = 'none';
+                headContract.style.display = 'none';
+                headAdmin.style.display = 'none';
+            } else {
+                headDate.style.display = null;
+                headWebsite.style.display = null;
+                headContract.style.display = null;
+                headAdmin.style.display = null;
+            }
+        })
+    });
+</script>
 
 {% endblock %}
