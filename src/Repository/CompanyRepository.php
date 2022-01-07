@@ -18,30 +18,4 @@ class CompanyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Company::class);
     }
-
-    // /**
-    //  * @return Company[] Retourne les compagnies recherchées
-    //  */
-    public function findSearch(String $search)
-    {
-        return $this->getEntityManager()->createQuery(
-            "SELECT c FROM App:company c
-            WHERE c.name LIKE '%" . $search . "%'"
-        )->getResult();
-    }
-
-    // /**
-    //  * @return Company[] Returns an array of Company objects
-    //  */
-    // public function findNbContract(Company $company)
-    // {
-    //     return $this->getEntityManager()->createQuery(
-    //         "SELECT count(c) FROM App:company cmp
-    //         INNER JOIN App:website w
-    //         WITH w.company = cmp.id
-    //         INNER JOIN App:contract c
-    //         WITH c.website = w.id
-    //         WHERE cmp.id = " . $company->getId()
-    //     )->getResult()[0][1];
-    // }
 }

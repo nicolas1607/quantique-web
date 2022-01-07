@@ -376,7 +376,6 @@ input[type='checkbox'] {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* height: 5rem; */
 }
 
 .cont-flex-space {
@@ -396,12 +395,10 @@ input[type='checkbox'] {
 }
 
 .cont-flex-end {
-  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   align-items: center;
-  z-index: -100;
 }
 
 .cont-flex-column {
@@ -421,7 +418,6 @@ input[type='checkbox'] {
   .cont-flex-end {
     display: flex;
     justify-content: flex-end;
-    /* height: 5rem; */
   }
   .cont-flex-start-contract {
     display: flex;
@@ -679,10 +675,6 @@ h3 .action-link {
   padding-right: 0rem;
 }
 
-#search-form {
-  position: relative;
-}
-
 #search-input {
   font-size: 1rem;
 }
@@ -700,6 +692,11 @@ h3 .action-link {
 
 .invoice-search input {
   margin-left: 2rem;
+}
+
+.all-invoice {
+  position: absolute;
+  right: 0;
 }
 
 @media screen and (min-width: 576px) {

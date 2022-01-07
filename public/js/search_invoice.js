@@ -10,11 +10,22 @@ startDate.addEventListener('change', () => {
         const invoiceName = invoice.className.substr(20).split('-');
         const invoiceDate = new Date(invoiceName[0], invoiceName[1], invoiceName[2]);
         if (startDate.value != "") {
-            if (invoiceDate >= invoiceStartDate) {
-                invoice.style.display = null;
+            if (endDate.value == "") {
+                if (invoiceStartDate <= invoiceDate) {
+                    invoice.style.display = null;
+                } else {
+                    invoice.style.display = 'none';
+                }
             } else {
-                invoice.style.display = 'none';
+                const end = endDate.value.split('-');
+                const invoiceEndDate = new Date(end[0], end[1], end[2]);
+                if (invoiceStartDate <= invoiceDate && invoiceDate <= invoiceEndDate) {
+                    invoice.style.display = null;
+                } else {
+                    invoice.style.display = 'none';
+                }
             }
+
         } else {
             invoice.style.display = null;
         }
@@ -23,17 +34,28 @@ startDate.addEventListener('change', () => {
 
 endDate.addEventListener('change', () => {
     for (let i = 0; i < invoices.length; i++) {
-        const start = endDate.value.split('-');
-        const invoiceEndDate = new Date(start[0], start[1], start[2]);
+        const end = endDate.value.split('-');
+        const invoiceEndDate = new Date(end[0], end[1], end[2]);
         const invoice = invoices[i];
         const invoiceName = invoice.className.substr(20).split('-');
         const invoiceDate = new Date(invoiceName[0], invoiceName[1], invoiceName[2]);
         if (endDate.value != "") {
-            if (invoiceDate <= invoiceEndDate) {
-                invoice.style.display = null;
+            if (startDate.value == "") {
+                if (invoiceDate <= invoiceEndDate) {
+                    invoice.style.display = null;
+                } else {
+                    invoice.style.display = 'none';
+                }
             } else {
-                invoice.style.display = 'none';
+                const start = startDate.value.split('-');
+                const invoiceStartDate = new Date(start[0], start[1], start[2]);
+                if (invoiceStartDate <= invoiceDate && invoiceDate <= invoiceEndDate) {
+                    invoice.style.display = null;
+                } else {
+                    invoice.style.display = 'none';
+                }
             }
+
         } else {
             invoice.style.display = null;
         }

@@ -91,11 +91,12 @@
             </form>
             <a id="add-invoice{{company.id}}" class="btn-type right btn10 add-invoice">Nouvelle
                 facture</a>
+            </a>
         </div>
         
         {% endif %}
 
-        <ul class="nav nav-tabs nav-tabs-company" style="margin-top: 1rem;">
+        <ul class="nav nav-tabs nav-tabs-company" style="margin-top: 1rem; position: relative;">
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab"
                     href="{{path('show_contracts', {'company': company.id})}}">Abonnements</a>
@@ -107,6 +108,12 @@
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab"
                     href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
+            </li>
+            <li class="all-invoice">
+                <input type="checkbox" name="allInvoice" style="margin-top: 1rem; margin-bottom: 0">
+                <label for="allInvoice">Tout sélectionner</label>
+                <a class="btn-type btn10">Télécharger</a>
+                <a class="btn-type btn10">Supprimer</a>
             </li>
         </ul>
 
@@ -128,6 +135,7 @@
                         <td class="body-name">{{ invoice.file }}</td>
                         <td>
                             <ul class="action-list">
+                                <input type="checkbox" style="margin-top: 0; margin-bottom: 0">
                                 <li class="action-item cont-flex-space">
                                     <a href="{{path('download_invoice', {'id': invoice.id})}}" class="action-link"
                                         title="Télécharger la facture">
@@ -197,6 +205,27 @@
                 document.querySelector('#head-action').style.display = 'block';
             }
         })
+    });
+
+    // tout sélectionner
+    const allInvoice = document.querySelector('.all-invoice input');
+    allInvoice.addEventListener('click', () => {
+        const invoicesList = document.getElementsByClassName('invoice');
+        if (allInvoice.checked == true) {
+            for (let i=0; i<invoicesList.length; i++) {
+                let invoice = invoicesList[i];
+                if (invoice.style.display != 'none') {
+                    invoice.querySelector('input').checked = true;
+                }
+            }
+        } else if (allInvoice.checked == false) {
+            for (let i=0; i<invoicesList.length; i++) {
+                let invoice = invoicesList[i];
+                if (invoice.style.display != 'none') {
+                    invoice.querySelector('input').checked = false;
+                }
+            }
+        }
     });
 </script>
 

@@ -94,6 +94,7 @@ class CompanyController extends AbstractController
      */
     public function showInvoices(Request $request, Company $company, UserPasswordHasherInterface $encoder, MailerInterface $mailer, SluggerInterface $slugger): Response
     {
+
         // Formulaire de modification de mot de passe
         $editPasswordForm = $this->createForm(UserPasswordType::class, $this->getUser());
         $editPasswordForm->handleRequest($request);
@@ -102,10 +103,8 @@ class CompanyController extends AbstractController
             $password = $editPasswordForm->get('password')->getData();
             $passwordEncoded = $encoder->hashPassword($this->getUser(), $password);
             $this->getUser()->setPassword($passwordEncoded);
-
             $this->em->persist($this->getUser());
             $this->em->flush();
-
             $this->addFlash('success', 'Mot de passe modifié avec succès !');
         }
 
@@ -119,14 +118,12 @@ class CompanyController extends AbstractController
 
             // Fichier PDF *
             $paths = $addInvoiceForm->get('files')->getData();
-
             foreach ($paths as $path) {
                 $invoice = new Invoice();
                 $invoice->setReleasedAt(new DateTime($request->get('date')))
                     ->setType($this->em->getRepository(TypeInvoice::class)
                         ->findOneBy(['name' => $request->get('type')]))
                     ->setCompany($company);
-
                 if ($path) {
                     $originalFilename = pathinfo($path->getClientOriginalName(), PATHINFO_FILENAME);
                     $safeFilename = $slugger->slug($originalFilename);
@@ -139,7 +136,6 @@ class CompanyController extends AbstractController
                     } catch (FileException $e) {
                         // ... handle exception if something happens during file upload
                     }
-
                     $invoice->setFile($newFilename);
                     $company->addInvoice($invoice);
                     $this->em->persist($invoice);
@@ -164,10 +160,8 @@ class CompanyController extends AbstractController
                 foreach ($invoices as $invoice) {
                     $email->attachFromPath($this->getParameter('invoices') . '/' . $invoice->getFile());
                 }
-
                 $mailer->send($email);
             }
-
             $this->addFlash('success', 'Facture(s) ajoutée(s) à ' . $company->getName() . ' !');
         }
 
