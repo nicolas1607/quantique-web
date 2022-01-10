@@ -30,6 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Google\AdsApi\AdWords\AdWordsSessionBuilder;
 use Facebook\Exceptions\FacebookResponseException;
 use Google\AdsApi\AdWords\Query\v201809\ReportQuery;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Google\AdsApi\AdWords\Reporting\v201809\ReportDownloader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -94,6 +95,53 @@ class CompanyController extends AbstractController
      */
     public function showInvoices(Request $request, Company $company, UserPasswordHasherInterface $encoder, MailerInterface $mailer, SluggerInterface $slugger): Response
     {
+        if ($request->get('all-download') == 'on') {
+            $action = 'download';
+        } else if ($request->get('all-delete') == 'on') {
+            $action = 'delete';
+        } else {
+            $action = null;
+        }
+        // Les factures qui ont été cochées
+        $res = [];
+        $invoices = $this->em->getRepository(Invoice::class)->findAll();
+        for ($i = 1; $i <= count($invoices); $i++) {
+            $check = $request->get('invoiceCheck' . $i);
+            if ($check == 'on') {
+                $res[] = $invoices[$i - 1];
+            }
+        }
+        // Download or Delete
+        if ($action != null && count($res) == 0) {
+            $this->addFlash('alert', 'Veuillez sélectionner une ou plusieurs factures !');
+        } else {
+            if ($action == 'download') {
+                $zip = new \ZipArchive();
+                $zipName = 'mes_factures.zip';
+
+                $zip->open($zipName,  \ZipArchive::CREATE);
+                foreach ($res as $file) {
+                    $zip->addFromString(basename($file->getFile()),  file_get_contents($this->getParameter('invoices') . '/' . $file->getFile()));
+                }
+                $zip->close();
+
+                $response = new Response(file_get_contents($zipName));
+                $response->headers->set('Content-Type', 'application/zip');
+                $response->headers->set('Content-Disposition', 'attachment;filename="' . $zipName . '"');
+                $response->headers->set('Content-length', filesize($zipName));
+                return $response;
+            } else if ($action == 'delete') {
+                foreach ($res as $file) {
+                    $this->em->remove($file);
+                }
+                $this->em->flush();
+                $this->addFlash('success', 'Factures supprimées avec succès !');
+                return $this->redirect($_SERVER['HTTP_REFERER']);
+            }
+        }
+
+
+
 
         // Formulaire de modification de mot de passe
         $editPasswordForm = $this->createForm(UserPasswordType::class, $this->getUser());
@@ -260,36 +308,6 @@ class CompanyController extends AbstractController
             'users' => $users
         ]);
     }
-
-    // private function useCurl($url, $headers, $fields = null)
-    // {
-    //     // Open connection
-    //     $ch = curl_init();
-    //     if ($url) {
-    //         // Set the url, number of POST vars, POST data
-    //         curl_setopt($ch, CURLOPT_URL, $url);
-    //         curl_setopt($ch, CURLOPT_POST, true);
-    //         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    //         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    //         // Disabling SSL Certificate support temporarly
-    //         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    //         if ($fields) {
-    //             curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-    //         }
-
-    //         // Execute post
-    //         $result = curl_exec($ch);
-    //         if ($result === FALSE) {
-    //             die('Curl failed: ' . curl_error($ch));
-    //         }
-
-    //         // Close connection
-    //         curl_close($ch);
-
-    //         return $result;
-    //     }
-    // }
 
     /**
      * @Route("/admin/company/add", name="add_company")

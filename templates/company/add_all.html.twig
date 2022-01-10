@@ -32,24 +32,30 @@
 
 
     <div class="form-section">
-        <div class="cont-flex-start cont-title">
-            <i class="fas fa-globe-americas fa-2x"></i>
-            <h2>Abonnement</h2>
+        <div class="cont-flex-space">
+            <div class="cont-flex-start cont-title">
+                <i class="fas fa-globe-americas fa-2x"></i>
+                <h2>Abonnement</h2>
+            </div>
+            <div class="cont-contract">
+                <button id="new-abo" type="button" class="btn-type form-btn btn10">Ajouter</button>
+            </div>
         </div>
-        <div class="cont-grid">
+        
+        <div class="cont-grid website-input" style="display: none;">
             <div>
-                <label for="website">Site internet</label>
-                <input class="form-control" type="text" name="website">
+                <label for="website">Site internet *</label>
+                <input class="form-control website-name" type="text" name="website">
             </div>
             <div>
-                <label for="url">URL du site</label>
-                <input class="form-control" type="text" name="url">
+                <label for="url">URL du site *</label>
+                <input class="form-control website-url" type="text" name="url">
             </div>
         </div>
     </div>
 
-    <div class="form-section">
-        <div class="cont-flex-start-contract">
+    <div class="form-section contract-input" style="display: none;">
+        <div class="cont-flex-space">
             <div class="cont-flex-start cont-title">
                 <i class="fas fa-file-contract fa-2x"></i>
                 <h2>Contrats</h2>
@@ -57,17 +63,14 @@
             <div class="cont-contract">
                 {% for type in types %}
                 <div>
-                    <div class="">
-                        <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn btn5" type="button">+
-                            {{type.lib}}</button>
-                    </div>
+                    <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn btn5" type="button">+
+                        {{type.lib}}</button>
                 </div>
                 {% endfor %}
             </div>
         </div>
-        <div>
+        <div class="all-types">
             {% for type in types %}
-            <div>
                 <div id="{{type.lib}}-form" class="form-type form-contract cont-grid-contract" style="display: none">
                     <div class="form-contract-title">
                         <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox"
@@ -85,8 +88,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
             {% endfor %}
         </div>
     </div>
@@ -99,5 +100,33 @@
 </div>
 
 <script src="{{asset('js/add_multiple_contract.js')}}"></script>
+
+<script>
+    const addAbo = document.querySelector('#new-abo');
+    addAbo.addEventListener('click', () => {
+        const websiteInput = document.querySelector('.website-input');
+        const contractInput = document.querySelector('.contract-input');
+        if (websiteInput.style.display == 'none') {
+            document.querySelector('.website-name').setAttribute('required', 'required')
+            document.querySelector('.website-url').setAttribute('required', 'required')
+            websiteInput.style.display = 'grid';
+            contractInput.style.display = 'block';
+            addAbo.setAttribute('style', 'background-color: var(--color1)');
+        } else {
+            document.querySelector('.website-name').removeAttribute('required');
+            document.querySelector('.website-url').removeAttribute('required');
+            websiteInput.style.display = 'none';
+            contractInput.style.display = 'none';
+            addAbo.setAttribute('style', 'background-color: var(--orange)');
+            // réinitialise les contrats
+            const btnType = document.querySelectorAll('.btn-contract');
+            btnType.forEach(function(btn) {
+                if (btn.innerHTML[0] == "-") {
+                    btn.click();
+                }
+            })
+        }
+    });
+</script>
 
 {% endblock %}

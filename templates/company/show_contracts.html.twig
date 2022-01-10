@@ -75,6 +75,8 @@
 
         <div class="contracts">
             {% for website in company.websites %}
+            <div style="margin-top: 1rem;"></div>
+
             <div class="contract">
                 <div class="contract-header">
                     <div class="cont-flex-space">
@@ -86,11 +88,11 @@
                         {% if is_granted('ROLE_ADMIN') and website.id %}
                         <div class="cont-flex">
                             <a id="edit-website{{website.id}}" class="nav-link edit-website"
-                                title="Modifier l'abonnement">
+                                title="Modifier l'abonnement" style="padding: 0 .5rem;">
                                 <i class="fas fa-edit fa-lg"></i>
                             </a>
                             <a id="delete-website{{website.id}}" class="nav-link delete-website"
-                                title="Supprimer l'abonnement">
+                                title="Supprimer l'abonnement" style="padding: 0 .5rem;">
                                 <i class="fas fa-times fa-lg"></i>
                             </a>
                         </div>
@@ -101,7 +103,7 @@
                     {% for contract in website.contracts %}
                     <div class="cont-flex-space contract-item">
                         <div id="contract{{contract.id}}" class="cont-flex-start contract-info">
-                            <h3 class="cont-flex-start contract-title">{{contract.type.name}}</h3>
+                            <h3 class="cont-flex-start contract-title">- {{contract.type.name}}</h3>
                             <div class="cont-flex-space">
                                 <p class="contract-content">
                                     <i class="fas fa-chevron-right"></i>
@@ -129,7 +131,7 @@
                     </div>
                     {% endfor %}
                 </div>
-                {% endfor %}
+            {% endfor %}
             </div>
         </div>
     </div>

@@ -15,12 +15,3 @@ input.addEventListener('keyup', () => {
         }
     }
 });
-
-// function delete search
-const cross = document.querySelector('#search-delete');
-cross.addEventListener('click', () => {
-    for (let i = 0; i < companies.length; i++) {
-        input.value = "";
-        companies[i].style.display = null;
-    }
-});

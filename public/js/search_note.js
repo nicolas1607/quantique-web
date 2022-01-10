@@ -17,12 +17,3 @@ input.addEventListener('keyup', () => {
         }
     }
 });
-
-// function delete
-const cross = document.querySelector('#search-delete');
-cross.addEventListener('click', () => {
-    for (let i = 0; i < notes.length; i++) {
-        input.value = "";
-        notes[i].style.display = null;
-    }
-});

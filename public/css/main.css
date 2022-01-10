@@ -29,7 +29,7 @@
 
 @media screen and (min-width: 576px) {
   .mdl-header-form .svg-inline--fa.fa-w-20 {
-    width: 2em;
+    width: 1em;
   }
 }
 
@@ -63,7 +63,6 @@ h3 {
   h1, h2, h3 {
     text-align: left;
     margin-top: 1rem;
-    margin-bottom: 1rem;
   }
   h1 {
     font-size: 2rem;
@@ -335,7 +334,39 @@ input[type='checkbox'] {
 }
 
 .type-check {
-  font-weight: bold;
+  width: 80%;
+  z-index: 1;
+  position: relative;
+  font-size: inherit;
+  font-family: inherit;
+  color: white;
+  padding: .8rem 1.2rem;
+  margin-top: -.2rem;
+  outline: none;
+  border: none;
+  font-size: .8rem;
+  background-color: #666;
+  border-radius: .2rem;
+}
+
+.type-check::before {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--orange);
+  transform-origin: center right;
+  transform: scaleX(0);
+  transition: transform 0.25s ease-in-out;
+  border-radius: .2rem;
+}
+
+.type-check:hover::before {
+  transform-origin: center left;
+  transform: scaleX(1);
 }
 
 .section {
@@ -348,9 +379,17 @@ input[type='checkbox'] {
 }
 
 .container {
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   margin-bottom: 2rem;
+}
+
+@media screen and (min-width : 400px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-bottom: 2rem;
+  }
 }
 
 @media screen and (min-width : 1200px) {
@@ -414,6 +453,12 @@ input[type='checkbox'] {
   gap: 1rem;
 }
 
+.cont-search-invoice {
+  display: flex;
+  flex-direction: column;
+  align-items: initial;
+}
+
 @media screen and (min-width: 576px) {
   .cont-flex-end {
     display: flex;
@@ -431,6 +476,9 @@ input[type='checkbox'] {
   }
   .cont-flex-start p {
     margin-top: 1rem;
+  }
+  .cont-search-invoice {
+    flex-direction: row;
   }
 }
 
@@ -479,8 +527,8 @@ input[type='checkbox'] {
 @media screen and (min-width: 576px) {
   .cont-grid-contract{
     display: grid;
-    grid-template-columns: 1fr 2fr;
-    width: 74%;
+    grid-template-columns: 2fr 3fr;
+    width: 100%;
     margin: auto;
   }
   .cont-grid {
@@ -578,8 +626,8 @@ input[type='checkbox'] {
 
 .nav-link {
   color: var(--color1);
-  padding: .8rem 1rem;
   font-size: .6rem;
+  padding: .6rem 1rem;
 }
 
 .nav-link:hover {
@@ -614,22 +662,43 @@ h3 .action-link {
 /* Login */
 
 .login-form {
-  width: 90%;
   justify-content: space-between;
   align-items: center;
   background-color: var(--white);
   padding: 4rem 2rem;
   border-radius: 2rem;
   box-shadow: 2px 4px 8px 6px rgba(0,0,0,.1);
-  margin-top: -.5rem;
 }
 
-@media screen and (min-width : 576px) {
-  
+.login-form form {
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 0;
 }
-@media screen and (min-width : 1200px) {
 
+.login-img {
+  width: 60%;
+  margin: auto;
 }
+
+.btn-login {
+  width: 100%;
+}
+
+@media screen and (min-width: 576px) {
+  .login-form {
+    padding: 4rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .login-div-img {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+}
+
 @media screen and (min-width : 1200px) {
   .login-form {
     display: grid;
@@ -644,21 +713,9 @@ h3 .action-link {
     box-shadow: 2px 4px 8px 6px rgba(0,0,0,.1);
     margin-top: -.5rem;
   }
-}
-
-
-.login-form form {
-  padding-left: 0;
-  padding-right: 0;
-  margin-top: 0;
-}
-
-.login-img {
-  width: 85%;
-}
-
-.btn-login {
-  width: 100%;
+  .login-img {
+    width: 85%;
+  }
 }
 
 /* Register */
@@ -688,10 +745,11 @@ h3 .action-link {
 
 .invoice-search {
   display: flex;
+  flex-direction: column;
 }
 
 .invoice-search input {
-  margin-left: 2rem;
+  margin-bottom: 1rem;
 }
 
 .all-invoice {
@@ -703,6 +761,13 @@ h3 .action-link {
   #search-input {
     font-size: 1rem;
     width: 12rem;
+  }
+  .invoice-search input {
+    margin-left: 2rem;
+    margin-bottom: 0;
+  }
+  .invoice-search {
+    flex-direction: row;
   }
 }
 
@@ -768,9 +833,19 @@ h3 .action-link {
   width: 100%;
 }
 
+tbody tr {
+  border-bottom: solid 3px black;
+}
+
 @media screen and (min-width : 460px) {
   .company {
     display: table-row;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  tbody tr {
+    border-bottom: none;
   }
 }
 
@@ -787,13 +862,11 @@ h3 .action-link {
   margin-top: 0;
 }
 
-@media screen and (min-width : 460px) {
+@media screen and (min-width : 766px) {
   .table-companies tr {
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
-}
-@media screen and (min-width : 766px) {
   .table-companies tr {
     display: grid;
     grid-template-columns: 1fr 1fr 2fr 1.5fr;
@@ -823,9 +896,6 @@ h3 .action-link {
 }
 
 .contracts {
-  border: solid 1px #cacdcf;
-  border-bottom: none;
-  border-top: none;
   margin-bottom: 8rem;
 }
 
@@ -835,12 +905,8 @@ h3 .action-link {
 
 .contract-header {
   background-color: #eeeff0;
-  border-bottom: solid 1px #cacdcf;
+  border: solid 1px #cacdcf;
   padding: 0;
-}
-
-.contract-header .nav-link {
-  padding: 0 1.5rem 0 0;
 }
 
 .contract-header .svg-inline--fa.fa-w-18 {
@@ -848,9 +914,9 @@ h3 .action-link {
 }
 
 .contract-item {
-  border-bottom: solid 1px #cacdcf;
+  border: solid 1px #cacdcf;
+  border-top: none;
   cursor: pointer;
-  min-height: 5.1rem;
   position: relative;
 }
 
@@ -877,13 +943,16 @@ h3 .action-link {
 
 .delete-contract {
   position: absolute;
-  top: -.2rem;
-  right: -.2rem
+  right: .5rem;
 }
 
 .contract-info {
   text-align: left;
   width: 100%;
+}
+
+.contract-input {
+  margin-bottom: 4rem;
 }
 
 .contract-title {
@@ -899,20 +968,20 @@ h3 .action-link {
   font-size: .6rem;
 }
 
+.contract-notes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
 @media screen and (min-width: 768px) {
   .list-client {
     margin-top: 0;
   }
   .contract-header {
-    padding: .2rem 2rem .2rem 1rem;
-  }
-  .contract-header .nav-link {
-    padding: .8rem 1rem;
+    padding-right: 2rem;
   }
   .contract-info {
-    margin-left: 4rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    margin-left: 1rem;
   }
   .contract-title {
     margin-left: 1rem;
@@ -922,7 +991,7 @@ h3 .action-link {
   .contract-content mark,
   .contract-content strike {
     margin-bottom: 0;
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
   .notepad-link {
     display: block;
@@ -936,8 +1005,14 @@ h3 .action-link {
 @media screen and (min-width: 1200px) {
   .contract-action {
     display: none;
-    padding-right: 2rem;
   }
+}
+
+.all-types {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 2rem;
+  margin-top: 2rem;
 }
 
 .form-contract-title {
@@ -957,7 +1032,7 @@ h3 .action-link {
 @media screen and (min-width: 768px) {
   .form-contract-title label {
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: .8rem;
   }
 }
 
@@ -1028,7 +1103,8 @@ h3 .action-link {
 .mdl-edit-company,
 .mdl-edit-website,
 .mdl-add-new-user,
-.mdl-edit-password {
+.mdl-edit-password,
+.mdl-all-company {
   visibility: hidden;
   width: 80%;
   position: fixed;
@@ -1051,7 +1127,8 @@ h3 .action-link {
 .mdl-edit-user form,
 .mdl-edit-company form,
 .mdl-add-new-user form,
-.mdl-edit-password form {
+.mdl-edit-password form,
+.mdl-all-company {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
@@ -1061,35 +1138,37 @@ h3 .action-link {
     top: 15%;
     bottom: 15%;
   }
-  
   .mdl-add-user {
     top: 10%;
     bottom: 10%;
   }
-  
   .mdl-edit-company {
     top: 8%;
     bottom: 8%;
   }
-
   .mdl-add-website {
     top: 8%;
     bottom: 8%;
   }
-  
+  .mdl-edit-website {
+    top: 5%;
+    bottom: 5%;
+  }
   .mdl-add-invoice {
     top: 15%;
     bottom: 15%;
   }
-  
   .mdl-edit-user {
     top: 10%;
     bottom: 10%;
   }
-  
   .mdl-edit-password {
     top: 20%;
     bottom: 20%;
+  }
+  .mdl-all-company {
+    top: 5%;
+    bottom: 5%;
   }
 }
 
@@ -1101,7 +1180,8 @@ h3 .action-link {
   .mdl-edit-company,
   .mdl-edit-website,
   .mdl-add-new-user,
-  .mdl-edit-password {
+  .mdl-edit-password,
+  .mdl-all-company {
     width: 60%;
     left: 20%;
   }
@@ -1112,7 +1192,8 @@ h3 .action-link {
   .mdl-edit-user form,
   .mdl-edit-company form,
   .mdl-add-new-user form,
-  .mdl-edit-password form {
+  .mdl-edit-password form,
+  .mdl-all-company form {
     margin-top: 2rem;
     margin-bottom: 4rem;
   }
@@ -1123,6 +1204,7 @@ h3 .action-link {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 78%;
 }
 
 .mdl-header-form h2 {
@@ -1175,7 +1257,7 @@ h3 .action-link {
     justify-content: space-between;
     align-items: center;
     padding: 2rem 0 0 0;
-    width: 78%;
+    /* width: 78%; */
     margin: auto;
     margin-top: 2rem;
   }

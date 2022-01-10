@@ -82,12 +82,12 @@
         {% include "partials/_company_info.html.twig" %}
 
         {% if is_granted('ROLE_ADMIN') %}
-        <div class="cont-flex-end" style="z-index: 0;">
+        <div class="cont-flex-end cont-search-invoice" style="z-index: 0;">
             <form id="search-form" class="search invoice-search" style="margin-top: 0;">
                 <input id="start-date" class="form-control" type="date" name="search" placeholder="Date de début"
-                    aria-label="Date de début" style="margin-bottom: 0;">
+                    aria-label="Date de début">
                 <input id="start-end" class="form-control" type="date" name="search" placeholder="Date de fin"
-                    aria-label="Date de fin" style="margin-bottom: 0;">
+                    aria-label="Date de fin">
             </form>
             <a id="add-invoice{{company.id}}" class="btn-type right btn10 add-invoice">Nouvelle
                 facture</a>
@@ -96,67 +96,93 @@
         
         {% endif %}
 
-        <ul class="nav nav-tabs nav-tabs-company" style="margin-top: 1rem; position: relative;">
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab"
-                    href="{{path('show_contracts', {'company': company.id})}}">Abonnements</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="tab"
-                    href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab"
-                    href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
-            </li>
-            <li class="all-invoice">
-                <input type="checkbox" name="allInvoice" style="margin-top: 1rem; margin-bottom: 0">
-                <label for="allInvoice">Tout sélectionner</label>
-                <a class="btn-type btn10">Télécharger</a>
-                <a class="btn-type btn10">Supprimer</a>
-            </li>
-        </ul>
+        <form action="{{path('show_invoices', {'company': company.id})}}" style="padding-left: 0; padding-right: 0;">
 
-        <div>
-            <table class="table table-hover table-invoices">
-                <thead>
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Type</th>
-                        <th id="head-name" scope="col">Nom</th>
-                        <th id="head-action" scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for invoice in company.invoices %}
-                    <tr class="table-light invoice {{ invoice.releasedAt|date("Y-m-d") }}">
-                        <td>{{ invoice.releasedAt|date("d/m/Y") }}</td>
-                        <td>{{ invoice.type.name }}</td>
-                        <td class="body-name">{{ invoice.file }}</td>
-                        <td>
-                            <ul class="action-list">
-                                <input type="checkbox" style="margin-top: 0; margin-bottom: 0">
-                                <li class="action-item cont-flex-space">
-                                    <a href="{{path('download_invoice', {'id': invoice.id})}}" class="action-link"
-                                        title="Télécharger la facture">
-                                        <i class="fas fa-lg fa-file-download"></i>
-                                    </a>
-                                </li>
-                                {% if is_granted('ROLE_ADMIN') %}
-                                <li class="action-item">
-                                    <a id="delete-invoice{{invoice.id}}" class="action-link delete-invoice"
-                                        title="Supprimer la facture">
-                                        <i class="fas fa-times fa-lg"></i>
-                                    </a>
-                                </li>
+            <ul class="nav nav-tabs nav-tabs-company" style="margin-top: 1rem; position: relative;">
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab"
+                        href="{{path('show_contracts', {'company': company.id})}}">Abonnements</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab"
+                        href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab"
+                        href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
+                </li>
+                <li class="all-invoice">
+                    <input type="checkbox" name="allInvoice" style="margin-top: 1rem; margin-bottom: 0">
+                    <label for="allInvoice">Tout sélectionner</label>
+
+                    <input id="all-download" name="all-download" type="checkbox" hidden>
+                    <button type="submit" aria-label="Télécharger" value="Télécharger" class="btn-type btn5" style="padding: .4rem 1rem; font-size: .6rem; margin-left: 1rem;">Télécharger</button>
+
+                    <input id="all-delete" name="all-delete" type="checkbox" hidden>
+                    <button type="submit" aria-label="Supprimer" value="Supprimer" class="btn-type btn5" style="padding: .4rem 1rem; font-size: .6rem; margin-left: 1rem;">Supprimer</button>
+                </li>
+            </ul>
+
+            <div>
+                <table class="table table-hover table-invoices">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Type</th>
+                            <th id="head-name" scope="col">Nom</th>
+                            <th id="head-action" scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set i = 1 %}
+                        {% for invoice in company.invoices %}
+                            {# blank #}
+                            {% if loop.index0 - 1 >= 0 %}
+                                {% set date = company.invoices[loop.index0 - 1].releasedAt %}
+                                {% if date|date("m/d/Y") < invoice.releasedAt|date("m/d/Y") %}
+                                    <tr style="border-bottom: 1px;">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
                                 {% endif %}
-                            </ul>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                            {% endif %}
+                            {# blank #}
+
+                            <tr class="table-light invoice {{ invoice.releasedAt|date("Y-m-d") }}">
+                                <td>{{ invoice.releasedAt|date("d/m/Y") }}</td>
+                                <td>{{ invoice.type.name }}</td>
+                                <td class="body-name">{{ invoice.file }}</td>
+                                <td>
+                                    <ul class="action-list">
+                                        <input name="invoiceCheck{{i}}" type="checkbox" style="margin-top: 0; margin-bottom: 0">
+                                        <li class="action-item cont-flex-space">
+                                            <a href="{{path('download_invoice', {'id': invoice.id})}}" class="action-link"
+                                                title="Télécharger la facture">
+                                                <i class="fas fa-lg fa-file-download"></i>
+                                            </a>
+                                        </li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                        <li class="action-item">
+                                            <a id="delete-invoice{{invoice.id}}" class="action-link delete-invoice"
+                                                title="Supprimer la facture">
+                                                <i class="fas fa-times fa-lg"></i>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </td>
+                            </tr>
+
+                            {% set i = i + 1 %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </form>
+
     </div>
 
 </body>
@@ -208,17 +234,19 @@
     });
 
     // tout sélectionner
-    const allInvoice = document.querySelector('.all-invoice input');
-    allInvoice.addEventListener('click', () => {
+    const all = document.querySelector('.all-invoice input');
+    all.addEventListener('click', () => {
+        document.querySelector('#all-download').checked = false;
+        document.querySelector('#all-delete').checked = false;
         const invoicesList = document.getElementsByClassName('invoice');
-        if (allInvoice.checked == true) {
+        if (all.checked == true) {
             for (let i=0; i<invoicesList.length; i++) {
                 let invoice = invoicesList[i];
                 if (invoice.style.display != 'none') {
                     invoice.querySelector('input').checked = true;
                 }
             }
-        } else if (allInvoice.checked == false) {
+        } else if (all.checked == false) {
             for (let i=0; i<invoicesList.length; i++) {
                 let invoice = invoicesList[i];
                 if (invoice.style.display != 'none') {
@@ -227,6 +255,18 @@
             }
         }
     });
+    const allInvoice = document.querySelectorAll('.all-invoice button');
+    allInvoice.forEach(buttonInvoice => buttonInvoice.addEventListener('click', () => {
+        if (buttonInvoice.value == "Télécharger") {
+            document.querySelector('#all-download').checked = true;
+        } else if (buttonInvoice.value == "Supprimer") {
+            document.querySelector('#all-delete').checked = true;
+        }
+        setTimeout(() => {
+            document.querySelector('#all-download').checked = false;
+            document.querySelector('#all-delete').checked = false;
+        }, 2000);
+    }));
 </script>
 
 <script src="{{asset('js/search_invoice.js')}}"></script>

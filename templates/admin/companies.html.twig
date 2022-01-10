@@ -4,6 +4,107 @@
 
 {% block body %}
 
+<!-- MODAL ADD COMPANY -->
+<div class="mdl-all-company">
+    {{ form_start(add_company_form) }}
+
+    <div class="form-section">
+        <div class="cont-flex-space mdl-header-form" style="margin-bottom: 2rem; width: 100%;">
+            <div class="cont-flex">
+                <i class="fas fa-user-plus fa-2x"></i>
+                <h2>Client</h2>
+            </div>
+            <a class="mdl-close action-link">✖</a>
+        </div>
+        <div class="cont-grid form-section">
+            {{ form_row(add_company_form.name) }}
+            {{ form_row(add_company_form.email) }}
+        </div>
+        <div class="cont-grid form-section">
+            {{ form_row(add_company_form.phone) }}
+            {{ form_row(add_company_form.address) }}
+        </div>
+        <div class="cont-grid form-section">
+            {{ form_row(add_company_form.postalCode) }}
+            {{ form_row(add_company_form.city) }}
+        </div>
+        <div class="cont-grid form-section">
+            {{ form_row(add_company_form.numTVA) }}
+            {{ form_row(add_company_form.siret) }}
+        </div>
+    </div>
+
+    <div class="form-section" style="margin-bottom: 2rem;">
+        <div class="cont-flex-space">
+            <div class="cont-flex-start cont-title">
+                <i class="fas fa-globe-americas fa-2x"></i>
+                <h2>Abonnement</h2>
+            </div>
+            <div class="cont-contract">
+                <button id="new-abo" type="button" class="btn-type form-btn btn10">Ajouter</button>
+            </div>
+        </div>
+        <div class="cont-grid website-input" style="display: none; margin-top: 2rem;">
+            <div>
+                <label for="website">Site internet *</label>
+                <input class="form-control website-name" type="text" name="website">
+            </div>
+            <div>
+                <label for="url">URL du site *</label>
+                <input class="form-control website-url" type="text" name="url">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section contract-input" style="display: none;">
+        <div class="form-section">
+            <div class="cont-flex-start">
+                <div class="cont-flex">
+                    <i class="fas fa-file-contract fa-2x"></i>
+                    <h2>Contrats</h2>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="cont-flex-space mdl-btn-contract">
+                {% for type in typesContract %}
+                <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn" type="button">+
+                    {{type.lib}}</button>
+                {% endfor %}
+            </div>
+            <div>
+                {% for type in typesContract %}
+                <div id="{{type.lib}}-form" class="form-type form-contract cont-grid-contract mdl-form-contract"
+                    style="display: none">
+                    <div class="form-contract-title">
+                        <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox"
+                            name="{{type.lib}}-check" hidden>
+                        <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
+                    </div>
+                    <div class="cont-grid">
+                        <div>
+                            <label for="{{type.lib}}-price">Prix initial *</label>
+                            <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                        </div>
+                        <div>
+                            <label for="{{type.lib}}-promotion">Prix réduit</label>
+                            <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="cont-flex-space mdl-btn">
+        <button class="btn-type btn-form btn-alert" type="submit">Créer</button>
+        <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+    </div>
+
+    {{ form_end(add_company_form) }}
+</div>
+
 {% for company in companies|reverse %}
 <!-- MODAL ADD USER -->
 {% include "partials/_modal_add_user.html.twig" with {'company': company} %}
@@ -62,7 +163,7 @@
                 <input id="search-input" class="form-control" type="text" name="search" placeholder="Entreprise"
                     aria-label="Rechercher">
             </form>
-            <a class="btn-type right btn10" href="{{ path('add_company') }}">Nouvelle entreprise</a>
+            <a id="add-all-company" class="btn-type right btn10">Nouvelle entreprise</a>
         </div>
 
         <ul class="nav nav-tabs nav-tabs-admin">
@@ -100,12 +201,6 @@
                                     <i class="fas fa-user-plus fa-lg"></i>
                                 </a>
                             </li>
-                            <!-- <li class="action-item">
-                                <a id="add-contract{{company.id}}" class="action-link add-contract"
-                                    title="Ajouter un contrat">
-                                    <i class="fas fa-file-contract fa-lg"></i>
-                                </a>
-                            </li> -->
                             <li class="action-item">
                                 <a id="add-invoice{{company.id}}" class="action-link add-invoice"
                                     title="Ajouter une facture {{company.name}}">
@@ -208,7 +303,7 @@
                     tel.style.display = null;
                 })
             }
-            if (screen.width < 460) {
+            if (screen.width < 768) {
                 document.querySelector('#head-action').style.display = 'none';
             } else {
                 document.querySelector('#head-action').style.display = 'block';
@@ -216,14 +311,53 @@
         })
     });
     
+    // ajouter une entreprise
+    const button = document.querySelector('#add-all-company');
+    button.addEventListener('click', () => {
+        const modal = document.querySelector('.mdl-all-company');
+        modal.style.visibility = 'visible';
+        navbar.style.opacity = 0.4;
+        cont.style.opacity = 0.4;
+        buttons.forEach(function (btn) {
+            btn.style.pointerEvents = 'none';
+        });
+    });
+
+    const addAbo = document.querySelector('#new-abo');
+    addAbo.addEventListener('click', () => {
+        const websiteInput = document.querySelector('.website-input');
+        const contractInput = document.querySelector('.contract-input');
+        if (websiteInput.style.display == 'none') {
+            addAbo.innerHTML = 'Supprimer';
+            document.querySelector('.website-name').setAttribute('required', 'required')
+            document.querySelector('.website-url').setAttribute('required', 'required')
+            websiteInput.style.display = 'grid';
+            contractInput.style.display = 'block';
+            addAbo.setAttribute('style', 'background-color: var(--color1)');
+        } else {
+            addAbo.innerHTML = 'Ajouter';
+            document.querySelector('.website-name').removeAttribute('required');
+            document.querySelector('.website-url').removeAttribute('required');
+            websiteInput.style.display = 'none';
+            contractInput.style.display = 'none';
+            addAbo.setAttribute('style', 'background-color: var(--orange)');
+            // réinitialise les contrats
+            const btnType = document.querySelectorAll('.btn-contract');
+            btnType.forEach(function(btn) {
+                if (btn.innerHTML[0] == "-") {
+                    btn.click();
+                }
+            })
+        }
+    });
 
 </script>
 
 <script src="{{asset('js/search_company.js')}}"></script>
 <script src="{{asset('js/add_multiple_contract.js')}}"></script>
 <script src="{{asset('js/close_modal.js')}}"></script>
-<script src="{{asset('js/add_entity_modal.js')}}" nb="4" param1="user" param2="contract" param3="invoice"
-    param4="website"></script>
+<script src="{{asset('js/add_entity_modal.js')}}" nb="5" param1="user" param2="contract" param3="invoice"
+    param4="website" param5="company"></script>
 <script src="{{asset('js/edit_entity_modal.js')}}" nb="1" param1="company"></script>
 <script src="{{asset('js/delete_entity_modal.js')}}" nb="1" param1="company"></script>
 

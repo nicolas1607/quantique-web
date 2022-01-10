@@ -9,7 +9,8 @@ const modalElements = [...Array.from(document.querySelectorAll('.mdl-delete')),
 ...Array.from(document.querySelectorAll('.mdl-edit-company')),
 ...Array.from(document.querySelectorAll('.mdl-add-new-user')),
 ...Array.from(document.querySelectorAll('.mdl-edit-password')),
-...Array.from(document.querySelectorAll('.mdl-remove'))];
+...Array.from(document.querySelectorAll('.mdl-remove')),
+...Array.from(document.querySelectorAll('.mdl-all-company'))];
 
 modalElements.forEach(function (modal) {
     const close = modal.querySelector('.mdl-close');

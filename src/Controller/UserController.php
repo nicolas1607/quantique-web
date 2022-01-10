@@ -7,6 +7,9 @@ use App\Entity\Note;
 use App\Entity\User;
 use App\Entity\Company;
 use App\Entity\Invoice;
+use App\Entity\Website;
+use App\Entity\Contract;
+use App\Form\CompanyType;
 use App\Form\InvoiceType;
 use App\Entity\TypeInvoice;
 use App\Entity\TypeContract;
@@ -27,13 +30,11 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserController extends AbstractController
 {
     private EntityManagerInterface $em;
-    private CompanyRepository $companyRepo;
     private UserRepository $userRepo;
 
-    public function __construct(EntityManagerInterface $em, CompanyRepository $companyRepo, UserRepository $userRepo)
+    public function __construct(EntityManagerInterface $em, UserRepository $userRepo)
     {
         $this->em = $em;
-        $this->companyRepo = $companyRepo;
         $this->userRepo = $userRepo;
     }
 
@@ -49,25 +50,67 @@ class UserController extends AbstractController
         $typesInvoice = $this->em->getRepository(TypeInvoice::class)->findAll();
         $currentDate = new DateTime();
 
+        // Formulaire d'ajout d'entreprise
+        $company = new Company();
+        $addCompanyForm = $this->createForm(CompanyType::class, $company);
+        $addCompanyForm->handleRequest($request);
+        if ($addCompanyForm->isSubmitted() && $addCompanyForm->isValid()) {
+            $company = $addCompanyForm->getData();
+
+            // Abonnement
+            $website = null;
+            if ($request->get('website') != '') {
+                $website = new Website();
+                $website->setName($request->get('website'))
+                    ->setUrl($request->get('url'))
+                    ->setCompany($company);
+                $company->addWebsite($website);
+                $this->em->persist($website);
+            }
+
+            // Liste des contrats ajoutés
+            if ($website != null) {
+                $types = ['vitrine', 'commerce', 'google', 'facebook'];
+                foreach ($types as $type) {
+                    $check = $request->get($type . '-check');
+                    if ($check == 'on') {
+                        $typeContract = $this->em->getRepository(TypeContract::class)
+                            ->findOneBy(['lib' => $type]);
+                        $price = $request->get($type . '-price');
+                        $promotion = $request->get($type . '-promotion');
+                        $contract = new Contract;
+                        $contract->setPrice(floatval($price))
+                            ->setType($typeContract)
+                            ->setWebsite($website);
+                        if ($promotion && $promotion != $price) {
+                            $contract->setPromotion(floatval($promotion));
+                        }
+                        $website->addContract($contract);
+                        $this->em->persist($contract);
+                    }
+                }
+            }
+            $this->em->persist($company);
+            $this->em->flush();
+            $this->addFlash('success', $company->getName() . ' ajoutée avec succès !');
+            return $this->redirectToRoute('admin_companies');
+        }
+
         // Formulaire d'ajout de facture
         $invoice = new Invoice();
         $addInvoiceForm = $this->createForm(InvoiceType::class, $invoice);
         $addInvoiceForm->handleRequest($request);
-
         if ($addInvoiceForm->isSubmitted() && $addInvoiceForm->isValid()) {
-
             $company = $this->em->getRepository(Company::class)->findOneBy(['name' => $request->get('company')]);
 
             // Fichier PDF *
             $paths = $addInvoiceForm->get('files')->getData();
-
             foreach ($paths as $path) {
                 $invoice = new Invoice();
                 $invoice->setReleasedAt(new DateTime($request->get('date')))
                     ->setType($this->em->getRepository(TypeInvoice::class)
                         ->findOneBy(['name' => $request->get('type')]))
                     ->setCompany($company);
-
                 if ($path) {
                     $originalFilename = pathinfo($path->getClientOriginalName(), PATHINFO_FILENAME);
                     $safeFilename = $slugger->slug($originalFilename);
@@ -80,7 +123,6 @@ class UserController extends AbstractController
                     } catch (FileException $e) {
                         // ... handle exception if something happens during file upload
                     }
-
                     $invoice->setFile($newFilename);
                     $company->addInvoice($invoice);
                     $this->em->persist($invoice);
@@ -108,9 +150,11 @@ class UserController extends AbstractController
 
                 $mailer->send($email);
             }
-
             $this->addFlash('success', 'Facture(s) ajoutée(s) à ' . $company->getName() . ' !');
         }
+
+        $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
+
 
         return $this->render('admin/companies.html.twig', [
             'users' => $users,
@@ -118,7 +162,8 @@ class UserController extends AbstractController
             'typesContract' => $typesContract,
             'typesInvoice' => $typesInvoice,
             'currentDate' => $currentDate,
-            'add_invoice_form' => $addInvoiceForm->createView()
+            'add_invoice_form' => $addInvoiceForm->createView(),
+            'add_company_form' => $addCompanyForm->createView()
         ]);
     }
 
