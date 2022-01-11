@@ -5,106 +5,7 @@
 {% block body %}
 
 <!-- MODAL ADD COMPANY -->
-<div class="mdl-all-company">
-    {{ form_start(add_company_form) }}
-
-    <div class="form-section">
-        <div class="cont-flex-space mdl-header-form" style="margin-bottom: 2rem; width: 100%;">
-            <div class="cont-flex">
-                <i class="fas fa-user-plus fa-2x"></i>
-                <h2>Client</h2>
-            </div>
-            <a class="mdl-close action-link">✖</a>
-        </div>
-        <div class="cont-grid form-section">
-            {{ form_row(add_company_form.name) }}
-            {{ form_row(add_company_form.email) }}
-        </div>
-        <div class="cont-grid form-section">
-            {{ form_row(add_company_form.phone) }}
-            {{ form_row(add_company_form.address) }}
-        </div>
-        <div class="cont-grid form-section">
-            {{ form_row(add_company_form.postalCode) }}
-            {{ form_row(add_company_form.city) }}
-        </div>
-        <div class="cont-grid form-section">
-            {{ form_row(add_company_form.numTVA) }}
-            {{ form_row(add_company_form.siret) }}
-        </div>
-    </div>
-
-    <div class="form-section" style="margin-bottom: 2rem;">
-        <div class="cont-flex-space">
-            <div class="cont-flex-start cont-title">
-                <i class="fas fa-globe-americas fa-2x"></i>
-                <h2>Abonnement</h2>
-            </div>
-            <div class="cont-contract">
-                <button id="new-abo" type="button" class="btn-type form-btn btn10">Ajouter</button>
-            </div>
-        </div>
-        <div class="cont-grid website-input" style="display: none; margin-top: 2rem;">
-            <div>
-                <label for="website">Site internet *</label>
-                <input class="form-control website-name" type="text" name="website">
-            </div>
-            <div>
-                <label for="url">URL du site *</label>
-                <input class="form-control website-url" type="text" name="url">
-            </div>
-        </div>
-    </div>
-
-    <div class="form-section contract-input" style="display: none;">
-        <div class="form-section">
-            <div class="cont-flex-start">
-                <div class="cont-flex">
-                    <i class="fas fa-file-contract fa-2x"></i>
-                    <h2>Contrats</h2>
-                </div>
-            </div>
-        </div>
-        <div>
-            <div class="cont-flex-space mdl-btn-contract">
-                {% for type in typesContract %}
-                <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn" type="button">+
-                    {{type.lib}}</button>
-                {% endfor %}
-            </div>
-            <div>
-                {% for type in typesContract %}
-                <div id="{{type.lib}}-form" class="form-type form-contract cont-grid-contract mdl-form-contract"
-                    style="display: none">
-                    <div class="form-contract-title">
-                        <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox"
-                            name="{{type.lib}}-check" hidden>
-                        <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
-                    </div>
-                    <div class="cont-grid">
-                        <div>
-                            <label for="{{type.lib}}-price">Prix initial *</label>
-                            <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
-                        </div>
-                        <div>
-                            <label for="{{type.lib}}-promotion">Prix réduit</label>
-                            <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    <div class="cont-flex-space mdl-btn">
-        <button class="btn-type btn-form btn-alert" type="submit">Créer</button>
-        <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
-    </div>
-
-    {{ form_end(add_company_form) }}
-</div>
-
+{% include "partials/_modal_all_company.html.twig" %}
 {% for company in companies|reverse %}
 <!-- MODAL ADD USER -->
 {% include "partials/_modal_add_user.html.twig" with {'company': company} %}
@@ -128,22 +29,40 @@
     <div class="cont-grid form-section">
         <div>
             <label for="company">Entreprise *</label>
-            <input id="company" class="form-control" name="company" readonly>
+            <div class="input">
+                <input id="company" class="form-control" name="company" readonly>
+                <span class="bottom"></span>
+                <span class="right"></span>
+                <span class="top"></span>
+                <span class="left"></span>
+            </div>
         </div>
         <div>
             <label for="type">Type *</label>
-            <select class="form-select" name="type">
-                {% for type in typesInvoice %}
-                <option value="{{type.name}}">{{type.name}}</option>
-                {% endfor %}
-            </select>
+            <div class="input">
+                <select class="form-select" name="type">
+                    {% for type in typesInvoice %}
+                    <option value="{{type.name}}">{{type.name}}</option>
+                    {% endfor %}
+                </select>
+                <span class="bottom"></span>
+                <span class="right"></span>
+                <span class="top"></span>
+                <span class="left"></span>
+            </div>
         </div>
     </div>
     <div class="cont-grid form-section">
         {{form_row(add_invoice_form.files)}}
         <div>
             <label for="date">Date de facturation *</label>
-            <input id="date" class="form-control" type="date" name="date" value="{{currentDate|date('Y-m-d')}}">
+            <div class="input">
+                <input id="date" class="form-control" type="date" name="date" value="{{currentDate|date('Y-m-d')}}">
+                <span class="bottom"></span>
+                <span class="right"></span>
+                <span class="top"></span>
+                <span class="left"></span>
+            </div>
         </div>
     </div>
     <div class="cont-flex-space mdl-btn">
@@ -160,10 +79,16 @@
         <h1>Espace administration</h1>
         <div class="cont-flex-end">
             <form id="search-form" class="search">
-                <input id="search-input" class="form-control" type="text" name="search" placeholder="Entreprise"
+                <div class="input">
+                    <input id="search-input" class="form-control" type="text" name="search" placeholder="Entreprise"
                     aria-label="Rechercher">
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </form>
-            <a id="add-all-company" class="btn-type right btn10">Nouvelle entreprise</a>
+            <a id="add-all-company" class="btn-type float-right btn10">Nouvelle entreprise</a>
         </div>
 
         <ul class="nav nav-tabs nav-tabs-admin">
@@ -178,7 +103,7 @@
             </li>
         </ul>
 
-        <table class="table table-hover table-companies">
+        <table class="table table-hover table-companies animate__animated animate__backInUp">
             <thead>
                 <tr>
                     <th scope="col">Entreprise</th>
@@ -316,6 +241,7 @@
     button.addEventListener('click', () => {
         const modal = document.querySelector('.mdl-all-company');
         modal.style.visibility = 'visible';
+        modal.className = modal.className + ' animate__animated animate__backInUp';
         navbar.style.opacity = 0.4;
         cont.style.opacity = 0.4;
         buttons.forEach(function (btn) {
@@ -330,14 +256,12 @@
         if (websiteInput.style.display == 'none') {
             addAbo.innerHTML = 'Supprimer';
             document.querySelector('.website-name').setAttribute('required', 'required')
-            document.querySelector('.website-url').setAttribute('required', 'required')
             websiteInput.style.display = 'grid';
             contractInput.style.display = 'block';
             addAbo.setAttribute('style', 'background-color: var(--color1)');
         } else {
             addAbo.innerHTML = 'Ajouter';
             document.querySelector('.website-name').removeAttribute('required');
-            document.querySelector('.website-url').removeAttribute('required');
             websiteInput.style.display = 'none';
             contractInput.style.display = 'none';
             addAbo.setAttribute('style', 'background-color: var(--orange)');

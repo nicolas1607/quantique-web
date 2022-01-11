@@ -12,6 +12,7 @@
     <link rel="icon" href="{{asset('images/icons/favicon.png')}}">
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     {% endblock %}
 
     {% block javascripts %}
@@ -23,13 +24,13 @@
     {% include "partials/_navbar.html.twig" %}
 
     {% for message in app.flashes('success') %}
-        <div class="alert-success bg-success">
+        <div class="alert-success bg-success animate__animated animate__fadeInDown">
             {{ message }}
         </div>
     {% endfor %}
 
     {% for message in app.flashes('alert') %}
-        <div class="alert-success bg-danger">
+        <div class="alert-success bg-danger animate__animated animate__fadeInDown">
             {{ message }}
         </div>
     {% endfor %}

@@ -16,6 +16,7 @@ if (document.querySelector('.notepad')) {
         noteLink.addEventListener('click', () => {
             if (notepad.style.visibility = 'hidden') {
                 notepad.style.visibility = 'visible';
+                notepad.className = notepad.className + ' animate__animated animate__backInUp';
                 navbar.style.opacity = 0.4;
                 cont.style.opacity = 0.4;
                 buttons.forEach(function (btn) {
@@ -28,6 +29,7 @@ if (document.querySelector('.notepad')) {
             close.addEventListener('click', () => {
                 if (notepad.style.visibility = 'visible') {
                     notepad.style.visibility = 'hidden';
+                    notepad.className = notepad.className.replace(' animate__animated animate__backInUp', '');
                     navbar.style.opacity = 1;
                     cont.style.opacity = 1;
                     buttons.forEach(function (btn) {
@@ -47,6 +49,8 @@ window.addEventListener('keydown', function (event) {
         for (let i = 0; i < notepads.length; i++) {
             if (notepads[i].style.visibility = 'visible') {
                 notepads[i].style.visibility = 'hidden';
+                notepads[i].className = notepads[i].className.replace(' animate__animated animate__backInUp', '');
+
                 navbar.style.opacity = 1;
                 cont.style.opacity = 1;
                 buttons.forEach(function (btn) {

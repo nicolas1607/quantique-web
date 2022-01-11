@@ -12,6 +12,7 @@ typeRemove.forEach(function (type) {
         let modal = document.querySelector('#modal-remove-' + type + id);
         del.addEventListener('click', () => {
             modal.style.visibility = 'visible';
+            modal.className = modal.className + ' animate__animated animate__backInUp';
             navbar.style.opacity = 0.4;
             cont.style.opacity = 0.4;
             buttons.forEach(function (btn) {

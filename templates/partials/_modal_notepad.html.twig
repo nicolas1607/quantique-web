@@ -30,7 +30,13 @@
             <div class="cont-note">
                 <div>
                     <label id="{{app.user.id}}" class="user" for="message">Message</label>
-                    <textarea class="form-control msg" name="message" rows="1" required></textarea>
+                    <div class="input">
+                        <textarea class="form-control msg" name="message" rows="1" required></textarea>
+                        <span class="bottom"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="left"></span>
+                    </div>
                 </div>
                 <a id="notepad-submit{{contract.id}}" class="btn-type notepad-btn" onclick="validateForm({{contract.id}})">Envoyer</a>
             </div>
@@ -54,7 +60,10 @@
             url: '/delete_note.php',
             data: {id : id}
         });
-        document.querySelector('#notepad-item'+id).remove();
+        document.querySelector('#notepad-item'+id).className = 'notepad-item animate__animated animate__lightSpeedOutRight';
+        setTimeout( () => {
+            document.querySelector('#notepad-item'+id).remove();
+        }, 1000); 
     }
 
     function validateForm(id) {
@@ -82,7 +91,7 @@
         const notepadItem = document.createElement('div');
         nb++;
         notepadItem.id = "notepad-item" + nb;
-        notepadItem.className = "notepad-item";
+        notepadItem.className = "notepad-item animate__animated animate__lightSpeedInRight";
 
         const noteDate = document.createElement('p');
         noteDate.className = "note-date";

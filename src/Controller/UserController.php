@@ -52,10 +52,15 @@ class UserController extends AbstractController
 
         // Formulaire d'ajout d'entreprise
         $company = new Company();
-        $addCompanyForm = $this->createForm(CompanyType::class, $company);
-        $addCompanyForm->handleRequest($request);
-        if ($addCompanyForm->isSubmitted() && $addCompanyForm->isValid()) {
-            $company = $addCompanyForm->getData();
+        if ($request->get('name') && $request->get('email')) {
+            $company->setName($request->get('name'))
+                ->setEmail($request->get('email'));
+            if ($request->get('phone')) $company->setPhone($request->get('phone'));
+            if ($request->get('address')) $company->setAddress($request->get('address'));
+            if ($request->get('postalCode')) $company->setPostalCode($request->get('postalCode'));
+            if ($request->get('city')) $company->setCity($request->get('city'));
+            if ($request->get('numTVA')) $company->setNumTVA($request->get('numTVA'));
+            if ($request->get('siret')) $company->setSiret($request->get('siret'));
 
             // Abonnement
             $website = null;
@@ -147,7 +152,6 @@ class UserController extends AbstractController
                 foreach ($invoices as $invoice) {
                     $email->attachFromPath($this->getParameter('invoices') . '/' . $invoice->getFile());
                 }
-
                 $mailer->send($email);
             }
             $this->addFlash('success', 'Facture(s) ajoutée(s) à ' . $company->getName() . ' !');
@@ -155,15 +159,13 @@ class UserController extends AbstractController
 
         $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
 
-
         return $this->render('admin/companies.html.twig', [
             'users' => $users,
             'companies' => $companies,
             'typesContract' => $typesContract,
             'typesInvoice' => $typesInvoice,
             'currentDate' => $currentDate,
-            'add_invoice_form' => $addInvoiceForm->createView(),
-            'add_company_form' => $addCompanyForm->createView()
+            'add_invoice_form' => $addInvoiceForm->createView()
         ]);
     }
 
@@ -214,15 +216,9 @@ class UserController extends AbstractController
      */
     public function notes(Request $request): Response
     {
-        $search = $request->get('search');
-        if ($search != null) {
-            $notes = $this->noteRepo->findSearch($search);
-        } else {
-            $notes = $this->em->getRepository(Note::class)->findAll();
-        }
+        $notes = $this->em->getRepository(Note::class)->findAll();
         return $this->render('admin/notes.html.twig', [
             'notes' => $notes,
-            'search' => $search
         ]);
     }
 

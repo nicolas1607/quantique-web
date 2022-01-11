@@ -23,7 +23,13 @@
     {{ form_start(edit_password_form) }}
     <div class="form-section">
         <label for="company">Identifiant</label>
-        <input class="form-control" type="text" value="{{app.user.email}}" readonly>
+        <div class="input">
+            <input class="form-control" type="text" value="{{app.user.email}}" readonly>
+            <span class="bottom"></span>
+            <span class="right"></span>
+            <span class="top"></span>
+            <span class="left"></span>
+        </div>
     </div>
     <div class="form-section cont-grid">
         {{ form_row(edit_password_form.password) }}
@@ -89,7 +95,7 @@
                 <input id="start-end" class="form-control" type="date" name="search" placeholder="Date de fin"
                     aria-label="Date de fin">
             </form>
-            <a id="add-invoice{{company.id}}" class="btn-type right btn10 add-invoice">Nouvelle
+            <a id="add-invoice{{company.id}}" class="btn-type float-right btn10 add-invoice">Nouvelle
                 facture</a>
             </a>
         </div>
@@ -98,19 +104,22 @@
 
         <form action="{{path('show_invoices', {'company': company.id})}}" style="padding-left: 0; padding-right: 0;">
 
-            <ul class="nav nav-tabs nav-tabs-company" style="margin-top: 1rem; position: relative;">
-                <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="tab"
-                        href="{{path('show_contracts', {'company': company.id})}}">Abonnements</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" data-bs-toggle="tab"
-                        href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="tab"
-                        href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
-                </li>
+            <ul class="nav nav-tabs nav-tabs-company" style="margin-top: 1rem; display: flex; justify-content: space-between;">
+                <div style="display: flex;">
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab"
+                            href="{{path('show_contracts', {'company': company.id})}}">Abonnements</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab"
+                            href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab"
+                            href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
+                    </li>
+                </div>
+                
                 <li class="all-invoice">
                     <input type="checkbox" name="allInvoice" style="margin-top: 1rem; margin-bottom: 0">
                     <label for="allInvoice">Tout sélectionner</label>
@@ -137,26 +146,24 @@
                         {% set i = 1 %}
                         {% for invoice in company.invoices %}
                             {# blank #}
-                            {% if loop.index0 - 1 >= 0 %}
+                            {% if loop.index0 - 1 > 0 %}
                                 {% set date = company.invoices[loop.index0 - 1].releasedAt %}
-                                {% if date|date("m/d/Y") < invoice.releasedAt|date("m/d/Y") %}
-                                    <tr style="border-bottom: 1px;">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                                {% if date|date("m/d/Y") != invoice.releasedAt|date("m/d/Y") %}
+                                    <tr class="table-light invoice {{ invoice.releasedAt|date("Y-m-d") }}" style="margin-top: 2rem; border-top: solid 1px;">
+                                {% else %}
+                                    <tr class="table-light invoice {{ invoice.releasedAt|date("Y-m-d") }}">
                                 {% endif %}
+                            {% else %}
+                                <tr class="table-light invoice {{ invoice.releasedAt|date("Y-m-d") }}">
                             {% endif %}
                             {# blank #}
 
-                            <tr class="table-light invoice {{ invoice.releasedAt|date("Y-m-d") }}">
                                 <td>{{ invoice.releasedAt|date("d/m/Y") }}</td>
                                 <td>{{ invoice.type.name }}</td>
                                 <td class="body-name">{{ invoice.file }}</td>
                                 <td>
                                     <ul class="action-list">
-                                        <input name="invoiceCheck{{i}}" type="checkbox" style="margin-top: 0; margin-bottom: 0">
+                                        <input class="invoice-check" name="invoiceCheck{{i}}" type="checkbox" style="margin-top: 0; margin-bottom: 0">
                                         <li class="action-item cont-flex-space">
                                             <a href="{{path('download_invoice', {'id': invoice.id})}}" class="action-link"
                                                 title="Télécharger la facture">
@@ -243,7 +250,8 @@
             for (let i=0; i<invoicesList.length; i++) {
                 let invoice = invoicesList[i];
                 if (invoice.style.display != 'none') {
-                    invoice.querySelector('input').checked = true;
+                    console.log(invoice.querySelector('input'))
+                    invoice.querySelector('.invoice-check').checked = true;
                 }
             }
         } else if (all.checked == false) {

@@ -16,6 +16,7 @@ typeEditModal.forEach(function (type) {
         else modal = document.querySelector('#modal-edit-' + type + id);
         edit.addEventListener('click', () => {
             modal.style.visibility = 'visible';
+            modal.className = modal.className + ' animate__animated animate__backInUp';
             navbar.style.opacity = 0.4;
             cont.style.opacity = 0.4;
             buttons.forEach(function (btn) {

@@ -9,16 +9,34 @@
     <form action="{{path('add_website_modal', {'company': company.id})}}">
         <div class="form-section">
             <label for="company">Entreprise</label>
-            <input class="form-control" type="text" name="company" value="{{company.name}}" readonly>
+            <div class="input">
+                <input class="form-control" type="text" name="company" value="{{company.name}}" readonly>
+                <span class="bottom"></span>
+                <span class="right"></span>
+                <span class="top"></span>
+                <span class="left"></span>
+            </div>
         </div>
         <div class="cont-grid form-section">
             <div>
                 <label for="name">Nom du site *</label>
-                <input class="form-control" type="text" name="name" required>
+                <div class="input">
+                    <input class="form-control" type="text" name="name" required>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
             <div>
-                <label for="url">URL du site *</label>
-                <input class="form-control" type="text" name="url" required>
+                <label for="url">URL du site</label>
+                <div class="input">
+                    <input class="form-control" type="text" name="url">
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
         </div>
         <div class="form-section">
@@ -49,11 +67,23 @@
                         <div class="cont-grid">
                             <div>
                                 <label for="{{type.lib}}-price">Prix initial *</label>
-                                <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                                <div class="input">
+                                    <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                                    <span class="bottom"></span>
+                                    <span class="right"></span>
+                                    <span class="top"></span>
+                                    <span class="left"></span>
+                                </div>
                             </div>
                             <div>
                                 <label for="{{type.lib}}-promotion">Prix réduit</label>
-                                <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                                <div class="input">
+                                    <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                                    <span class="bottom"></span>
+                                    <span class="right"></span>
+                                    <span class="top"></span>
+                                    <span class="left"></span>
+                                </div>
                             </div>
                         </div>
                     </div>

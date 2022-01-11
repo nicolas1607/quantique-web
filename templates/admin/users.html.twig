@@ -16,30 +16,59 @@
     <form action="{{path('add_user_modal')}}">
     <div class="form-section">
         <label for="company">Entreprise</label>
-        <select class="form-select" name="company">
-            {% for company in companies %}
-            <option value="{{company.name}}">{{company.name}}</option>
-            {% endfor %}
-        </select>
+        <div class="input">
+            <select class="form-select" name="company">
+                {% for company in companies %}
+                <option value="{{company.name}}">{{company.name}}</option>
+                {% endfor %}
+            </select>            <span class="bottom"></span>
+            <span class="right"></span>
+            <span class="top"></span>
+            <span class="left"></span>
+        </div>
     </div>
     <div class="cont-grid form-section">
         <div>
             <label for="firstname">Prénom *</label>
-            <input class="form-control" name="firstname" required>
+            <div class="input">
+                <input class="form-control" name="firstname" required>
+                <span class="bottom"></span>
+                <span class="right"></span>
+                <span class="top"></span>
+                <span class="left"></span>
+            </div>
         </div>
         <div>
             <label for="lastname">Nom de famille *</label>
-            <input class="form-control" name="lastname" required>
+            <div class="input">
+                <input class="form-control" name="lastname" required>
+                <span class="bottom"></span>
+                <span class="right"></span>
+                <span class="top"></span>
+                <span class="left"></span>
+            </div>
         </div>
     </div>
     <div class="cont-grid form-section">
         <div>
             <label for="email">Email *</label>
-            <input class="form-control" name="email" required>
+            <div class="input">
+                <input class="form-control" name="email" required>
+                <span class="bottom"></span>
+                <span class="right"></span>
+                <span class="top"></span>
+                <span class="left"></span>
+            </div>
         </div>
         <div>
             <label for="phone">Téléphone</label>
-            <input class="form-control" name="phone">
+            <div class="input">
+                <input class="form-control" name="phone">
+                <span class="bottom"></span>
+                <span class="right"></span>
+                <span class="top"></span>
+                <span class="left"></span>
+            </div>
         </div>
     </div>
     <div class="cont-flex-space mdl-btn">
@@ -87,10 +116,16 @@
     <h1>Espace administration</h1>
     <div class="cont-flex-end">
         <form id="search-form" class="search">
-            <input id="search-input" class="form-control" type="text" name="search" placeholder="Contact"
+            <div class="input">
+                <input id="search-input" class="form-control" type="text" name="search" placeholder="Contact"
                 aria-label="Rechercher">
+                <span class="bottom"></span>
+                <span class="right"></span>
+                <span class="top"></span>
+                <span class="left"></span>
+            </div>
         </form>
-        <a id="add-new-user" class="btn-type right btn10 add-new-user">Nouveau client</a>
+        <a id="add-new-user" class="btn-type float-right btn10 add-new-user">Nouveau client</a>
     </div>
 
     <ul class="nav nav-tabs nav-tabs-admin">
@@ -105,7 +140,7 @@
         </li>
     </ul>
 
-    <table class="table table-hover table-users">
+    <table class="table table-hover table-users animate__animated animate__backInUp">
         <thead>
             <tr>
                 <th scope="col">Contact</th>

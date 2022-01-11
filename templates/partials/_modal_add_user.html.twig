@@ -10,25 +10,38 @@
         <div class="form-section cont-grid">
             <div>
                 <label for="company">Entreprise</label>
-                <input class="form-control" type="text" name="company" value="{{company.name}}" readonly>
+                <div class="input">
+                    <input class="form-control" type="text" name="company" value="{{company.name}}" readonly>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
             <div>
                 <label for="user">Client existant *</label>
-                <select id="user-exist" class="form-select" name="user">
-                    <option value=""></option>
-                    <!-- On liste uniquement les clients qui ne sont pas déjà ajoutés -->
-                    {% for user in users %}
-                        {% set flag = false %}
-                        {% for userExist in company.users %}
-                            {% if user.id == userExist.id %}
-                                {% set flag = true %}
+                <div class="input">
+                    <select id="user-exist" class="form-select" name="user">
+                        <option value=""></option>
+                        <!-- On liste uniquement les clients qui ne sont pas déjà ajoutés -->
+                        {% for user in users %}
+                            {% set flag = false %}
+                            {% for userExist in company.users %}
+                                {% if user.id == userExist.id %}
+                                    {% set flag = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if flag == false %}
+                                <option value="{{user.id}}">{{user.firstname}} {{user.lastname}}</option>
                             {% endif %}
                         {% endfor %}
-                        {% if flag == false %}
-                            <option value="{{user.id}}">{{user.firstname}} {{user.lastname}}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
+                    </select>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
+                
             </div>
         </div>
 
@@ -38,21 +51,45 @@
         <div class="cont-grid form-section">
             <div>
                 <label for="firstname">Prénom *</label>
-                <input id="user-firstname" class="form-control" name="firstname" required>
+                <div class="input">
+                    <input id="user-firstname" class="form-control" name="firstname" required>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
             <div>
                 <label for="lastname">Nom de famille *</label>
-                <input id="user-lastname" class="form-control" name="lastname" required>
+                <div class="input">
+                    <input id="user-lastname" class="form-control" name="lastname" required>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
         </div>
         <div class="cont-grid form-section">
             <div>
                 <label for="email">Email *</label>
-                <input id="user-email" class="form-control" name="email" required>
+                <div class="input">
+                    <input id="user-email" class="form-control" name="email" required>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
             <div>
                 <label for="phone">Téléphone</label>
-                <input class="form-control" name="phone">
+                <div class="input">
+                    <input class="form-control" name="phone">
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
         </div>
         <div class="cont-flex-space mdl-btn">

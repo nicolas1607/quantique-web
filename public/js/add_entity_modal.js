@@ -17,6 +17,7 @@ typeAddModal.forEach(function (type) {
         else if (type == 'new-user') modal = document.querySelector('#modal-new-user');
         else modal = document.querySelector('#modal-' + type + id);
         add.addEventListener('click', () => {
+            modal.className = modal.className + ' animate__animated animate__backInUp';
             modal.style.visibility = 'visible';
             navbar.style.opacity = 0.4;
             cont.style.opacity = 0.4;

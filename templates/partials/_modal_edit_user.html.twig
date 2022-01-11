@@ -13,26 +13,56 @@
             {% for company in user.companies %}
             {% set value = value ~ company.name ~ " / " %}
             {% endfor %}
-            <input class="form-control" type="text" name="company" value="{{value|slice(0, (value|length - 2))}}" readonly>
+            <div class="input">
+                <input class="form-control" type="text" name="company" value="{{value|slice(0, (value|length - 2))}}" readonly>
+                <span class="bottom"></span>
+                <span class="right"></span>
+                <span class="top"></span>
+                <span class="left"></span>
+            </div>
         </div>
         <div class="cont-grid form-section">
             <div>
                 <label for="firstname">Prénom *</label>
-                <input class="form-control" name="firstname" value="{{user.firstname}}" required>
+                <div class="input">
+                    <input class="form-control" name="firstname" value="{{user.firstname}}" required>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
             <div>
                 <label for="lastname">Nom de famille *</label>
-                <input class="form-control" name="lastname" value="{{user.lastname}}" required>
+                <div class="input">
+                    <input class="form-control" name="lastname" value="{{user.lastname}}" required>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
         </div>
         <div class="cont-grid form-section">
             <div>
                 <label for="email">Email *</label>
-                <input class="form-control" name="email" value="{{user.email}}" required>
+                <div class="input">
+                    <input class="form-control" name="email" value="{{user.email}}" required>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
             <div>
                 <label for="phone">Téléphone</label>
-                <input class="form-control" name="phone" value="{{user.phone}}">
+                <div class="input">
+                    <input class="form-control" name="phone" value="{{user.phone}}">
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
         </div>
         <div class="cont-flex-space mdl-btn">

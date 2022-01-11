@@ -12,26 +12,26 @@
       <ul id="menu" class="navbar-nav me-auto">
         {% if is_granted('ROLE_ADMIN') %}
         <li class="nav-item">
-          <a class="nav-link" href="{{path('admin_companies')}}">Entreprises</a>
+          <a class="nav-link animate__animated animate__pulse" href="{{path('admin_companies')}}">Entreprises</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{path('admin_users')}}">Utilisateurs</a>
+          <a class="nav-link animate__animated animate__pulse" href="{{path('admin_users')}}">Utilisateurs</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{path('admin_notes')}}">Historique</a>
+          <a class="nav-link animate__animated animate__pulse" href="{{path('admin_notes')}}">Historique</a>
         </li>
         {% elseif is_granted('ROLE_USER') %}
         {# <li class="nav-item">
-          <a class="nav-link" href="{{path('profile')}}">Mon profil</a>
+          <a class="nav-link animate__animated animate__pulse" href="{{path('profile')}}">Mon profil</a>
         </li> #}
         {% for company in app.user.companies %}
         <li class="nav-item">
-          <a class="nav-link" href="{{path('show_contracts', {'company': company.id})}}">{{company.name}}</a>
+          <a class="nav-link animate__animated animate__pulse" href="{{path('show_contracts', {'company': company.id})}}">{{company.name}}</a>
         </li>
         {% endfor %}
         {% endif %}
         <li class="nav-item">
-          <a class="nav-link" href="{{ url('app_logout') }}">Déconnexion</a>
+          <a class="nav-link animate__animated animate__pulse" href="{{ url('app_logout') }}">Déconnexion</a>
         </li>
       </ul>
       {% endif %}

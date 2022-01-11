@@ -1,14 +1,18 @@
 // function search
 const invoices = document.getElementsByClassName('invoice');
+console.log(invoices)
 const startDate = document.querySelector('#start-date');
 const endDate = document.querySelector('#start-end');
 startDate.addEventListener('change', () => {
     for (let i = 0; i < invoices.length; i++) {
         const start = startDate.value.split('-');
-        const invoiceStartDate = new Date(start[0], start[1], start[2]);
+        const invoiceStartDate = new Date(start[0], start[1] - 1, start[2]);
         const invoice = invoices[i];
         const invoiceName = invoice.className.substr(20).split('-');
-        const invoiceDate = new Date(invoiceName[0], invoiceName[1], invoiceName[2]);
+        const invoiceDate = new Date(invoiceName[0], invoiceName[1] - 1, invoiceName[2]);
+        console.log(invoiceStartDate)
+        console.log(invoiceDate);
+        console.log(invoiceStartDate <= invoiceDate)
         if (startDate.value != "") {
             if (endDate.value == "") {
                 if (invoiceStartDate <= invoiceDate) {

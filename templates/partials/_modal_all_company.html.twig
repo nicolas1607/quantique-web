@@ -1,0 +1,193 @@
+<div class="mdl-all-company">
+    <form action="{{path('admin_companies')}}">
+        <div class="form-section">
+            <div class="cont-flex-space mdl-header-form" style="margin-bottom: 2rem; width: 100%;">
+                <div class="cont-flex">
+                    <i class="fas fa-user-plus fa-2x"></i>
+                    <h2>Client</h2>
+                </div>
+                <a class="mdl-close action-link">✖</a>
+            </div>
+            <div class="cont-grid form-section">
+                <div>
+                    <label for="name">Nom de l'entreprise *</label>
+                    <div class="input">
+                        <input class="form-control name" type="text" name="name">
+                        <span class="bottom"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="left"></span>
+                    </div>
+                </div>
+                <div>
+                    <label for="email">Email *</label>
+                    <div class="input">
+                        <input class="form-control email" type="text" name="email">
+                        <span class="bottom"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="left"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="cont-grid form-section">
+                <div>
+                    <label for="phone">Téléphone</label>
+                    <div class="input">
+                        <input class="form-control phone" type="text" name="phone">
+                        <span class="bottom"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="left"></span>
+                    </div>
+                </div>
+                <div>
+                    <label for="address">Adresse</label>
+                    <div class="input">
+                        <input class="form-control address" type="text" name="address">
+                        <span class="bottom"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="left"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="cont-grid form-section">
+                <div>
+                    <label for="postalCode">Code postal</label>
+                    <div class="input">
+                        <input class="form-control postalCode" type="text" name="postalCode">
+                        <span class="bottom"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="left"></span>
+                    </div>
+                </div>
+                <div>
+                    <label for="ville">Ville</label>
+                    <div class="input">
+                        <input class="form-control ville" type="text" name="ville">
+                        <span class="bottom"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="left"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="cont-grid form-section">
+                <div>
+                    <label for="numTVA">Numéro de TVA</label>
+                    <div class="input">
+                        <input class="form-control numTVA" type="text" name="numTVA">
+                        <span class="bottom"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="left"></span>
+                    </div>
+                </div>
+                <div>
+                    <label for="siret">SIRET ou SIREN</label>
+                    <div class="input">
+                        <input class="form-control siret" type="text" name="siret">
+                        <span class="bottom"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="left"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section" style="margin-bottom: 2rem;">
+            <div class="cont-flex-space mdl-header-form" style="margin-bottom: 2rem; width: 100%;">
+                <div class="cont-flex-start cont-title">
+                    <i class="fas fa-globe-americas fa-2x"></i>
+                    <h2>Abonnement</h2>
+                </div>
+                <div class="cont-contract">
+                    <button id="new-abo" type="button" class="btn-type form-btn btn10">Ajouter</button>
+                </div>
+            </div>
+            <div class="cont-grid website-input" style="display: none; margin-top: 2rem;">
+                <div>
+                    <label for="website">Site internet *</label>
+                    <div class="input">
+                        <input class="form-control website-name" type="text" name="website">
+                        <span class="bottom"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="left"></span>
+                    </div>
+                </div>
+                <div>
+                    <label for="url">URL du site</label>
+                    <div class="input">
+                        <input class="form-control website-url" type="text" name="url">
+                        <span class="bottom"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="left"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section contract-input" style="display: none;">
+            <div class="form-section">
+                <div class="cont-flex-start">
+                    <div class="cont-flex">
+                        <i class="fas fa-file-contract fa-2x"></i>
+                        <h2>Contrats</h2>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="cont-flex-space mdl-btn-contract">
+                    {% for type in typesContract %}
+                    <button id="{{type.lib}}-btn" class="btn-contract btn-type form-btn" type="button">+
+                        {{type.lib}}</button>
+                    {% endfor %}
+                </div>
+                <div>
+                    {% for type in typesContract %}
+                    <div id="{{type.lib}}-form" class="form-type form-contract cont-grid-contract mdl-form-contract"
+                        style="display: none">
+                        <div class="form-contract-title">
+                            <input id="{{type.lib}}-check" class="{{type.lib}}-check" type="checkbox"
+                                name="{{type.lib}}-check" hidden>
+                            <label class="type-check" for="{{type.lib}}-check">{{type.name}}</label>
+                        </div>
+                        <div class="cont-grid">
+                            <div>
+                                <label for="{{type.lib}}-price">Prix initial *</label>
+                                <div class="input">
+                                    <input id="{{type.lib}}-price" class="form-control" name="{{type.lib}}-price">
+                                    <span class="bottom"></span>
+                                    <span class="right"></span>
+                                    <span class="top"></span>
+                                    <span class="left"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="{{type.lib}}-promotion">Prix réduit</label>
+                                <div class="input">
+                                    <input id="{{type.lib}}-promotion" class="form-control" name="{{type.lib}}-promotion">
+                                    <span class="bottom"></span>
+                                    <span class="right"></span>
+                                    <span class="top"></span>
+                                    <span class="left"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="cont-flex-space mdl-btn">
+            <button class="btn-type btn-form btn-alert" type="submit">Créer</button>
+            <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+        </div>
+    </form>
+</div>

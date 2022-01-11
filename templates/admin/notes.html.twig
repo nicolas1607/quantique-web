@@ -6,12 +6,31 @@
 
 <div class="container">
     <h1>Espace administration</h1>
-    <div class="cont-flex-end">
-        <form id="search-form" class="search">
-            <input id="search-input" class="form-control" type="text" name="search" placeholder="Site internet"
-                aria-label="Rechercher">
-        </form>
-    </div>
+    <form id="search-form" class="cont-flex search">
+        <div class="cont-flex-end">
+            <div class="input">
+                <input id="search-input" class="form-control" type="text" name="search" placeholder="Site internet"
+                aria-label="Rechercher" style="margin-bottom: 0;">
+                <span class="bottom"></span>
+                <span class="right"></span>
+                <span class="top"></span>
+                <span class="left"></span>
+            </div>
+            <div class="input" style="margin-left: 3.2rem;">
+                <select id="search-select" class="form-select" style="margin-bottom: 0;">
+                    <option value="" disabled selected>Contrat</option>
+                    <option value="vitrine">Vitrine</option>
+                    <option value="commerce">E-commerce</option>
+                    <option value="google">Google</option>
+                    <option value="facebook">Facebook</option>
+                </select>
+                <span class="bottom"></span>
+                <span class="right"></span>
+                <span class="top"></span>
+                <span class="left"></span>
+            </div>
+        </div>
+    </form>
 
     <ul class="nav nav-tabs nav-tabs-admin">
         <li class="nav-item">
@@ -25,7 +44,7 @@
         </li>
     </ul>
 
-    <table class="table table-hover table-notes">
+    <table class="table table-hover table-notes animate__animated animate__backInUp">
         <thead>
             <tr>
                 <th id="head-date" scope="col">Date</th>
@@ -37,7 +56,7 @@
         </thead>
         <tbody>
             {% for note in notes|reverse %}
-            <tr id="note{{note.id}}" class="table-light note {{note.contract.website.name}}">
+            <tr id="note{{note.id}}" class="table-light note {{note.contract.website.name}}" type="{{note.contract.type.name}}">
                 <td>{{ note.releasedAt|date("d/m/Y") }}</td>
                 <td>{{ note.contract.website.name }}</td>
                 <td>{{ note.contract.type.name }}</td>

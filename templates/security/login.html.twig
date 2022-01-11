@@ -23,11 +23,23 @@
 
                 <h1 class="h3 mb-3 font-weight-normal text-color1">ESPACE DE CONNEXION</h1>
                 <label for="inputEmail">Email</label>
-                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control"
+                <div class="input">
+                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control"
                     autocomplete="email" required autofocus>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
                 <label for="inputPassword">Password</label>
-                <input type="password" name="password" id="inputPassword" class="form-control"
+                <div class="input">
+                    <input type="password" name="password" id="inputPassword" class="form-control"
                     autocomplete="current-password" required>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 

@@ -117,7 +117,7 @@ class CompanyController extends AbstractController
         } else {
             if ($action == 'download') {
                 $zip = new \ZipArchive();
-                $zipName = 'mes_factures.zip';
+                $zipName = 'quantique_web_factures.zip';
 
                 $zip->open($zipName,  \ZipArchive::CREATE);
                 foreach ($res as $file) {
@@ -139,9 +139,6 @@ class CompanyController extends AbstractController
                 return $this->redirect($_SERVER['HTTP_REFERER']);
             }
         }
-
-
-
 
         // Formulaire de modification de mot de passe
         $editPasswordForm = $this->createForm(UserPasswordType::class, $this->getUser());
@@ -306,69 +303,6 @@ class CompanyController extends AbstractController
         return $this->render('company/show_stats.html.twig', [
             'company' => $company,
             'users' => $users
-        ]);
-    }
-
-    /**
-     * @Route("/admin/company/add", name="add_company")
-     */
-    public function addAll(Request $request): Response
-    {
-        $company = new Company();
-        $addCompanyForm = $this->createForm(CompanyType::class, $company);
-        $addCompanyForm->handleRequest($request);
-
-        if ($addCompanyForm->isSubmitted() && $addCompanyForm->isValid()) {
-            $company = $addCompanyForm->getData();
-
-            // Abonnement
-            $website = null;
-            if ($request->get('website') != '') {
-                $website = new Website();
-                $website->setName($request->get('website'))
-                    ->setUrl($request->get('url'))
-                    ->setCompany($company);
-                $company->addWebsite($website);
-                $this->em->persist($website);
-            }
-
-            // Liste des contrats ajoutés
-            if ($website != null) {
-                $types = ['vitrine', 'commerce', 'google', 'facebook'];
-                foreach ($types as $type) {
-                    $check = $request->get($type . '-check');
-                    if ($check == 'on') {
-                        $typeContract = $this->em->getRepository(TypeContract::class)
-                            ->findOneBy(['lib' => $type]);
-                        $price = $request->get($type . '-price');
-                        $promotion = $request->get($type . '-promotion');
-                        $contract = new Contract;
-                        $contract->setPrice(floatval($price))
-                            ->setType($typeContract)
-                            ->setWebsite($website);
-                        if ($promotion && $promotion != $price) {
-                            $contract->setPromotion(floatval($promotion));
-                        }
-                        $website->addContract($contract);
-                        $this->em->persist($contract);
-                    }
-                }
-            }
-
-
-            $this->em->persist($company);
-            $this->em->flush();
-
-            $this->addFlash('success', $company->getName() . ' ajoutée avec succès !');
-
-            return $this->redirectToRoute('admin_companies');
-        }
-
-        $typesContract = $this->em->getRepository(TypeContract::class)->findAll();
-
-        return $this->render('company/add_all.html.twig', [
-            'add_company_form' => $addCompanyForm->createView(),
-            'types' => $typesContract
         ]);
     }
 

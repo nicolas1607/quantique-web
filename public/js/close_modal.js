@@ -18,6 +18,8 @@ modalElements.forEach(function (modal) {
     // fermer avec button 'X'
     close.addEventListener('click', () => {
         modal.style.visibility = 'hidden';
+        console.log(modal.className)
+        modal.className = modal.className.replace(' animate__animated animate__backInUp', '');
         navbar.style.opacity = 1;
         cont.style.opacity = 1;
         buttons.forEach(function (btn) {
@@ -27,6 +29,7 @@ modalElements.forEach(function (modal) {
     // fermer avec button 'Annuler'
     cancel.addEventListener('click', () => {
         modal.style.visibility = 'hidden';
+        modal.className = modal.className.replace(' animate__animated animate__backInUp', '');
         navbar.style.opacity = 1;
         cont.style.opacity = 1;
         buttons.forEach(function (btn) {
@@ -37,6 +40,8 @@ modalElements.forEach(function (modal) {
     window.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') {
             modal.style.visibility = 'hidden';
+            console.log('escape')
+            modal.className = modal.className.replace(' animate__animated animate__backInUp', '');
             navbar.style.opacity = 1;
             cont.style.opacity = 1;
             buttons.forEach(function (btn) {
