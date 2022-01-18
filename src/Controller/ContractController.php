@@ -22,14 +22,14 @@ class ContractController extends AbstractController
      */
     public function delete(Contract $contract): Response
     {
+        $this->addFlash(
+            'success',
+            $contract->getWebsite()->getName() . ' : ' . $contract->getType()->getName() . ' supprimé avec succès !'
+        );
+
         $contract->getWebsite()->removeContract($contract);
         $this->em->remove($contract);
         $this->em->flush();
-
-        $this->addFlash(
-            'success',
-            $contract->getWebsite() . ' : contrat ' . $contract->getType()->getName() . ' supprimé avec succès !'
-        );
 
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }

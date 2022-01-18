@@ -77,11 +77,11 @@
 
     <div class="container">
         <h1>Espace administration</h1>
-        <div class="cont-flex-end">
-            <form id="search-form" class="search">
+        <div class="cont-flex-end" style="margin-top: 2rem; margin-bottom: 2rem">
+            <form id="search-form" class="search" style="margin-top: 0;">
                 <div class="input">
                     <input id="search-input" class="form-control" type="text" name="search" placeholder="Entreprise"
-                    aria-label="Rechercher">
+                        aria-label="Rechercher" style="margin-bottom: 0;">
                     <span class="bottom"></span>
                     <span class="right"></span>
                     <span class="top"></span>
@@ -116,8 +116,16 @@
                 {% for company in companies|reverse %}
                 <tr id="company{{company.id}}" class="table-light company {{company.name}}">
                     <td class="company{{company.id}}">{{ company.name }}</td>
+                    {% if company.phone %}
                     <td class="body-tel company{{company.id}}">{{ company.phone }}</td>
+                    {% else %}
+                    <td class="body-tel company{{company.id}}">Aucun téléphone</td>
+                    {% endif %}
+                    {% if company.email %}
                     <td class="body-email company{{company.id}}">{{ company.email }}</td>
+                    {% else %}
+                    <td class="body-email company{{company.id}}">Aucun email</td>
+                    {% endif %}
                     <td>
                         <ul class="action-list">
                             <li class="action-item">
@@ -190,8 +198,8 @@
         if (recap) recap.remove();
         recap = document.createElement('div');
         recap.id = "recap-invoice";
-        
-        for (let i=0; i<files.files.length; i++) {
+
+        for (let i = 0; i < files.files.length; i++) {
             const fileName = document.createElement('p');
             fileName.innerHTML = files.files[i]['name'];
             recap.appendChild(fileName);
@@ -207,35 +215,32 @@
     const tels = document.querySelectorAll('.body-tel');
     const emails = document.querySelectorAll('.body-email');
     const events = ['load', 'resize'];
-    events.forEach(function(event) {
-        window.addEventListener(event, function(){
+    events.forEach(function (event) {
+        window.addEventListener(event, function () {
             if (screen.width < 768) {
                 headTel.style.display = 'none';
                 headEmail.style.display = 'none';
-                tels.forEach(function(tel) {
+                document.querySelector('#head-action').style.display = 'none';
+                tels.forEach(function (tel) {
                     tel.style.display = 'none';
                 })
-                emails.forEach(function(tel) {
+                emails.forEach(function (tel) {
                     tel.style.display = 'none';
                 })
             } else {
                 headTel.style.display = null;
-                headEmail.style.display = null;
-                tels.forEach(function(tel) {
-                    tel.style.display = null;
-                })
-                emails.forEach(function(tel) {
-                    tel.style.display = null;
-                })
-            }
-            if (screen.width < 768) {
-                document.querySelector('#head-action').style.display = 'none';
-            } else {
                 document.querySelector('#head-action').style.display = 'block';
+                headEmail.style.display = null;
+                tels.forEach(function (tel) {
+                    tel.style.display = null;
+                })
+                emails.forEach(function (tel) {
+                    tel.style.display = null;
+                })
             }
         })
     });
-    
+
     // ajouter une entreprise
     const button = document.querySelector('#add-all-company');
     button.addEventListener('click', () => {
@@ -267,7 +272,7 @@
             addAbo.setAttribute('style', 'background-color: var(--orange)');
             // réinitialise les contrats
             const btnType = document.querySelectorAll('.btn-contract');
-            btnType.forEach(function(btn) {
+            btnType.forEach(function (btn) {
                 if (btn.innerHTML[0] == "-") {
                     btn.click();
                 }

@@ -6,11 +6,11 @@
 
 <div class="container">
     <h1>Espace administration</h1>
-    <form id="search-form" class="cont-flex search">
-        <div class="cont-flex-end">
+    <form id="search-form" class="search">
+        <div class="cont-flex-end" style="margin-top: 2rem; margin-bottom: 2rem">
             <div class="input">
                 <input id="search-input" class="form-control" type="text" name="search" placeholder="Site internet"
-                aria-label="Rechercher" style="margin-bottom: 0;">
+                    aria-label="Rechercher" style="margin-bottom: 0;">
                 <span class="bottom"></span>
                 <span class="right"></span>
                 <span class="top"></span>
@@ -56,7 +56,8 @@
         </thead>
         <tbody>
             {% for note in notes|reverse %}
-            <tr id="note{{note.id}}" class="table-light note {{note.contract.website.name}}" type="{{note.contract.type.name}}">
+            <tr id="note{{note.id}}" class="table-light note {{note.contract.website.name}}"
+                type="{{note.contract.type.name}}">
                 <td>{{ note.releasedAt|date("d/m/Y") }}</td>
                 <td>{{ note.contract.website.name }}</td>
                 <td>{{ note.contract.type.name }}</td>
@@ -79,8 +80,8 @@
     const headContract = document.querySelector('#head-contract');
     const headAdmin = document.querySelector('#head-admin');
     const events = ['load', 'resize'];
-    events.forEach(function(event) {
-        window.addEventListener(event, function(){
+    events.forEach(function (event) {
+        window.addEventListener(event, function () {
             if (screen.width < 768) {
                 headDate.style.display = 'none';
                 headWebsite.style.display = 'none';

@@ -16,6 +16,7 @@
         "facebook/php-business-sdk": "^12.0",
         "fakerphp/faker": "^1.16",
         "google/protobuf": "^3.19",
+        "googleads/google-ads-php": "^13.0",
         "googleads/googleads-php-lib": "^55.0",
         "grpc/grpc": "^1.42",
         "nelmio/cors-bundle": "^2.2",

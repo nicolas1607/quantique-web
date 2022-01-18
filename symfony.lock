@@ -118,8 +118,20 @@
     "google/auth": {
         "version": "v1.18.0"
     },
+    "google/common-protos": {
+        "version": "1.4.0"
+    },
+    "google/gax": {
+        "version": "v1.10.0"
+    },
+    "google/grpc-gcp": {
+        "version": "v0.2.0"
+    },
     "google/protobuf": {
         "version": "v3.19.1"
+    },
+    "googleads/google-ads-php": {
+        "version": "v13.0.0"
     },
     "googleads/googleads-php-lib": {
         "version": "55.0.0"
@@ -304,6 +316,18 @@
         },
         "files": [
             "config/packages/sensio_framework_extra.yaml"
+        ]
+    },
+    "sensiolabs/security-checker": {
+        "version": "6.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.0",
+            "ref": "160c9b600564faa1224e8f387d49ef13ceb8b793"
+        },
+        "files": [
+            "config/packages/security_checker.yaml"
         ]
     },
     "symfony/apache-pack": {

@@ -1,5 +1,6 @@
+{% if is_granted('ROLE_ADMIN') %}
 <div class="cont-grid-2-3">
-    <div>
+    <div class="cont-company-info">
         <div class="cont-flex-start">
             <i class="fas fa-building fa-2x"></i>
             <h2>{{company.name}}</h2>
@@ -24,7 +25,7 @@
             </div>
             {% if is_granted('ROLE_ADMIN') %}
             <a id="add-user{{company.id}}" class="action-link add-user" title="Ajouter un utilisateur">
-                <i class="fas fa-plus-square fa-2x"></i>
+                <i class="fas fa-plus-square fa-lg"></i>
             </a>
             {% endif %}
         </div>
@@ -39,14 +40,18 @@
             </thead>
             <tbody>
                 {% for user in company.users %}
-                <!-- <div style="display: none;">
-                    <h2>Téléphone : <span>{{user.phone}}</span></h2>
-                    <h2>Email : <span>{{user.email}}</span></h2>
-                </div> -->
                 <tr class="table-light">
                     <td>{{ user.firstname }} {{ user.lastname }}</td>
+                    {% if user.phone %}
                     <td class="body-tel">{{ user.phone }}</td>
+                    {% else %}
+                    <td class="body-tel">Aucun téléphone</td>
+                    {% endif %}
+                    {% if user.email %}
                     <td class="body-email">{{ user.email }}</td>
+                    {% else %}
+                    <td class="body-email">Aucun email</td>
+                    {% endif %}
                     {% if is_granted('ROLE_ADMIN') %}
                     <td>
                         <ul class="action-list">
@@ -97,8 +102,8 @@
     const tels = document.querySelectorAll('.body-tel');
     const emails = document.querySelectorAll('.body-email');
     const events = ['load', 'resize'];
-    events.forEach(function(event) {
-        window.addEventListener(event, function(){
+    events.forEach(function (event) {
+        window.addEventListener(event, function () {
             if (screen.width < 768) {
                 headTel.style.display = 'none';
                 headEmail.style.display = 'none';
@@ -114,3 +119,13 @@
         })
     });
 </script>
+{% else %}
+<div class="cont-grid-2-3">
+    <div class="cont-company-info">
+        <div class="cont-flex-start">
+            <i class="fas fa-building fa-2x"></i>
+            <h2>{{company.name}}</h2>
+        </div>
+    </div>
+</div>
+{% endif %}

@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Company;
 use App\Entity\Invoice;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Invoice|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,31 +21,16 @@ class InvoiceRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Invoice[] Returns an array of Invoice objects
+    //  * @return Invoice[] Retournes les factures d'une compagnie ordonnées par date
     //  */
-    /*
-    public function findByExampleField($value)
+    public function findOrderByDate(Company $company)
     {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->getEntityManager()
+            ->createQuery(
+                "SELECT i FROM App:invoice i
+                WHERE i.company = " . $company->getId() . "
+                ORDER BY i.releasedAt DESC"
+            )
+            ->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Invoice
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

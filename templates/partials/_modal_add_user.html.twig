@@ -25,15 +25,15 @@
                         <option value=""></option>
                         <!-- On liste uniquement les clients qui ne sont pas déjà ajoutés -->
                         {% for user in users %}
-                            {% set flag = false %}
-                            {% for userExist in company.users %}
-                                {% if user.id == userExist.id %}
-                                    {% set flag = true %}
-                                {% endif %}
-                            {% endfor %}
-                            {% if flag == false %}
-                                <option value="{{user.id}}">{{user.firstname}} {{user.lastname}}</option>
-                            {% endif %}
+                        {% set flag = false %}
+                        {% for userExist in company.users %}
+                        {% if user.id == userExist.id %}
+                        {% set flag = true %}
+                        {% endif %}
+                        {% endfor %}
+                        {% if flag == false %}
+                        <option value="{{user.id}}">{{user.firstname}} {{user.lastname}}</option>
+                        {% endif %}
                         {% endfor %}
                     </select>
                     <span class="bottom"></span>
@@ -41,12 +41,12 @@
                     <span class="top"></span>
                     <span class="left"></span>
                 </div>
-                
+
             </div>
         </div>
 
         <div class="cont-flex">
-            <p>OU</p>
+            <p style="margin-bottom: 0;">OU</p>
         </div>
         <div class="cont-grid form-section">
             <div>

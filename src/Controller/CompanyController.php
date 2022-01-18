@@ -5,36 +5,27 @@ namespace App\Controller;
 use DateTime;
 use App\Entity\Note;
 use App\Entity\User;
-use FacebookAds\Api;
-use Facebook\Facebook;
 use App\Entity\Company;
 use App\Entity\Invoice;
-use App\Entity\Website;
-use App\Entity\Contract;
-use App\Form\CompanyType;
 use App\Form\InvoiceType;
 use App\Entity\TypeInvoice;
 use App\Entity\TypeContract;
 use App\Form\UserPasswordType;
-use FacebookAds\Object\AdAccount;
+use App\Repository\InvoiceRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Facebook\Exceptions\FacebookSDKException;
-use FacebookAds\Object\Fields\CampaignFields;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Google\Ads\GoogleAds\Util\V9\ResourceNames;
 use Symfony\Component\Routing\Annotation\Route;
-use Google\AdsApi\AdWords\AdWordsSessionBuilder;
-use Facebook\Exceptions\FacebookResponseException;
-use Google\AdsApi\AdWords\Query\v201809\ReportQuery;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Google\Ads\GoogleAds\V9\Resources\BillingSetup;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Google\AdsApi\AdWords\Reporting\v201809\ReportDownloader;
+use Google\Ads\GoogleAds\Lib\V7\GoogleAdsClientBuilder;
+use Google\Ads\GoogleAds\V9\Enums\MonthOfYearEnum\MonthOfYear;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Google\AdsApi\AdWords\Reporting\v201809\RequestOptionsFactory;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -42,11 +33,13 @@ class CompanyController extends AbstractController
 {
     private EntityManagerInterface $em;
     private UserRepository $userRepo;
+    private InvoiceRepository $invoiceRepo;
 
-    public function __construct(EntityManagerInterface $em, UserRepository $userRepo)
+    public function __construct(EntityManagerInterface $em, UserRepository $userRepo, InvoiceRepository $invoiceRepo)
     {
         $this->em = $em;
         $this->userRepo = $userRepo;
+        $this->invoiceRepo = $invoiceRepo;
     }
 
     /**
@@ -210,13 +203,17 @@ class CompanyController extends AbstractController
             $this->addFlash('success', 'Facture(s) ajoutée(s) à ' . $company->getName() . ' !');
         }
 
+
         $currentDate = new DateTime();
         $typesInvoice = $this->em->getRepository(TypeInvoice::class)->findAll();
         $users = $this->userRepo->findUsers();
 
+        $invoices = $this->invoiceRepo->findOrderByDate($company);
+
         return $this->render('company/show_invoices.html.twig', [
             'users' => $users,
             'company' => $company,
+            'invoices' => $invoices,
             'typesInvoice' => $typesInvoice,
             'currentDate' => $currentDate,
             'edit_password_form' => $editPasswordForm->createView(),
@@ -229,30 +226,26 @@ class CompanyController extends AbstractController
      */
     public function showStats(Company $company): Response
     {
-        // $oAuth2Credential = (new OAuth2TokenBuilder())
-        //     ->fromFile()
-        //     ->build();
+        // OAuth2 Identification
+        $oAuth2Credential = (new OAuth2TokenBuilder())
+            ->fromFile('/Users/nicolasmormiche/google_ads_php.ini')
+            ->build();
+        // GoogleAds Identification
+        $googleAdsClient = (new GoogleAdsClientBuilder())
+            ->withOAuth2Credential($oAuth2Credential)
+            ->fromFile('/Users/nicolasmormiche/google_ads_php.ini')
+            ->build();
+        $customerId = '1612445303';
+        $billingSetupId = '1555927444';
 
-        // $session = (new AdWordsSessionBuilder())
-        //     ->fromFile()
-        //     ->withOAuth2Credential($oAuth2Credential)
-        //     ->build();
-
-        // $options = [
-        //     'stream_context' => [
-        //         'http' => ['timeout' => 120]
-        //     ]
-        // ];
-        // $requestOptionsFactory = new RequestOptionsFactory($session, $options);
-        // $reportDownloader = new ReportDownloader($session, $requestOptionsFactory);
-
-        // var_dump($reportDownloader->downloadReportWithAwql(
-        //     "SELECT CampaignId, AdGroupId, Impressions, Clicks, Cost
-        //     FROM ADGROUP_PERFORMANCE_REPORT
-        //     WHERE AdGroupStatus IN [ENABLED, PAUSED]
-        //     DURING LAST_7_DAYS",
-        //     "CSV"
-        // ));
+        // Issues the request.
+        $response = $googleAdsClient->getInvoiceServiceClient()->listInvoices(
+            $customerId,
+            ResourceNames::forBillingSetup($customerId, $billingSetupId),
+            // The year needs to be 2019 or later.
+            date('Y', '2021'),
+            MonthOfYear::value(strtoupper(date('F', '2021')))
+        );
 
 
 
@@ -292,11 +285,6 @@ class CompanyController extends AbstractController
         //         'access_token:  d46ee756cba654293fc67b0c7a3084d0'
         //     ]
         // );
-
-        // var_dump($res);
-
-
-
 
         $users = $this->userRepo->findUsers();
 

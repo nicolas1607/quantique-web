@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
-use ZipArchive;
+use DateTime;
 use App\Entity\Invoice;
+use App\Entity\TypeInvoice;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,6 +21,19 @@ class InvoiceController extends AbstractController
     }
 
     /**
+     * @Route("/admin/invoice/edit/{id}", name="edit_invoice")
+     */
+    public function edit(Request $request, Invoice $id): Response
+    {
+        $id->setType($this->em->getRepository(TypeInvoice::class)
+            ->findOneBy(['name' => $request->get('type')]))
+            ->setReleasedAt(new DateTime($request->get('date')));
+        $this->em->persist($id);
+        $this->em->flush();
+        return $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    /**
      * @Route("/profile/invoice/download/{id}", name="download_invoice")
      */
     public function download(Invoice $id): Response
@@ -26,44 +41,6 @@ class InvoiceController extends AbstractController
         $pdfPath = $this->getParameter('invoices') . '/' . $id->getFile();
         return $this->file($pdfPath);
     }
-
-    /**
-     * Create and download some zip documents.
-     *
-     * @param array $documents
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function zipDownloadDocumentsAction(array $documents)
-    {
-        $files = [];
-        $em = $this->getDoctrine()->getManager();
-
-        foreach ($documents as $document) {
-            array_push($files, '../web/' . $document->getWebPath());
-        }
-
-        // Create new Zip Archive.
-        $zip = new \ZipArchive();
-
-        // The name of the Zip documents.
-        $zipName = 'Documents.zip';
-
-        $zip->open($zipName,  \ZipArchive::CREATE);
-        foreach ($files as $file) {
-            $zip->addFromString(basename($file),  file_get_contents($file));
-        }
-        $zip->close();
-
-        $response = new Response(file_get_contents($zipName));
-        $response->headers->set('Content-Type', 'application/zip');
-        $response->headers->set('Content-Disposition', 'attachment;filename="' . $zipName . '"');
-        $response->headers->set('Content-length', filesize($zipName));
-
-        @unlink($zipName);
-
-        return $response;
-    }
-
 
     /**
      * @Route("/admin/invoice/delete/{invoice}", name="delete_invoice")

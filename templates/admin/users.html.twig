@@ -14,67 +14,67 @@
         <a class="mdl-close action-link">✖</a>
     </div>
     <form action="{{path('add_user_modal')}}">
-    <div class="form-section">
-        <label for="company">Entreprise</label>
-        <div class="input">
-            <select class="form-select" name="company">
-                {% for company in companies %}
-                <option value="{{company.name}}">{{company.name}}</option>
-                {% endfor %}
-            </select>            <span class="bottom"></span>
-            <span class="right"></span>
-            <span class="top"></span>
-            <span class="left"></span>
-        </div>
-    </div>
-    <div class="cont-grid form-section">
-        <div>
-            <label for="firstname">Prénom *</label>
+        <div class="form-section">
+            <label for="company">Entreprise</label>
             <div class="input">
-                <input class="form-control" name="firstname" required>
-                <span class="bottom"></span>
+                <select class="form-select" name="company">
+                    {% for company in companies %}
+                    <option value="{{company.name}}">{{company.name}}</option>
+                    {% endfor %}
+                </select> <span class="bottom"></span>
                 <span class="right"></span>
                 <span class="top"></span>
                 <span class="left"></span>
             </div>
         </div>
-        <div>
-            <label for="lastname">Nom de famille *</label>
-            <div class="input">
-                <input class="form-control" name="lastname" required>
-                <span class="bottom"></span>
-                <span class="right"></span>
-                <span class="top"></span>
-                <span class="left"></span>
+        <div class="cont-grid form-section">
+            <div>
+                <label for="firstname">Prénom *</label>
+                <div class="input">
+                    <input class="form-control" name="firstname" required>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
+            </div>
+            <div>
+                <label for="lastname">Nom de famille *</label>
+                <div class="input">
+                    <input class="form-control" name="lastname" required>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="cont-grid form-section">
-        <div>
-            <label for="email">Email *</label>
-            <div class="input">
-                <input class="form-control" name="email" required>
-                <span class="bottom"></span>
-                <span class="right"></span>
-                <span class="top"></span>
-                <span class="left"></span>
+        <div class="cont-grid form-section">
+            <div>
+                <label for="email">Email *</label>
+                <div class="input">
+                    <input class="form-control" name="email" required>
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
+            </div>
+            <div>
+                <label for="phone">Téléphone</label>
+                <div class="input">
+                    <input class="form-control" name="phone">
+                    <span class="bottom"></span>
+                    <span class="right"></span>
+                    <span class="top"></span>
+                    <span class="left"></span>
+                </div>
             </div>
         </div>
-        <div>
-            <label for="phone">Téléphone</label>
-            <div class="input">
-                <input class="form-control" name="phone">
-                <span class="bottom"></span>
-                <span class="right"></span>
-                <span class="top"></span>
-                <span class="left"></span>
-            </div>
+        <div class="cont-flex-space mdl-btn">
+            <button class="btn-type btn-form btn-alert" type="submit">Créer</button>
+            <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
         </div>
-    </div>
-    <div class="cont-flex-space mdl-btn">
-        <button class="btn-type btn-form btn-alert" type="submit">Créer</button>
-        <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
-    </div>
     </form>
 </div>
 
@@ -114,11 +114,11 @@
 
 <div class="container">
     <h1>Espace administration</h1>
-    <div class="cont-flex-end">
-        <form id="search-form" class="search">
+    <div class="cont-flex-end" style="margin-top: 2rem; margin-bottom: 2rem">
+        <form id="search-form" class="search" style="margin-top: 0;">
             <div class="input">
                 <input id="search-input" class="form-control" type="text" name="search" placeholder="Contact"
-                aria-label="Rechercher">
+                    aria-label="Rechercher" style="margin-bottom: 0;">
                 <span class="bottom"></span>
                 <span class="right"></span>
                 <span class="top"></span>
@@ -204,8 +204,8 @@
     const tels = document.querySelectorAll('.body-tel');
     const emails = document.querySelectorAll('.body-email');
     const events = ['load', 'resize'];
-    events.forEach(function(event) {
-        window.addEventListener(event, function(){
+    events.forEach(function (event) {
+        window.addEventListener(event, function () {
             if (screen.width < 768) {
                 headTel.style.display = 'none';
                 headEmail.style.display = 'none';
@@ -223,13 +223,13 @@
 
     const editPasswords = document.querySelectorAll('.edit-password');
     let id; let editPass;
-    {% for i in 0..users|length-1 %}
-        editPass = editPasswords[{{i}}];
-        editPass.addEventListener('click', () => {
-            document.querySelector('#ident').value = '{{users[i].email}}';
-        })
-    {% endfor %}  
-        
+    {% for i in 0..users | length - 1 %}
+    editPass = editPasswords[{{ i }}];
+    editPass.addEventListener('click', () => {
+        document.querySelector('#ident').value = '{{users[i].email}}';
+    })
+    {% endfor %}
+
 
 </script>
 

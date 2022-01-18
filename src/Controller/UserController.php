@@ -353,20 +353,22 @@ class UserController extends AbstractController
             'email' => $request->get('email')
         ]);
 
-        $email = (new TemplatedEmail())
-            ->from('noreply@quantique-web.fr')
-            ->to($user->getEmail())
-            ->subject('Réinitialiser mon mot de passe !')
-            ->htmlTemplate('emails/reset_password.html.twig')
-            ->context([
-                'user' => $user
-            ]);
-
-        $mailer->send($email);
-
-        $this->addFlash('success', 'Vérifier votre adresse email pour réinitialiser votre mot de passe !');
-
-        return $this->redirectToRoute('app_login');
+        if ($user) {
+            $email = (new TemplatedEmail())
+                ->from('noreply@quantique-web.fr')
+                ->to($user->getEmail())
+                ->subject('Réinitialiser mon mot de passe !')
+                ->htmlTemplate('emails/reset_password.html.twig')
+                ->context([
+                    'user' => $user
+                ]);
+            $mailer->send($email);
+            $this->addFlash('success', 'Vérifier votre adresse email pour réinitialiser votre mot de passe !');
+            return $this->redirectToRoute('app_login');
+        } else {
+            $this->addFlash('alert', 'Aucun compte ne correspnd à cette adresse email');
+            return $this->redirect($_SERVER['HTTP_REFERER']);
+        }
     }
 
     /**

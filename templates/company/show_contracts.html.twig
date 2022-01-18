@@ -64,31 +64,31 @@
             abonnement</a>
         {% endif %}
 
-        <ul class="nav nav-tabs nav-tabs-company">
+        <ul class="nav nav-tabs nav-tabs-company" style="margin-top: 4rem;">
             <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="tab"
+                <a class="nav-link active" data-bs-toggle="tab" style="border-bottom: solid 1px #ddd;"
                     href="{{path('show_contracts', {'company': company.id})}}">Abonnements</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab"
                     href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
             </li>
+            {% if is_granted('ROLE_ADMIN') %}
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab"
                     href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
             </li>
+            {% endif %}
         </ul>
 
         <div class="contracts">
             {% for website in company.websites %}
-            <div style="margin-top: 1rem;"></div>
-
-            <div class="contract">
-                <div class="contract-header">
+            <div id="contract{{website.id}}" class="contract">
+                <div id="contract-header{{website.id}}" class="contract-header">
                     <div class="cont-flex-space">
-                        <div class="cont-flex">
-                            <h3 class="contract-title"><a class="action-link"
-                                    href="{{website.url}}">{{website.name}}</a>
+                        <div class="cont-flex contract-title">
+                            <i class="fas fa-sort-down fa-lg"></i>
+                            <h3 class=""><a class="action-link" href="{{website.url}}">{{website.name}}</a>
                             </h3>
                         </div>
                         {% if is_granted('ROLE_ADMIN') and website.id %}
@@ -105,11 +105,11 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="contract-notes">
+                <div class="contract-notes animate__animated animate__flipInX">
                     {% for contract in website.contracts %}
                     <div class="cont-flex-space contract-item">
                         <div id="contract{{contract.id}}" class="cont-flex-start contract-info">
-                            <h3 class="cont-flex-start contract-title">- {{contract.type.name}}</h3>
+                            <h3 class="cont-flex-start contract-title">{{contract.type.name}}</h3>
                             <div class="cont-flex-space">
                                 <p class="contract-content">
                                     <i class="fas fa-chevron-right"></i>
@@ -137,7 +137,7 @@
                     </div>
                     {% endfor %}
                 </div>
-            {% endfor %}
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -146,6 +146,20 @@
         const cont = document.querySelector('.container');
         const navbar = document.querySelector('.navbar');
         const buttons = document.querySelectorAll('.container a, .navbar a, .contract-item');
+
+        // ouvrir et fermer un contrat
+        const headers = document.querySelectorAll('.contract-header');
+        for (let i = 0; i < headers.length; i++) {
+            headers[i].addEventListener('click', () => {
+                let id = headers[i].id.substr(15);
+                let contracts = document.querySelector('#contract' + id).querySelector('.contract-notes');
+                if (contracts.style.display == 'none') {
+                    contracts.style.display = 'grid';
+                } else if (contracts.style.display == 'grid' || contracts.style.display == '') {
+                    contracts.style.display = 'none';
+                }
+            });
+        }
     </script>
 
     <script src="{{asset('js/notepad_modal.js')}}"></script>

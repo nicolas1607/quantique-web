@@ -43,8 +43,43 @@
     {{ form_end(edit_password_form) }}
 </div>
 
-<!-- MODAL ADD / DELETE INVOICE -->
+<!-- MODULE DELETE INVOICE -->
 {% include "partials/_modal_delete_invoice.html.twig" %}
+<!-- MODAL EDIT INVOICE -->
+<div class="modal-edit-invoice">
+    <div class="cont-flex-start cont-title mdl-header-form">
+        <div class="cont-flex">
+            <i class="fas fa-file-upload fa-2x"></i>
+            <h2>Factures</h2>
+        </div>
+        <a class="mdl-close action-link">✖</a>
+    </div>
+    <form>
+        <div>
+            <label for="company">Entreprise *</label>
+            <input id="company" class="form-control" name="company" value="{{company.name}}" readonly>
+        </div>
+        <div class="cont-grid form-section">
+            <div>
+                <label for="type">Type *</label>
+                <select class="form-select" name="type">
+                    {% for type in typesInvoice %}
+                    <option value="{{type.name}}">{{type.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="date">Date de facturation *</label>
+                <input id="date" class="form-control" type="date" name="date" value="{{currentDate|date('Y-m-d')}}">
+            </div>
+        </div>
+        <div class="cont-flex-space mdl-btn">
+            <button class="btn-type btn-form" type="submit">Modifier</button>
+            <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
+        </div>
+    </form>
+</div>
+<!-- MODAL ADD INVOICE -->
 <div id="modal-invoice" class="mdl-add-invoice">
     <div class="cont-flex-start cont-title mdl-header-form">
         <div class="cont-flex">
@@ -87,7 +122,6 @@
     <div class="container">
         {% include "partials/_company_info.html.twig" %}
 
-        {% if is_granted('ROLE_ADMIN') %}
         <div class="cont-flex-end cont-search-invoice" style="z-index: 0;">
             <form id="search-form" class="search invoice-search" style="margin-top: 0;">
                 <input id="start-date" class="form-control" type="date" name="search" placeholder="Date de début"
@@ -95,16 +129,16 @@
                 <input id="start-end" class="form-control" type="date" name="search" placeholder="Date de fin"
                     aria-label="Date de fin">
             </form>
+            {% if is_granted('ROLE_ADMIN') %}
             <a id="add-invoice{{company.id}}" class="btn-type float-right btn10 add-invoice">Nouvelle
                 facture</a>
             </a>
+            {% endif %}
         </div>
-        
-        {% endif %}
 
         <form action="{{path('show_invoices', {'company': company.id})}}" style="padding-left: 0; padding-right: 0;">
 
-            <ul class="nav nav-tabs nav-tabs-company" style="margin-top: 1rem; display: flex; justify-content: space-between;">
+            <ul class="nav nav-tabs nav-tabs-company nav-tabs-invoices">
                 <div style="display: flex;">
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab"
@@ -114,21 +148,32 @@
                         <a class="nav-link active" data-bs-toggle="tab"
                             href="{{path('show_invoices', {'company': company.id})}}">Factures</a>
                     </li>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab"
                             href="{{path('show_stats', {'company': company.id})}}">Statistiques</a>
                     </li>
+                    {% endif %}
                 </div>
-                
+
                 <li class="all-invoice">
-                    <input type="checkbox" name="allInvoice" style="margin-top: 1rem; margin-bottom: 0">
-                    <label for="allInvoice">Tout sélectionner</label>
+                    <div class="all-invoice-check">
+                        <input type="checkbox" name="allInvoice">
+                        <label for="allInvoice">Tout</label>
+                    </div>
 
-                    <input id="all-download" name="all-download" type="checkbox" hidden>
-                    <button type="submit" aria-label="Télécharger" value="Télécharger" class="btn-type btn5" style="padding: .4rem 1rem; font-size: .6rem; margin-left: 1rem;">Télécharger</button>
-
-                    <input id="all-delete" name="all-delete" type="checkbox" hidden>
-                    <button type="submit" aria-label="Supprimer" value="Supprimer" class="btn-type btn5" style="padding: .4rem 1rem; font-size: .6rem; margin-left: 1rem;">Supprimer</button>
+                    <div class="btn-download-delete">
+                        <div>
+                            <input id="all-download" name="all-download" type="checkbox" hidden>
+                            <button type="submit" aria-label="Télécharger" value="Télécharger"
+                                class="btn-type btn5">Télécharger</button>
+                        </div>
+                        <div>
+                            <input id="all-delete" name="all-delete" type="checkbox" hidden>
+                            <button type="submit" aria-label="Supprimer" value="Supprimer"
+                                class="btn-type btn5">Supprimer</button>
+                        </div>
+                    </div>
                 </li>
             </ul>
 
@@ -137,52 +182,61 @@
                     <thead>
                         <tr>
                             <th scope="col">Date</th>
-                            <th scope="col">Type</th>
+                            <th id="head-type" scope="col">Type</th>
                             <th id="head-name" scope="col">Nom</th>
                             <th id="head-action" scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% set i = 1 %}
-                        {% for invoice in company.invoices %}
-                            {# blank #}
-                            {% if loop.index0 - 1 > 0 %}
-                                {% set date = company.invoices[loop.index0 - 1].releasedAt %}
-                                {% if date|date("m/d/Y") != invoice.releasedAt|date("m/d/Y") %}
-                                    <tr class="table-light invoice {{ invoice.releasedAt|date("Y-m-d") }}" style="margin-top: 2rem; border-top: solid 1px;">
-                                {% else %}
-                                    <tr class="table-light invoice {{ invoice.releasedAt|date("Y-m-d") }}">
-                                {% endif %}
-                            {% else %}
-                                <tr class="table-light invoice {{ invoice.releasedAt|date("Y-m-d") }}">
-                            {% endif %}
-                            {# blank #}
+                        {% for invoice in invoices %}
+                        
+                        {# blank #}
+                        {% if loop.index0 - 1 > 0 %}
+                        {% set date = invoices[loop.index0 - 1].releasedAt %}
+                        {% if date|date("m/d/Y") != invoice.releasedAt|date("m/d/Y") %}
+                        <tr class="table-light invoice {{ invoice.releasedAt|date(" Y-m-d") }}"
+                            style="margin-top: 2rem; border-top: solid 1px;">
+                        {% else %}
+                        <tr class="table-light invoice {{ invoice.releasedAt|date(" Y-m-d") }}">
+                        {% endif %}
+                        {% else %}
+                        <tr class="table-light invoice {{ invoice.releasedAt|date(" Y-m-d") }}">
+                        {% endif %}
+                        {# blank #}
 
-                                <td>{{ invoice.releasedAt|date("d/m/Y") }}</td>
-                                <td>{{ invoice.type.name }}</td>
-                                <td class="body-name">{{ invoice.file }}</td>
-                                <td>
-                                    <ul class="action-list">
-                                        <input class="invoice-check" name="invoiceCheck{{i}}" type="checkbox" style="margin-top: 0; margin-bottom: 0">
-                                        <li class="action-item cont-flex-space">
-                                            <a href="{{path('download_invoice', {'id': invoice.id})}}" class="action-link"
-                                                title="Télécharger la facture">
-                                                <i class="fas fa-lg fa-file-download"></i>
-                                            </a>
-                                        </li>
-                                        {% if is_granted('ROLE_ADMIN') %}
-                                        <li class="action-item">
-                                            <a id="delete-invoice{{invoice.id}}" class="action-link delete-invoice"
-                                                title="Supprimer la facture">
-                                                <i class="fas fa-times fa-lg"></i>
-                                            </a>
-                                        </li>
-                                        {% endif %}
-                                    </ul>
-                                </td>
-                            </tr>
+                            <td class="invoice{{invoice.id}}-date">{{ invoice.releasedAt|date("d/m/Y") }}</td>
+                            <td class="invoice{{invoice.id}}-type">{{ invoice.type.name }}</td>
+                            <td class="body-name">{{ invoice.file }}</td>
+                            <td>
+                                <ul class="action-list">
+                                    <input class="invoice-check" name="invoiceCheck{{i}}" type="checkbox"
+                                        style="margin-top: 0; margin-bottom: 0">
+                                    <li class="action-item">
+                                        <a id="edit-invoice{{invoice.id}}" class="action-link edit-invoice"
+                                            title="Modifier la facture">
+                                            <i class="fas fa-edit fa-lg"></i>
+                                        </a>
+                                    </li>
+                                    <li class="action-item cont-flex-space">
+                                        <a href="{{path('download_invoice', {'id': invoice.id})}}" class="action-link"
+                                            title="Télécharger la facture">
+                                            <i class="fas fa-lg fa-file-download"></i>
+                                        </a>
+                                    </li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                    <li class="action-item">
+                                        <a id="delete-invoice{{invoice.id}}" class="action-link delete-invoice"
+                                            title="Supprimer la facture">
+                                            <i class="fas fa-times fa-lg"></i>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </td>
+                        </tr>
 
-                            {% set i = i + 1 %}
+                        {% set i = i + 1 %}
                         {% endfor %}
                     </tbody>
                 </table>
@@ -206,8 +260,8 @@
         if (recap) recap.remove();
         recap = document.createElement('div');
         recap.id = "recap-invoice";
-        
-        for (let i=0; i<files.files.length; i++) {
+
+        for (let i = 0; i < files.files.length; i++) {
             const fileName = document.createElement('p');
             fileName.innerHTML = files.files[i]['name'];
             recap.appendChild(fileName);
@@ -218,24 +272,25 @@
     });
 
     // responsive min-height : 768px
+    const headType = document.querySelector('#head-type');
     const headName = document.querySelector('#head-name');
+    const headAction = document.querySelector('#head-action');
     const names = document.querySelectorAll('.body-name');
     const evts = ['load', 'resize'];
-    evts.forEach(function(event) {
-        window.addEventListener(event, function(){
+    evts.forEach(function (event) {
+        window.addEventListener(event, function () {
             if (screen.width < 768) {
+                headType.style.display = 'none';
                 headName.style.display = 'none';
-                names.forEach(function(name) {
+                names.forEach(function (name) {
                     name.style.display = 'none';
                 })
             } else {
+                headType.style.display = null;
                 headName.style.display = null;
-            }
-            if (screen.width < 768) {
-                console.log(document.querySelector('#head-action'))
-                document.querySelector('#head-action').style.display = 'none';
-            } else {
-                document.querySelector('#head-action').style.display = 'block';
+                names.forEach(function (name) {
+                    name.style.display = null;
+                })
             }
         })
     });
@@ -247,7 +302,7 @@
         document.querySelector('#all-delete').checked = false;
         const invoicesList = document.getElementsByClassName('invoice');
         if (all.checked == true) {
-            for (let i=0; i<invoicesList.length; i++) {
+            for (let i = 0; i < invoicesList.length; i++) {
                 let invoice = invoicesList[i];
                 if (invoice.style.display != 'none') {
                     console.log(invoice.querySelector('input'))
@@ -255,7 +310,7 @@
                 }
             }
         } else if (all.checked == false) {
-            for (let i=0; i<invoicesList.length; i++) {
+            for (let i = 0; i < invoicesList.length; i++) {
                 let invoice = invoicesList[i];
                 if (invoice.style.display != 'none') {
                     invoice.querySelector('input').checked = false;
@@ -279,7 +334,7 @@
 
 <script src="{{asset('js/search_invoice.js')}}"></script>
 <script src="{{asset('js/add_entity_modal.js')}}" nb="2" param1="user" param2="invoice"></script>
-<script src="{{asset('js/edit_entity_modal.js')}}" nb="2" param1="user" param2="password"></script>
+<script src="{{asset('js/edit_entity_modal.js')}}" nb="3" param1="user" param2="password" param3="invoice"></script>
 <script src="{{asset('js/remove_entity_modal.js')}}" nb="1" param1="user"></script>
 <script src="{{asset('js/delete_entity_modal.js')}}" nb="2" param1="invoice" param2="user"></script>
 

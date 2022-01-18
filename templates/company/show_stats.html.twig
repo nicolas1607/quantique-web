@@ -41,52 +41,53 @@
 
 <!-- The JS SDK Login Button -->
 
-<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+{# <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
 </fb:login-button>
 
 <div id="status">
-</div>
+</div> #}
 
+{#
 <script>
 
     function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
         console.log('statusChangeCallback');
         console.log(response);                   // The current login status of the person.
         if (response.status === 'connected') {   // Logged into your webpage and Facebook.
-            testAPI();  
+            testAPI();
         } else {                                 // Not logged into your webpage or we are unable to tell.
             document.getElementById('status').innerHTML = 'Please log ' +
-            'into this webpage.';
+                'into this webpage.';
         }
     }
 
 
     function checkLoginState() {               // Called when a person is finished with the Login Button.
-        FB.getLoginStatus(function(response) {   // See the onlogin handler
+        FB.getLoginStatus(function (response) {   // See the onlogin handler
             statusChangeCallback(response);
         });
     }
 
-    window.fbAsyncInit = function() {
-      FB.init({
-        appId            : '662888525073742',
-        autoLogAppEvents : true,
-        xfbml            : true,
-        version          : 'v12.0'
-      });
-      FB.getLoginStatus(function(response) {   // Called after the JS SDK has been initialized.
-        statusChangeCallback(response);        // Returns the login status.
-      });
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '662888525073742',
+            autoLogAppEvents: true,
+            xfbml: true,
+            version: 'v12.0'
+        });
+        FB.getLoginStatus(function (response) {   // Called after the JS SDK has been initialized.
+            statusChangeCallback(response);        // Returns the login status.
+        });
     };
 
     function testAPI() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
         console.log('Welcome!  Fetching your information.... ');
-        FB.api('/me', function(response) {
-          console.log('Successful login for: ' + response.name);
-          document.getElementById('status').innerHTML =
-            'Thanks for logging in, ' + response.name + '!';
+        FB.api('/me', function (response) {
+            console.log('Successful login for: ' + response.name);
+            document.getElementById('status').innerHTML =
+                'Thanks for logging in, ' + response.name + '!';
         });
-      }
+    }
 
     testAPI();
 
@@ -101,22 +102,22 @@
 
     const account = new AdAccount(accountId);
     var campaigns;
-        
-    account.read([AdAccount.Fields.name])
-    .then((account) =>{
-        return account.getCampaigns([Campaign.Fields.name], { limit: 10 }) // fields array and params
-    })
-    .then((result) =>{
-        campaigns = result
-        campaigns.forEach((campaign) =>console.log(campaign.name))  
-    }).catch(console.error);
-    
-  </script>
-  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
-  
 
-  <script src="{{asset('js/add_entity_modal.js')}}" nb="1" param1="user"></script>
-  <script src="{{asset('js/edit_entity_modal.js')}}" nb="1" param1="user"></script>
-  <script src="{{asset('js/remove_entity_modal.js')}}" nb="1" param1="user"></script>
+    account.read([AdAccount.Fields.name])
+        .then((account) => {
+            return account.getCampaigns([Campaign.Fields.name], { limit: 10 }) // fields array and params
+        })
+        .then((result) => {
+            campaigns = result
+            campaigns.forEach((campaign) => console.log(campaign.name))
+        }).catch(console.error);
+
+</script> #}
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+
+<script src="{{asset('js/add_entity_modal.js')}}" nb="1" param1="user"></script>
+<script src="{{asset('js/edit_entity_modal.js')}}" nb="1" param1="user"></script>
+<script src="{{asset('js/remove_entity_modal.js')}}" nb="1" param1="user"></script>
 
 {% endblock %}

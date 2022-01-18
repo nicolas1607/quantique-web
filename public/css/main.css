@@ -23,13 +23,15 @@
   margin-left: 1rem;
 }
 
-.mdl-header-form .svg-inline--fa.fa-w-20 {
-  width: .7em;
+.fa-sort-down {
+  margin-top: -.4rem;
+  margin-right: 1rem;
 }
 
 @media screen and (min-width: 576px) {
-  .mdl-header-form .svg-inline--fa.fa-w-20 {
-    width: 1em;
+  .fa-sort-down {
+    margin-top: -.6rem;
+    margin-right: 1rem;
   }
 }
 
@@ -40,6 +42,31 @@
   font-size: 1rem;
 }
 
+.table-client tr td,
+.edit-website, .delete-website,
+.notepad-link, .delete-contract,
+.add-user, .add-invoice, .add-website,
+.edit-company, .delete-company,
+.action-link {
+  font-size: .9rem !important;
+}
+
+.company-info,
+.btn-type, 
+.type-check,
+.edit-user, .remove-user {
+  font-size: .8rem !important;
+}
+
+input, select, textarea,
+.contract-title .action-link {
+  font-size: 1rem !important;
+}
+
+.fa-2x {
+  font-size: 1.5rem !important;
+}
+
 h1, h2, h3 {
   font-family: Poppins-Bold;
   text-align: center;
@@ -47,29 +74,26 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
 }
 
 h2 {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   margin-left: 1rem;
 }
 
 h3 {
-  font-size: 1.2rem;
+  font-size: .9rem;
 }
 
 @media screen and (min-width : 576px) {
-  h1, h2, h3 {
-    text-align: left;
-    margin-top: 1rem;
-  }
   h1 {
-    font-size: 2rem;
+    text-align: left;
+    font-size: 1.8rem;
   }
   h2 {
-    margin-left: 2rem;
-    margin-right: 1rem;
+    font-size: 1.4rem;
+    margin-left: 1.4rem;
   }
 }
 
@@ -85,12 +109,9 @@ h3 {
   margin-top: -.5rem;
 }
 
-#menu .nav-link {
-  font-size: 1.2rem;
-}
-
 #burger-menu {
   padding: 1rem 2rem;
+  font-size: 1.8rem;
 }
 
 @media screen and (min-width: 576px) {
@@ -104,12 +125,8 @@ h3 {
   #menu{
     display: flex;
     justify-content: flex-end;
-    font-size: .8rem;
     margin-top: 0;
     padding-right: 2rem;
-  }
-  #menu .nav-link {
-    font-size: 1rem;
   }
 }
 
@@ -168,7 +185,6 @@ p {
 
 a {
 	font-family: Poppins-Regular;
-	font-size: 14px;
 	line-height: 1.7;
   text-decoration: none;
   color: var(--white);
@@ -187,6 +203,15 @@ li {
 tr, td {
   text-align: center;
   vertical-align: middle;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+th, td {
+  width: 100%;
 }
 
 .table {
@@ -228,7 +253,7 @@ a:hover {
   border-radius: .2rem;
   text-align: center;
   box-shadow: 4px 4px 10px rgba(0,0,0,.1);
-  font-size: .7rem;
+  width: 100%;
 }
 
 .btn-type:hover {
@@ -254,7 +279,6 @@ a:hover {
 
 .btn5 {
   width: auto;
-  font-size: .7rem;
   margin-bottom: 1rem;
 }
 
@@ -277,14 +301,9 @@ form {
   margin-top: 1rem;
 }
 
-form h2 {
-  font-size: 1.2rem;
-}
-
 @media screen and (min-width: 576px) {
   .btn-type {
     padding: .8rem 1.5rem;
-    font-size: .8rem;
   }
   .btn5 {
     margin-bottom: 0;
@@ -311,9 +330,6 @@ form h2 {
     padding-left: 6rem;
     padding-right: 6rem;
     /* margin-top: 1rem; */
-  }
-  form h2 {
-    font-size: 1.6rem;
   }
 }
 
@@ -438,33 +454,25 @@ textarea:focus ~ .left {
   transform: scaleY(1);
 }
 
-input[type='checkbox'] {
-  margin-top: 1rem;
-}
-
 @media screen and (min-width: 576px) {
   input, select {
     margin-bottom: 2rem;
   }
-  
   input[type='checkbox'] {
-    margin-top: 2rem;
-    margin-right: 1rem;
+    margin: 0;
   }
 }
 
 .type-check {
-  width: 80%;
+  width: 100%;
   z-index: 1;
   position: relative;
-  font-size: inherit;
   font-family: inherit;
   color: white;
   padding: .8rem 1.2rem;
   margin-top: -.2rem;
   outline: none;
   border: none;
-  font-size: .8rem;
   background-color: #666;
   border-radius: .2rem;
 }
@@ -509,6 +517,12 @@ input[type='checkbox'] {
     padding-left: 2rem;
     padding-right: 2rem;
     margin-bottom: 2rem;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .type-check {
+    width: 80%;
   }
 }
 
@@ -567,15 +581,9 @@ input[type='checkbox'] {
   flex-direction: column;
 }
 
-.cont-contract {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
 .cont-search-invoice {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   align-items: initial;
 }
 
@@ -591,7 +599,7 @@ input[type='checkbox'] {
   }
   .cont-contract {
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
   }
   .cont-flex-start p {
@@ -605,12 +613,12 @@ input[type='checkbox'] {
 .cont-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem 4rem;
 }
 
 .cont-grid-1-2 {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 1rem 2rem;
 }
 
 .cont-grid-2-3 {
@@ -656,12 +664,6 @@ input[type='checkbox'] {
     grid-template-columns: 1fr 1fr;
     gap: 1rem 2rem;
   }
-  .cont-grid-1-2 {
-    display: grid;
-    grid-template-columns: 2fr 3fr;
-    gap: 1rem 2rem;
-  }
-  
 }
 
 @media screen and (min-width: 768px) {
@@ -711,12 +713,11 @@ input[type='checkbox'] {
   padding-bottom: 1rem;
   position: fixed;
   z-index: 100;
-  border-bottom: solid 1px rgba(0,0,0,.1);
-  box-shadow: 2px 4px 8px 3px rgba(0,0,0,.1);
   left: 0;
   right: 0;
   top: 0;
-  background-color: var(--white);
+  width: 100vw;
+  background-color: white;
 }
 
 .navbar-container {
@@ -730,13 +731,17 @@ input[type='checkbox'] {
   right: 0;
   width: 100%;
   text-align: right;
-  font-size: 2rem;
 }
 
 @media screen and (min-width: 992px) {
+  .navbar {
+    border-bottom: solid 1px rgba(0,0,0,.1);
+    box-shadow: 2px 4px 8px 3px rgba(0,0,0,.1);
+  }
   .navbar-content {
     width: 60%;
     text-align: left;
+    border: none;
   }
 }
 
@@ -751,8 +756,6 @@ input[type='checkbox'] {
 
 .nav-link {
   color: var(--color1);
-  font-size: .6rem;
-  padding: .6rem 1.5rem;
 }
 
 .nav-link:hover {
@@ -800,19 +803,12 @@ nav .nav-item .nav-link:hover::before {
   transform: translate3d(-50%, -50%, 0) scale3d(15, 15, 15);
 }
 
-@media screen and (min-width: 576px) {
-  .nav-link {
-    font-size: .8rem;
-  }
-}
-
 .action-link {
   color: var(--color1);
   padding: .1rem .4rem;
 }
 
 h3 .action-link {
-  font-size: 1.2rem;
   font-family: Poppins-Regular;
 }
 
@@ -889,10 +885,6 @@ h3 .action-link {
   padding-right: 0rem;
 }
 
-#search-input {
-  font-size: 1rem;
-}
-
 #search-delete {
   position: absolute;
   top: .6rem;
@@ -900,35 +892,86 @@ h3 .action-link {
   cursor: pointer;
 }
 
+.invoice {
+  position: relative;
+}
+
 .invoice-search {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
 .invoice-search input {
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .all-invoice {
   float: right;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  margin-bottom: 1rem;
+}
+
+.all-invoice-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 2rem;
+}
+
+.all-invoice input[type='checkbox'] {
+  margin-bottom: 0;
+  margin-right: .5rem;
+}
+
+.btn-download-delete {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.btn-download-delete button {
+  width: 100%;
+  font-size: .6rem !important;
+  margin-bottom: 0;
+}
+
+.nav-tabs-invoices {
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.invoice-check {
+  margin-right: .5rem;
+  position: absolute;
+  left: -2rem;
 }
 
 @media screen and (min-width: 576px) {
-  #search-input {
-    font-size: 1rem;
-    width: 12rem;
+  .all-invoice {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0;
+  }
+  .invoice-search {
+    margin-top: 0 !important;
   }
   .invoice-search input {
-    margin-left: 2rem;
     margin-bottom: 0;
   }
   .invoice-search {
     flex-direction: row;
   }
+  .nav-tabs-invoices {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 
-.nav-tabs {
-  margin-top: 4rem;
+.nav-tabs-admin {
+  margin-top: 1rem;
 }
 
 .nav-tabs a {
@@ -938,9 +981,12 @@ h3 .action-link {
   border: none;
   overflow: hidden;
   transition: color 0.3s ease-in-out;
+  padding: .6rem .6rem;
+  font-size: .8rem;
 }
 
-.nav-tabs a:hover {
+.nav-tabs a:hover,
+.nav-tabs .active:hover {
   color: white;
 }
 
@@ -963,21 +1009,18 @@ h3 .action-link {
   transform: translate3d(-50%, -50%, 0) scale3d(15, 15, 15);
 }
 
-.nav-tabs-admin {
-  margin-top: 2rem;
-}
-
-.nav-tabs-company {
-  margin-top: 4rem;
-}
-
 @media screen and (min-width: 576px) {
   .search {
     margin-top: 2rem;
   }
-  .nav-tabs-admin {
-    margin-top: 0;
+  .nav-tabs a {
+    padding: .6rem 1.2rem;
+    font-size: 1rem;
   }
+}
+
+.cont-company-info {
+  display: none;
 }
 
 .company-info {
@@ -994,11 +1037,6 @@ h3 .action-link {
   align-items: center;
   padding-left: 0;
   margin-bottom: 0;
-}
-
-.action-list li {
-  margin-left: .5rem;
-  margin-right: .5rem;
 }
 
 .form-search {
@@ -1025,6 +1063,9 @@ tbody tr {
   .company {
     display: table-row;
   }
+  .cont-company-info {
+    display: block;
+  }
 }
 
 @media screen and (min-width: 768px) {
@@ -1042,8 +1083,22 @@ tbody tr {
   flex-direction: column;
 }
 
+.table-companies .action-item,
+.table-users .action-item {
+  margin-left: .5rem;
+  margin-right: .5rem;
+}
+
 .table-client {
   margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+@media screen and (min-width: 460px) {
+  .table-client {
+    margin-top: 0;
+    margin-bottom: 4rem;
+  }
 }
 
 @media screen and (min-width : 766px) {
@@ -1057,11 +1112,11 @@ tbody tr {
   }
   .table-users tr {
     display: grid;
-    grid-template-columns: 1fr 1fr 2fr 1.5fr;
+    grid-template-columns: 1.5fr 1fr 2fr 1fr;
   }
   .table-client tr {
     display: grid;
-    grid-template-columns: 1.4fr .8fr 2fr 1fr;
+    grid-template-columns: 1.4fr 1fr 2fr .6fr;
   }
   .table-invoices tr {
     display: grid;
@@ -1069,14 +1124,14 @@ tbody tr {
   }
   .table-notes tr {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 4fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 3fr 2fr;
   }
 }
 
 /* Company vue */
 
 .list-client {
-  margin-top: 2rem;
+  margin-top: 0;
 }
 
 .contracts {
@@ -1088,13 +1143,62 @@ tbody tr {
 }
 
 .contract-header {
-  background-color: #eeeff0;
+  background-color: #f6f7f8;
   border: solid 1px #cacdcf;
-  padding: 0;
+  border-top: none;
+  padding: .2rem 0;
+  cursor: pointer;
 }
 
-.contract-header .svg-inline--fa.fa-w-18 {
-  width: 1.6em;
+.contract-header:hover {
+  background-color: #eeeff0;
+}
+
+.edit-website,
+.delete-website,
+.notepad-link,
+.delete-contract,
+.action-link {
+  opacity: 0.4;
+  display: block;
+}
+
+.edit-website:hover,
+.delete-website:hover,
+.notepad-link:hover,
+.delete-contract:hover,
+.action-link:hover {
+  opacity: 1;
+}
+
+.contract .action-link,
+.list-client .add-user {
+  opacity: 1;
+}
+
+.delete-contract {
+  opacity: 0.2;
+}
+
+@media screen and (min-width: 460px) {
+  .list-client {
+    margin-top: 2rem;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .edit-website,
+  .delete-website {
+    display: none;
+  }
+  .delete-contract {
+    opacity: 0.6;
+  }
+}
+
+.contract-header:hover .edit-website,
+.contract-header:hover .delete-website {
+  display: block;
 }
 
 .contract-item {
@@ -1117,10 +1221,6 @@ tbody tr {
   padding-right: .5rem;
 }
 
-.contract-action a {
-  opacity: 0.6;
-}
-
 .notepad-link {
   display: none;
 }
@@ -1130,9 +1230,18 @@ tbody tr {
   right: .5rem;
 }
 
+.nav-link {
+  padding: 0;
+}
+
 .contract-info {
   text-align: left;
   width: 100%;
+  padding-top: .5rem;
+}
+
+.contract-info * {
+  font-size: .8rem;
 }
 
 .contract-input {
@@ -1140,16 +1249,9 @@ tbody tr {
 }
 
 .contract-title {
-  margin-bottom: 1rem;
-  font-size: .8rem;
   margin-left: 1rem;
   margin-right: .2rem;
-}
-
-.contract-content mark,
-.contract-content strike {
-  margin-bottom: 0;
-  font-size: .6rem;
+  margin-top: 0;
 }
 
 .contract-notes {
@@ -1157,14 +1259,15 @@ tbody tr {
   flex-direction: column;
 }
 
-@media screen and (min-width: 1200px) {
-  .contract-notes {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
+.contract-content mark,
+.contract-content strike {
+  margin-bottom: 0;
 }
 
 @media screen and (min-width: 768px) {
+  .nav-link {
+    padding: .5rem 1rem;
+  }
   .list-client {
     margin-top: 0;
   }
@@ -1173,16 +1276,15 @@ tbody tr {
   }
   .contract-info {
     margin-left: 1rem;
+    padding-top: 0;
+  }
+  .contract-info * {
+    font-size: 1rem;
   }
   .contract-title {
     margin-left: 1rem;
     margin-right: 1rem;
-    font-size: 1.2rem;
-  }
-  .contract-content mark,
-  .contract-content strike {
-    margin-bottom: 0;
-    font-size: 1rem;
+    margin-top: .5rem;
   }
   .notepad-link {
     display: block;
@@ -1197,6 +1299,10 @@ tbody tr {
   .contract-action {
     display: none;
   }
+  .contract-notes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .all-types {
@@ -1206,6 +1312,11 @@ tbody tr {
   margin-top: 2rem;
 }
 
+.form-contract .cont-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
 .form-contract-title {
   margin-bottom: 2rem;
   margin-top: 1.5rem;
@@ -1213,7 +1324,6 @@ tbody tr {
 
 .form-contract-title label {
   font-weight: bold;
-  font-size: 1rem;
 }
 
 .add-abo-btn {
@@ -1223,7 +1333,6 @@ tbody tr {
 @media screen and (min-width: 768px) {
   .form-contract-title label {
     font-weight: bold;
-    font-size: .8rem;
   }
 }
 
@@ -1234,8 +1343,8 @@ tbody tr {
   visibility: hidden;
   width: 80%;
   position: fixed;
-  top: 25%;
-  bottom: 25%;
+  top: 22%;
+  bottom: 22%;
   left: 10%;
   background-color: white;
   z-index: 1000;
@@ -1244,9 +1353,22 @@ tbody tr {
 }
 
 .mdl-header {
-  padding: 1.5rem 1.5rem;
+  padding: 1.5rem 1.5rem 0 1.5rem;
   display: flex;
   justify-content: flex-end;
+}
+
+.mdl-header-abo{
+  flex-direction: column !important;
+}
+
+.mdl-header-abo .cont-title {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.mdl-header-abo .cont-contract {
+  width: 100%;
 }
 
 .mdl-content {
@@ -1254,6 +1376,15 @@ tbody tr {
 }
 
 @media screen and (min-width: 768px) {
+  .mdl-header {
+    padding: 1.5rem;
+  }
+  .mdl-header-abo{
+    flex-direction: row !important;
+  }
+  .mdl-header-abo .cont-title {
+    margin-bottom: 0;
+  }
   .mdl-delete,
   .mdl-remove {
     width: 60%;
@@ -1295,39 +1426,47 @@ tbody tr {
 .mdl-edit-website,
 .mdl-add-new-user,
 .mdl-edit-password,
-.mdl-all-company {
+.mdl-all-company,
+.modal-edit-invoice {
   visibility: hidden;
-  width: 80%;
+  width: 90%;
   position: fixed;
-  top: 10%;
-  bottom: 10%;
-  left: 10%;
+  left: 5%;
   background-color: white;
   z-index: 1000;
   border: solid 1px rgba(0,0,0,.1);
-  box-shadow: 8px 8px 8px 10px rgba(0,0,0,.1);
+  box-shadow: 8px 8px 8px 2px rgba(0,0,0,.1);
   overflow: scroll;
-  max-height: 43rem;
   padding: 0 2rem;
 }
 
-.mdl-add-user form,
-.mdl-add-invoice form,
-.mdl-add-website form,
-.mdl-edit-website form,
-.mdl-edit-user form,
-.mdl-edit-company form,
-.mdl-add-new-user form,
-.mdl-edit-password form,
-.mdl-all-company {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+.mdl-add-user,
+.mdl-add-website,
+.mdl-edit-company,
+.mdl-edit-company,
+.mdl-all-company,
+.mdl-edit-website {
+  top: 4%;
+  bottom: 4%;
+}
+
+.mdl-add-new-user,
+.mdl-edit-user,
+.mdl-add-invoice {
+  top: 10%;
+  bottom: 10%;
+}
+
+.mdl-edit-password,
+.modal-edit-invoice {
+  top: 18%;
+  bottom: 18%;
 }
 
 @media screen and (min-width: 768px) {
   .mdl-add-new-user {
-    top: 15%;
-    bottom: 15%;
+    top: 12%;
+    bottom: 12%;
   }
   .mdl-add-user {
     top: 10%;
@@ -1350,17 +1489,31 @@ tbody tr {
     bottom: 15%;
   }
   .mdl-edit-user {
-    top: 10%;
-    bottom: 10%;
+    top: 12%;
+    bottom: 12%;
   }
   .mdl-edit-password {
-    top: 20%;
-    bottom: 20%;
+    top: 18%;
+    bottom: 18%;
   }
   .mdl-all-company {
     top: 5%;
     bottom: 5%;
   }
+.mdl-add-user,
+.mdl-add-invoice,
+.mdl-add-website,
+.mdl-edit-user,
+.mdl-edit-company,
+.mdl-edit-website,
+.mdl-add-new-user,
+.mdl-edit-password,
+.mdl-all-company,
+.modal-edit-invoice {
+  width: 80%;
+  left: 10%;
+  box-shadow: 8px 8px 8px 10px rgba(0,0,0,.1);
+}
 }
 
 @media screen and (min-width: 1200px) {
@@ -1372,7 +1525,8 @@ tbody tr {
   .mdl-edit-website,
   .mdl-add-new-user,
   .mdl-edit-password,
-  .mdl-all-company {
+  .mdl-all-company,
+  .modal-edit-invoice {
     width: 60%;
     left: 20%;
   }
@@ -1400,7 +1554,6 @@ tbody tr {
 .mdl-header-form h2 {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 1.2rem;
 }
 
 .mdl-btn,
@@ -1409,7 +1562,6 @@ tbody tr {
   margin: auto;
   flex-direction: column;
   margin-bottom: 2rem;
-  margin-top: 2rem;
   display: flex;
   justify-content: space-around;
 }
@@ -1420,7 +1572,6 @@ tbody tr {
   gap: 1rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
-  margin-bottom: 4rem;
 }
 
 .btn-contract {
@@ -1431,16 +1582,27 @@ tbody tr {
   width: 100%;
 }
 
+#recap-invoice p {
+  font-size: .8rem;
+}
+
 @media screen and (min-width: 576px) {
   .mdl-btn,
   .mdl-btn-del {
     flex-direction: row;
+    margin-top: 2rem;
   }
   .mdl-btn {
-    margin-top: 2rem;
+    margin-top: 0;
+  }
+  .mdl-btn-contract {
+    margin-bottom: 4rem;
   }
   .mdl-header-form {
     width: 78%;
+  }
+  #recap-invoice p {
+    font-size: 1rem;
   }
 }
 
@@ -1450,7 +1612,6 @@ tbody tr {
     justify-content: space-between;
     align-items: center;
     padding: 2rem 0 0 0;
-    /* width: 78%; */
     margin: auto;
     margin-top: 2rem;
   }
@@ -1458,7 +1619,6 @@ tbody tr {
     margin-top: .4rem;
     margin-left: 1rem;
     margin-bottom: 0;
-    font-size: 1.6rem;
   }
   .mdl-btn-contract {
     display: flex;
@@ -1614,13 +1774,23 @@ tbody tr {
 .alert-success {
   position: absolute;
   top: -2rem;
-  right: 2rem;
+  width: 90%;
+  left: 5%;
   padding: 1rem 2rem;
   border-radius: 1rem;
   color: var(--white);
   opacity: 0.8 !important;
-  font-size: .9rem;
-  text-align: right;
+  text-align: center;
+  font-size: .8rem;
+}
+
+@media screen and (min-width: 460px) {
+  .alert-success {
+    text-align: right;
+    left: unset;
+    width: unset;
+    right: 2rem;
+  }
 }
 
 /* Erreur 404 */
