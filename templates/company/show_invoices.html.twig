@@ -46,39 +46,7 @@
 <!-- MODULE DELETE INVOICE -->
 {% include "partials/_modal_delete_invoice.html.twig" %}
 <!-- MODAL EDIT INVOICE -->
-<div class="modal-edit-invoice">
-    <div class="cont-flex-start cont-title mdl-header-form">
-        <div class="cont-flex">
-            <i class="fas fa-file-upload fa-2x"></i>
-            <h2>Factures</h2>
-        </div>
-        <a class="mdl-close action-link">✖</a>
-    </div>
-    <form>
-        <div>
-            <label for="company">Entreprise *</label>
-            <input id="company" class="form-control" name="company" value="{{company.name}}" readonly>
-        </div>
-        <div class="cont-grid form-section">
-            <div>
-                <label for="type">Type *</label>
-                <select class="form-select" name="type">
-                    {% for type in typesInvoice %}
-                    <option value="{{type.name}}">{{type.name}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label for="date">Date de facturation *</label>
-                <input id="date" class="form-control" type="date" name="date" value="{{currentDate|date('Y-m-d')}}">
-            </div>
-        </div>
-        <div class="cont-flex-space mdl-btn">
-            <button class="btn-type btn-form" type="submit">Modifier</button>
-            <a class="mdl-close-btn btn-type btn-form btn-cancel">Annuler</a>
-        </div>
-    </form>
-</div>
+{% include "partials/_modal_edit_invoice.html.twig" %}
 <!-- MODAL ADD INVOICE -->
 <div id="modal-invoice" class="mdl-add-invoice">
     <div class="cont-flex-start cont-title mdl-header-form">
@@ -192,7 +160,7 @@
                         {% for invoice in invoices %}
                         
                         {# blank #}
-                        {% if loop.index0 - 1 > 0 %}
+                        {% if loop.index0 - 1 >= 0 %}
                         {% set date = invoices[loop.index0 - 1].releasedAt %}
                         {% if date|date("m/d/Y") != invoice.releasedAt|date("m/d/Y") %}
                         <tr class="table-light invoice {{ invoice.releasedAt|date(" Y-m-d") }}"
