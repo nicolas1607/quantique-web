@@ -6,6 +6,7 @@
 parameters:
     logo: '%kernel.project_dir%/public/images'
     invoices: '%kernel.project_dir%/public/uploads/invoices'
+    zip: '%kernel.project_dir%/public/quantique_web_factures.zip'
     locale: 'fr'
     app_locales: fr|en|
 

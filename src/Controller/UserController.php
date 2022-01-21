@@ -142,7 +142,7 @@ class UserController extends AbstractController
                 $email = (new TemplatedEmail())
                     ->from('noreply@quantique-web.fr')
                     ->to($user->getEmail())
-                    ->subject('Nouvelle(s) facture(s) pour ' . $company->getName() . ' disponible(s) !')
+                    ->subject('Nouvelle(s) facture(s) Quantique Web disponible(s) !')
                     ->htmlTemplate('emails/invoice_confirmation.html.twig')
                     ->context([
                         'user' => $user,

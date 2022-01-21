@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use DateTime;
 use App\Entity\Invoice;
 use App\Entity\TypeInvoice;

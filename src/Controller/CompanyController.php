@@ -11,11 +11,13 @@ use App\Form\InvoiceType;
 use App\Entity\TypeInvoice;
 use App\Entity\TypeContract;
 use App\Form\UserPasswordType;
-use App\Repository\InvoiceRepository;
 use App\Repository\UserRepository;
+use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Console\Helper\Helper;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -97,11 +99,11 @@ class CompanyController extends AbstractController
         }
         // Les factures qui ont été cochées
         $res = [];
-        $invoices = $this->em->getRepository(Invoice::class)->findAll();
-        for ($i = 1; $i <= count($invoices); $i++) {
-            $check = $request->get('invoiceCheck' . $i);
+        $invoicesAll = $this->em->getRepository(Invoice::class)->findBy(['company' => $company->getId()]);
+        foreach ($invoicesAll as $inv) {
+            $check = $request->get('invoiceCheck' . $inv->getId());
             if ($check == 'on') {
-                $res[] = $invoices[$i - 1];
+                $res[] = $this->em->getRepository(Invoice::class)->findOneBy(['id' => $inv->getId()]);
             }
         }
         // Download or Delete
@@ -114,7 +116,7 @@ class CompanyController extends AbstractController
 
                 $zip->open($zipName,  \ZipArchive::CREATE);
                 foreach ($res as $file) {
-                    $zip->addFromString(basename($file->getFile()),  file_get_contents($this->getParameter('invoices') . '/' . $file->getFile()));
+                    $zip->addFromString(basename($file->getFile()), file_get_contents($this->getParameter('invoices') . '/' . $file->getFile()));
                 }
                 $zip->close();
 
@@ -122,6 +124,8 @@ class CompanyController extends AbstractController
                 $response->headers->set('Content-Type', 'application/zip');
                 $response->headers->set('Content-Disposition', 'attachment;filename="' . $zipName . '"');
                 $response->headers->set('Content-length', filesize($zipName));
+                $filesystem = new Filesystem();
+                $filesystem->remove($this->getParameter('zip'));
                 return $response;
             } else if ($action == 'delete') {
                 foreach ($res as $file) {
@@ -129,7 +133,6 @@ class CompanyController extends AbstractController
                 }
                 $this->em->flush();
                 $this->addFlash('success', 'Factures supprimées avec succès !');
-                return $this->redirect($_SERVER['HTTP_REFERER']);
             }
         }
 
@@ -188,7 +191,7 @@ class CompanyController extends AbstractController
                 $email = (new TemplatedEmail())
                     ->from('noreply@quantique-web.fr')
                     ->to($user->getEmail())
-                    ->subject('Nouvelle(s) facture(s) pour ' . $company->getName() . ' disponible(s) !')
+                    ->subject('Nouvelle(s) facture(s) Quantique Web disponible(s) !')
                     ->htmlTemplate('emails/invoice_confirmation.html.twig')
                     ->context([
                         'invoices' => $invoices,
@@ -201,6 +204,7 @@ class CompanyController extends AbstractController
                 $mailer->send($email);
             }
             $this->addFlash('success', 'Facture(s) ajoutée(s) à ' . $company->getName() . ' !');
+            return $this->redirect($request->getUri());
         }
 
 
@@ -230,23 +234,27 @@ class CompanyController extends AbstractController
         $oAuth2Credential = (new OAuth2TokenBuilder())
             ->fromFile('/Users/nicolasmormiche/google_ads_php.ini')
             ->build();
+
         // GoogleAds Identification
         $googleAdsClient = (new GoogleAdsClientBuilder())
             ->withOAuth2Credential($oAuth2Credential)
             ->fromFile('/Users/nicolasmormiche/google_ads_php.ini')
             ->build();
-        $customerId = '1612445303';
-        $billingSetupId = '1555927444';
+
+        $customerId = '161-244-5303';
+        $billingSetupId = '5911-5010-7531';
+
+        // Gets the date one month before now.
+        $lastMonth = strtotime('-1 month');
 
         // Issues the request.
         $response = $googleAdsClient->getInvoiceServiceClient()->listInvoices(
             $customerId,
             ResourceNames::forBillingSetup($customerId, $billingSetupId),
             // The year needs to be 2019 or later.
-            date('Y', '2021'),
-            MonthOfYear::value(strtoupper(date('F', '2021')))
+            date('Y', $lastMonth),
+            MonthOfYear::value(strtoupper(date('F', $lastMonth)))
         );
-
 
 
 
@@ -276,7 +284,8 @@ class CompanyController extends AbstractController
         //     exit;
         // }
         // $graphNode = $response->getGraphNode();
-        // var_dump($graphNode);
+        // 
+        _dump($graphNode);
 
         // $res = $this->useCurl(
         //     'https://graph.facebook.com/v12.0/228753810/insights',

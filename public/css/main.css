@@ -1116,7 +1116,7 @@ tbody tr {
   }
   .table-client tr {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 2fr .6fr;
+    grid-template-columns: 1.4fr 1.2fr 2fr .6fr;
   }
   .table-invoices tr {
     display: grid;

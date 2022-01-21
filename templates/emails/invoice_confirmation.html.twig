@@ -166,6 +166,7 @@ a[x-apple-data-detectors='true'] {
 {% set day = invoices[0].releasedAt|date("d") %}
 {% set month = invoices[0].releasedAt|date("m") %}
 {% set year = invoices[0].releasedAt|date("Y") %}
+{% set newYear = year %}
 {% for invoice in invoices %}
   {% if invoice.type.name == 'Abonnement' %}
     {% set flag = true %}
@@ -175,12 +176,16 @@ a[x-apple-data-detectors='true'] {
 {% if flag == true %}
   {% if month + 1 == 13 %}
     {% set newMonth = '01' %}
-  {% elseif month + 1 < 9 %}
-    {% set newMonth = '0' + month + 1 %}
+    {% set newYear = year + 1 %}
   {% else %}
     {% set newMonth = month + 1 %}
+    {% set newYear = year %} 
   {% endif %}
-  <p style="font-size: 14px; line-height: 130%;"><span style="font-size: 14px; line-height: 18.2px; font-family: Lato, sans-serif;">- Facture(s) abonnement du {{day}}/{{month}}/{{year}} au {{day}}/{{newMonth}}/{{year}}</span></p>
+  {% if month != 10 and month != 11 and month != 12 and newMonth != '01' %}
+    <p style="font-size: 14px; line-height: 130%;"><span style="font-size: 14px; line-height: 18.2px; font-family: Lato, sans-serif;">- Facture(s) abonnement du {{day}}/{{month}}/{{year}} au {{day}}/0{{newMonth}}/{{newYear}}</span></p>
+  {% else %}
+    <p style="font-size: 14px; line-height: 130%;"><span style="font-size: 14px; line-height: 18.2px; font-family: Lato, sans-serif;">- Facture(s) abonnement du {{day}}/{{month}}/{{year}} au {{day}}/{{newMonth}}/{{newYear}}</span></p>
+  {% endif %}
 {% else %}
   <p style="font-size: 14px; line-height: 130%;"><span style="font-size: 14px; line-height: 18.2px; font-family: Lato, sans-serif;">- Facture(s) personnalisée(s) du {{day}}/{{month}}/{{year}}</span></p>
 {% endif %}
